@@ -121,8 +121,8 @@
             </svg>
           </span>
           <span class="mc-body">
-            <span class="mc-title">墙体隔声量 STC <span class="mc-tag live">可用</span></span>
-            <span class="mc-desc">质量定律估算或直接输入实测隔声量，按 ASTM E413 完成 16 带 STC 评级，附双层构件估算与吻合频率提示。</span>
+            <span class="mc-title">墙体隔声量 Rw / STC <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">质量定律估算或输入实测隔声量，同时给出国标 GB/T 50121 计权隔声量 Rw 与频谱修正量 C、Ctr，以及美标 ASTM E413 的 STC，并对照 GB 50118 / GB 55038 限值判定。</span>
           </span>
         </a>
       </div>
@@ -580,8 +580,8 @@
   <!-- ====================== 墙体隔声量 STC ====================== -->
   <section class="view" id="view-stc" data-view="stc">
     <div class="page-head">
-      <h2>墙体隔声量 STC</h2>
-      <p class="hint">质量定律估算或输入实测隔声量，按 ASTM E413 完成 16 个 1/3 倍频带的 STC 评级</p>
+      <h2>墙体隔声量 Rw / STC</h2>
+      <p class="hint">质量定律估算或输入实测隔声量，同时按国标 GB/T 50121-2005 给出计权隔声量 Rw（含频谱修正量 C、Ctr）与美标 ASTM E413 的 STC</p>
     </div>
 
     <div class="split">
@@ -637,29 +637,62 @@
           </div>
 
           <div id="stcMeasured" class="stc-panel" hidden>
-            <p class="inline-note">按 125–4000 Hz 共 16 个 1/3 倍频带填入实测隔声量（dB）：</p>
-            <div id="stcGrid" class="band-grid stc16"></div>
+            <p class="inline-note">按 100–4000 Hz 共 17 个 1/3 倍频带填入实测隔声量（dB）：国标 Rw 用 100–3150 Hz 共 16 带，美标 STC 用 125–4000 Hz 共 16 带，故一并提供 17 带。</p>
+            <div id="stcGrid" class="band-grid stc17"></div>
           </div>
 
           <div id="stcMsg" class="callout-row"></div>
         </section>
 
         <section class="card">
-          <h3>隔声量频率特性</h3>
+          <div class="card-head">
+            <h3>隔声量频率特性</h3>
+            <div class="field inline">
+              <label for="stcRefLine">参考曲线</label>
+              <select id="stcRefLine">
+                <option value="gb" selected>国标基准（GB）</option>
+                <option value="stc">美标轮廓（ASTM）</option>
+                <option value="both">两条都显示</option>
+                <option value="none">不显示</option>
+              </select>
+            </div>
+          </div>
           <div class="canvas-wrap"><canvas id="stcChart" height="300"></canvas></div>
           <div class="legend">
             <span><i style="background:#2563eb"></i>隔声量 R（dB）</span>
-            <span><i style="background:#f59e0b"></i>STC 轮廓线</span>
+            <span><i style="background:#f59e0b"></i>GB 基准曲线（100–3150 Hz）</span>
+            <span><i style="background:#10b981"></i>ASTM 轮廓线（125–4000 Hz）</span>
           </div>
         </section>
       </div>
 
       <div class="split-col">
         <section class="card result-hero">
-          <div class="rc-title">STC 隔声等级</div>
-          <div class="hero-rate" id="stcValue">—</div>
+          <div class="rc-title">隔声单值评价量（双标准对照）</div>
+          <div class="dual-hero">
+            <div class="hero-box">
+              <div class="hb-label">GB/T 50121-2005</div>
+              <div class="hero-rate" id="rwValue">—</div>
+              <div class="hb-sub">计权隔声量 R<sub>w</sub> (dB)</div>
+            </div>
+            <div class="hero-box">
+              <div class="hb-label">ASTM E413</div>
+              <div class="hero-rate" id="stcValue">—</div>
+              <div class="hb-sub">隔声等级 STC</div>
+            </div>
+          </div>
+          <div class="sub mono" id="rwNotation"></div>
           <div class="sub" id="stcVerdict"></div>
           <div class="stat-grid" id="stcStats"></div>
+
+          <div class="field-row compact">
+            <div class="field">
+              <label for="stcReq">对照国标限值 <span class="unit-tag">GB 50118-2010 / GB 55038-2025</span></label>
+              <select id="stcReq"></select>
+            </div>
+          </div>
+          <div id="stcReqResult" class="callout-row"></div>
+
           <div class="btn-row toolbar">
             <button id="stcCopy" class="btn">复制摘要</button>
             <button id="stcCsv" class="btn">导出 CSV</button>
@@ -668,7 +701,7 @@
         </section>
 
         <section class="card">
-          <h3>逐带明细 <span class="hint">(轮廓线与缺量)</span></h3>
+          <h3>逐带明细 <span class="hint">(两标准轮廓线与偏差)</span></h3>
           <div id="stcTable" class="table-wrap"></div>
         </section>
       </div>
@@ -679,11 +712,14 @@
       <ul>
         <li><strong>质量定律</strong>：R = 20·lg(m·f) − 48（m 为面密度 kg/m²，f 为频率 Hz），适用于单层密实匀质构件在吻合频率以下的扩散场隔声估算，精度约 ±3 dB。</li>
         <li><strong>面密度</strong>：由材料密度与厚度换算（m = ρ·t）；也可直接在界面上手改，用于已知面密度的复合构件。</li>
-        <li><strong>吻合频率</strong>：f_c = c₀²/(1.8·c_L·t)，c_L 为材料纵波声速。在 f_c 附近隔声量会出现明显谷值，质量定律不再适用，实际 STC 往往显著低于质量定律预测值。</li>
-        <li><strong>STC 评级</strong>：ASTM E413。以 500 Hz 处为 0 dB、向低频每倍频程 −5 dB 的标准轮廓线，在 125–4000 Hz 共 16 个 1/3 倍频带上逐 dB 平移，取满足「缺量之和 ≤ 32 dB 且任一频带缺量 ≤ 8 dB」的最大轮廓值。</li>
+        <li><strong>吻合频率</strong>：f_c = c₀²/(1.8·c_L·t)，c_L 为材料纵波声速。在 f_c 附近隔声量会出现明显谷值，质量定律不再适用，实测值往往显著低于质量定律预测值。</li>
+        <li><strong>计权隔声量 R<sub>w</sub>（GB/T 50121-2005）</strong>：在 100–3150 Hz 共 16 个 1/3 倍频带（或 125–2000 Hz 共 5 个倍频带）上，把表 3.1.2 的空气声隔声基准曲线 K<sub>i</sub>（500 Hz 处为 0 dB）逐 dB 平移，取满足「不利偏差之和 ≤ 32.0 dB（1/3 倍频程）／≤ 10.0 dB（倍频程）」的最大值，即为 R<sub>w</sub>；国标采用 ISO 717-1:1996 方法，<em>不设</em> 8 dB 单带限值。</li>
+        <li><strong>频谱修正量 C / C<sub>tr</sub>（GB/T 50121-2005 式 3.4.1）</strong>：C<sub>j</sub> = −10·lg Σ10^((L<sub>ij</sub> − X<sub>i</sub>)/10) − X<sub>w</sub>，其中 L<sub>ij</sub> 为表 3.1.3 的 A 计权频谱（总级归一化到 0 dB）。C 对应频谱 1（粉红噪声，以社会生活噪声为代表，中高频为主），C<sub>tr</sub> 对应频谱 2（交通噪声，中低频为主）。结果按 GB 表述为 R<sub>w</sub>(C; C<sub>tr</sub>) = 45(−1; −5) dB，并给出 R<sub>w</sub>+C、R<sub>w</sub>+C<sub>tr</sub>。</li>
+        <li><strong>隔声等级 STC（ASTM E413）</strong>：以 500 Hz 处为 0 dB、向低频每倍频程 −5 dB 的标准轮廓线，在 125–4000 Hz 共 16 个 1/3 倍频带上逐 dB 平移，取满足「缺量之和 ≤ 32 dB <em>且</em>任一频带缺量 ≤ 8 dB」的最大轮廓值。</li>
+        <li><strong>两标准差异</strong>：频带范围不同（GB 100–3150 Hz，ASTM 125–4000 Hz），且 ASTM 多一条 8 dB 单带限值，因此同一构件常有 1–2 dB 差别；对低频敏感的构件（轻质墙、玻璃），国标因含 100 Hz 频带而更严格。工程上国内设计验收应以 R<sub>w</sub>+C / R<sub>w</sub>+C<sub>tr</sub> 表述。</li>
+        <li><strong>国标限值对照</strong>：内置 GB 50118-2010《民用建筑隔声设计规范》与 GB 55038-2025《住宅项目规范》中构件类的空气声隔声要求，可直接判定是否达标并给出余量。注意：GB 55038-2025 对住宅分户构件的强制性指标为现场「计权标准化声压级差 D<sub>nT,w</sub>+C」（卧室分户墙/楼板 ≥ 50 dB），属房间之间的现场量，受侧向传声影响，一般比构件实验室 R<sub>w</sub>+C 低 2–5 dB，不能直接等同。</li>
         <li><strong>双层构件</strong>：在总面密度质量定律基础上加 3 dB（两层解耦）并叠加空气层增益 12·lg(1 + D/50)，为常用经验估算式，用于方案比较；实际双层墙还需考虑层间声桥、空腔填充与板缝密封。</li>
-        <li><strong>实测输入</strong>：可直接填入实验室或现场实测的 16 带隔声量（如按 GB/T 50121 / ISO 10140 测得），本工具只做 STC 评级与缺量分析。</li>
-        <li><strong>注意</strong>：STC 主要评价 125–4000 Hz 的空气声隔声，对低频（&lt; 125 Hz）与结构传声不敏感；轨道交通、风机等低频噪声源建议另行按频谱评价（可用噪声评价模块）。</li>
+        <li><strong>注意</strong>：本模块评价空气声隔声，对结构传声与撞击声（楼板 L<sub>n,w</sub>）不作评价；轨道交通、风机等以低频为主的噪声源，建议结合噪声评价与声屏障模块一并分析。</li>
       </ul>
     </section>
   </section>

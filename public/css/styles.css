@@ -1028,3 +1028,74 @@ select.btn {
 @media (max-width: 760px) {
   .band-grid.stc16 { grid-template-columns: repeat(auto-fit, minmax(82px, 1fr)); }
 }
+
+/* ==========================================================================
+   隔声模块：双标准结果对照 / 卡片头 / 17 带输入网格
+   ========================================================================== */
+
+.dual-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 10px 0 6px;
+}
+.hero-box {
+  background: var(--card-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.hero-box .hb-label {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+.hero-box .hb-sub {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--faint);
+}
+.hero-box .hero-rate { font-size: 38px; }
+.hero-box .hero-rate sub { font-size: 0.5em; font-weight: 600; }
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.card-head h3 { margin: 0; }
+.field.inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.field.inline label { margin: 0; font-size: 12px; color: var(--muted); }
+.field.inline select {
+  padding: 6px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.band-grid.stc17 { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+@media (max-width: 980px) {
+  .band-grid.stc17 { grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); }
+}
+@media (max-width: 560px) {
+  .dual-hero { grid-template-columns: 1fr; }
+  .hero-box .hero-rate { font-size: 32px; }
+}
