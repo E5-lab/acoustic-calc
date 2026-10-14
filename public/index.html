@@ -14,7 +14,12 @@
 
   <main class="container">
     <section class="card">
-      <h2>倍频带声压级输入 <span class="hint">(dB，31.5–8000 Hz)</span></h2>
+      <div class="mode-row">
+        <span class="mode-label">输入模式</span>
+        <button class="mode-btn active" data-mode="octave" type="button">1/1 倍频程</button>
+        <button class="mode-btn" data-mode="third" type="button">1/3 倍频程</button>
+      </div>
+      <h2>倍频带声压级输入 <span class="hint" id="bandHint">(dB，1/1 倍频程 16 Hz–8 kHz 共 10 带)</span></h2>
       <div id="bandGrid" class="band-grid"></div>
       <div class="btn-row">
         <button id="btnCalc" class="btn primary">计算</button>
@@ -25,11 +30,14 @@
         </span>
         <button id="btnClear" class="btn ghost">清空</button>
       </div>
+      <div id="modeNote" class="mode-note"></div>
 
       <details class="aux">
         <summary>多测点能量平均</summary>
-        <p class="aux-hint">每行粘贴一条完整频谱的 9 个数值（31.5–8000 Hz，空格或逗号分隔），求各带能量平均后填入上方输入框。</p>
-        <textarea id="avgInput" rows="4" placeholder="例：&#10;58 52 45 40 36 33 30 28 26&#10;57 51 44 39 35 32 29 27 25"></textarea>
+        <p class="aux-hint">每行粘贴一条完整频谱的数值（当前模式对应 10 个倍频带或 29 个 1/3 倍频带，空格或逗号分隔），求各带能量平均后填入上方输入框。</p>
+        <textarea id="avgInput" rows="4" placeholder="例（1/1 倍频程，16–8000 Hz）：
+54 58 52 45 40 36 33 30 28 26
+53 57 51 44 39 35 32 29 27 25"></textarea>
         <div class="btn-row">
           <button id="btnAvg" class="btn">平均并填入</button>
           <span id="avgMsg" class="aux-msg"></span>
@@ -79,10 +87,14 @@
     <section class="card notes">
       <h2>计算方法</h2>
       <ul>
-        <li><strong>A 声级</strong>：L<sub>A</sub> = 10·log₁₀ Σ 10<sup>(Lᵢ + Aᵢ)/10</sup>，Aᵢ 为 IEC 61672 倍频带 A 计权修正值。</li>
-        <li><strong>NC</strong>：ANSI/ASA S12.2 切线插值法，逐带插值曲线指数，取最大者为 NC 值（控制带标出其来源频带）。</li>
+        <li><strong>A 声级</strong>：L<sub>A</sub> = 10·log₁₀ Σ 10<sup>(Lᵢ + Aᵢ)/10</sup>，Aᵢ 由 IEC 61672 解析式计算，支持任意 1/3 倍频带中心频率。</li>
+        <li><strong>NC</strong>：ANSI/ASA S12.2-2019 切线插值法，逐带插值曲线指数取最大值（31.5–8000 Hz 共 9 带），控制带标出起决定作用的频带。</li>
+        <li><strong>NC 低频一致性</strong>：以 NC(SIL) 曲线为基准比较 31.5/63/125/250 Hz，超出 6–9 dB 提示可能引起严重不满，&gt;9 dB 提示很可能引起（S12.2 频谱不平衡法）。</li>
         <li><strong>NR</strong>：ISO/R 1996 切线插值法，同理取各带最大 NR 指数。</li>
-        <li><strong>RC Mark II</strong>：RC = round(均值(L₅₀₀, L₁₀₀₀, L₂₀₀₀))；低频带(≤500 Hz)超出参考曲线 &gt;5 dB 判 R，高频带(≥2000 Hz) &gt;3 dB 判 H，否则 N；31.5 Hz &gt;75 dB 标注振动风险。</li>
+        <li><strong>RC Mark II</strong>：RC = round(均值(L₅₀₀, L₁₀₀₀, L₂₀₀₀))，参考曲线为以 1 kHz 为锚点、−5 dB/倍频程的直线，16/31.5 Hz 取 max(RC+25, 55)；≤500 Hz 超 5 dB 判 R，1000–4000 Hz 超 3 dB 判 H，否则 N。</li>
+        <li><strong>QAI（品质评价指数）</strong>：SD<sub>低</sub>/SD<sub>中</sub>/SD<sub>高</sub> 分别为 16–63、125–500、1000–4000 Hz 三组偏差的能量平均，QAI = max(SD) − min(SD)，数值越小频谱越均衡（≤5 dB 通常视为均衡，为经验参考）。</li>
+        <li><strong>RV（振动/颤振风险）</strong>：16/31.5 Hz ≥ 65 dB 或 63 Hz ≥ 70 dB 判中等风险，≥ 75/75/80 dB 判明确风险（ANSI/ASA S12.2-2019）。</li>
+        <li><strong>1/3 倍频程</strong>：1/3 倍频程输入先按各带能量合成倍频程（每带取上下限 f/√2 ~ f·√2 内的 1/3 带求和），再按上述倍频程方法评价。</li>
         <li><strong>多测点能量平均</strong>：逐带 L̄ = 10·log₁₀( Σ10<sup>Lᵢ/10</sup> / n )，即功率平均（非算术平均）。</li>
         <li><strong>目标值对照</strong>：房间目标范围引自 ASHRAE Handbook HVAC Applications 常用 NC 推荐值，RC 取等价目标，判定以 NC 为主、RC 交叉参考。</li>
       </ul>
@@ -90,7 +102,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>数据来源：NC — Beranek/ASHRAE；NR — ISO/R 1996；A 计权 — IEC 61672；房间目标 — ASHRAE 常用推荐值。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
+    <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；房间目标 — ASHRAE 常用推荐值。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
   </footer>
 
   <script src="js/acoustics.js"></script>
