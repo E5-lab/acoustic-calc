@@ -1099,3 +1099,99 @@ select.btn {
   .dual-hero { grid-template-columns: 1fr; }
   .hero-box .hero-rate { font-size: 32px; }
 }
+
+/* ==========================================================================
+   声压级叠加模块：声源列表 / 相位滑块 / 子面板 / 占比条
+   ========================================================================== */
+
+.lv-panel { display: flex; flex-direction: column; gap: 18px; }
+.lv-panel[hidden] { display: none; }
+
+.card textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.card textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.src-list { display: flex; flex-direction: column; gap: 8px; }
+.src-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.6fr) 30px;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.src-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.6fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.src-row input {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+.src-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.src-row input.src-level,
+.src-row input.src-count { font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) {
+  .src-head { display: none; }
+  .src-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+.phase-range {
+  width: 100%;
+  margin: 4px 0 2px;
+  accent-color: var(--primary);
+}
+.phase-presets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.phase-presets .btn { padding: 6px 8px; font-size: 12.5px; }
+
+.share {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 72px;
+  height: 6px;
+  margin-left: 8px;
+  border-radius: 999px;
+  background: var(--card-soft);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.share-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--primary);
+}
+.detail-table.wide td.muted-cell { color: var(--faint); }
+
+/* 键值结果中的整行项与占比条布局 */
+.kv-result .kv.kv-wide { grid-column: 1 / -1; }
+.cell-share { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; width: 100%; }

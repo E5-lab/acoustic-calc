@@ -23,6 +23,7 @@
     <nav class="mainnav" aria-label="模块导航">
       <a href="#/" data-route="home">总览</a>
       <a href="#/noise" data-route="noise">噪声评价</a>
+      <a href="#/levels" data-route="levels">声压级叠加</a>
       <a href="#/perforation" data-route="perforation">穿孔率</a>
       <a href="#/absorber" data-route="absorber">吸声阻抗</a>
       <a href="#/rt60" data-route="rt60">混响时间</a>
@@ -42,6 +43,7 @@
       <p class="hero-sub">把常用的建筑与材料声学计算拆成独立模块，一个模块解决一类问题 —— 输入参数、给出结果，并附计算依据。所有运算在浏览器本地完成，数据不上传。</p>
       <div class="hero-actions">
         <a class="btn primary" href="#/noise">背景噪声评价</a>
+        <a class="btn" href="#/levels">声压级叠加</a>
         <a class="btn" href="#/perforation">穿孔率计算</a>
       </div>
       <div class="badge-row">
@@ -55,6 +57,24 @@
     <div class="section-head">
       <h2>功能模块</h2>
       <p class="hint">按类别划分，后续模块陆续上线</p>
+    </div>
+
+    <div class="module-group">
+      <div class="group-label">基础计算</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/levels">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 34h8M6 26h14M6 18h20M6 10h26" />
+              <path d="M34 30l8 8M42 30l-8 8" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声压级叠加计算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">多声源能量叠加、增量速算（差 0–20 dB 参考表）、相干叠加、背景噪声修正、频带谱叠加与距离衰减换算。</span>
+          </span>
+        </a>
+      </div>
     </div>
 
     <div class="module-group">
@@ -149,9 +169,9 @@
     <section class="card notes">
       <h2>使用说明</h2>
       <ul>
-        <li>顶部导航切换模块，也可用地址栏直接访问：<code>#/noise</code> 噪声评价、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障。</li>
-        <li>模块之间可配合使用：吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 250+ 条断言）。</li>
+        <li>顶部导航切换模块，也可用地址栏直接访问：<code>#/noise</code> 噪声评价、<code>#/levels</code> 声压级叠加、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障。</li>
+        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 390+ 条断言）。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -831,11 +851,294 @@
       </ul>
     </section>
   </section>
+  <!-- ====================== 声压级叠加计算 ====================== -->
+  <section class="view" id="view-levels" data-view="levels">
+    <div class="page-head">
+      <h2>声压级叠加计算</h2>
+      <p class="hint">dB 不能直接相加 —— 能量叠加、增量速算、相干叠加、背景修正与常用换算</p>
+    </div>
+
+    <div class="mode-row">
+      <span class="mode-label">工具</span>
+      <button class="mode-btn active" data-panel="sum" type="button">多声源叠加</button>
+      <button class="mode-btn" data-panel="method" type="button">叠加方法与相干</button>
+      <button class="mode-btn" data-panel="convert" type="button">修正与换算</button>
+    </div>
+
+    <!-- ------------------------- 面板 1：多声源叠加 ------------------------- -->
+    <div class="lv-panel" data-panel="sum">
+      <div class="split">
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">1</span> 声源列表 <span class="hint">(同类设备可填台数)</span></h3>
+            <div class="src-head">
+              <span>声源名称</span><span>声压级 dB</span><span>台数</span><span></span>
+            </div>
+            <div id="lvSrcList" class="src-list"></div>
+            <div class="btn-row">
+              <button id="lvAdd" class="btn">添加声源</button>
+              <span class="sample-wrap">
+                <select id="lvPreset" class="btn" aria-label="载入示例">
+                  <option value="">载入示例…</option>
+                </select>
+              </span>
+              <button id="lvClear" class="btn ghost">清空</button>
+            </div>
+            <div id="lvMsg" class="callout-row"></div>
+          </section>
+
+          <section class="card">
+            <h3><span class="step">2</span> 等声级声源叠加 <span class="hint">(n 个相同声级)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvEqLevel">单台声级 <span class="unit-tag">dB</span></label>
+                <input id="lvEqLevel" type="number" step="0.1" value="75" />
+              </div>
+              <div class="field">
+                <label for="lvEqCount">台数 n <span class="unit-tag">个</span></label>
+                <input id="lvEqCount" type="number" step="1" min="1" value="4" />
+              </div>
+            </div>
+            <div id="lvEqResult" class="kv-result"></div>
+          </section>
+
+          <section class="card">
+            <h3><span class="step">3</span> 倍频带谱叠加 <span class="hint">(63–8000 Hz 共 8 带，逗号或空格分隔)</span></h3>
+            <div class="field">
+              <label for="lvSpecA">设备 A 频谱 <span class="unit-tag">dB</span></label>
+              <textarea id="lvSpecA" rows="2"></textarea>
+            </div>
+            <div class="field">
+              <label for="lvSpecB">设备 B 频谱 <span class="unit-tag">dB</span></label>
+              <textarea id="lvSpecB" rows="2"></textarea>
+            </div>
+            <div class="btn-row">
+              <button id="lvSpecCalc" class="btn primary">逐带叠加</button>
+              <span id="lvSpecMsg" class="aux-msg"></span>
+            </div>
+            <div id="lvSpecTable" class="table-wrap"></div>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card result-hero">
+            <div class="rc-title">叠加后总声级</div>
+            <div class="hero-rate"><span id="lvTotal">—</span><span class="unit">dB</span></div>
+            <div class="sub" id="lvVerdict"></div>
+            <div class="stat-grid" id="lvStats"></div>
+            <div class="btn-row toolbar">
+              <button id="lvCopy" class="btn">复制摘要</button>
+              <button id="lvCsv" class="btn">导出 CSV</button>
+              <span id="lvCopyMsg" class="aux-msg"></span>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>各声源贡献分析</h3>
+            <div id="lvContrib" class="table-wrap"></div>
+          </section>
+
+          <section class="card">
+            <h3>达标反算 <span class="hint">(总级降到目标值所需降噪量)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvTarget">目标声级 <span class="unit-tag">dB</span></label>
+                <input id="lvTarget" type="number" step="0.5" value="88" />
+              </div>
+            </div>
+            <p class="inline-note">可判断「该先降哪台设备」：给出各声源分别需要降低的 dB，以及仅降某一声源能否达标。</p>
+            <div id="lvTargetResult" class="kv-result"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- --------------------- 面板 2：叠加方法与相干 --------------------- -->
+    <div class="lv-panel" data-panel="method" hidden>
+      <div class="split">
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">1</span> 两声级叠加（增量法）</h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvPairL1">声级 L₁ <span class="unit-tag">dB</span></label>
+                <input id="lvPairL1" type="number" step="0.1" value="80" />
+              </div>
+              <div class="field">
+                <label for="lvPairL2">声级 L₂ <span class="unit-tag">dB</span></label>
+                <input id="lvPairL2" type="number" step="0.1" value="74" />
+              </div>
+            </div>
+            <div id="lvPairResult" class="kv-result"></div>
+            <div class="canvas-wrap"><canvas id="lvChart" height="230"></canvas></div>
+            <div class="legend">
+              <span><i style="background:#2563eb"></i>增加值 ΔL（dB）</span>
+              <span><i style="background:#f97316"></i>当前差值位置</span>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3><span class="step">2</span> 相干叠加 <span class="hint">(同频、给定相位差)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvCohL1">声级 L₁ <span class="unit-tag">dB</span></label>
+                <input id="lvCohL1" type="number" step="0.1" value="80" />
+              </div>
+              <div class="field">
+                <label for="lvCohL2">声级 L₂ <span class="unit-tag">dB</span></label>
+                <input id="lvCohL2" type="number" step="0.1" value="80" />
+              </div>
+              <div class="field">
+                <label for="lvCohPhase">相位差 φ <span class="unit-tag">°</span></label>
+                <input id="lvCohPhase" type="number" step="5" value="0" />
+              </div>
+            </div>
+            <input id="lvCohRange" type="range" min="0" max="360" step="5" value="0" class="phase-range" aria-label="相位差滑块" />
+            <div class="field-row compact phase-presets">
+              <button class="btn ghost" data-phase="0" type="button">同相 0°</button>
+              <button class="btn ghost" data-phase="90" type="button">正交 90°</button>
+              <button class="btn ghost" data-phase="180" type="button">反相 180°</button>
+            </div>
+            <div id="lvCohResult" class="kv-result"></div>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card">
+            <h3>两声级叠加增量速查表</h3>
+            <div id="lvIncTable" class="table-wrap"></div>
+          </section>
+
+          <section class="card">
+            <h3>等声级声源叠加增量</h3>
+            <div id="lvEqTable" class="table-wrap"></div>
+          </section>
+
+          <section class="card notes">
+            <h3>为什么 dB 不能直接相加</h3>
+            <ul>
+              <li><strong>能量叠加</strong>：声压级是对数量，叠加要先把各声级换算为声压平方（能量）再相加，L = 10·lg Σ10^(Li/10)。</li>
+              <li><strong>两个等声级</strong>：叠加只增加 3 dB；<strong>三个</strong>增加 4.8 dB；<strong>四个</strong>增加 6 dB（即声级相同、数量加倍只多 3 dB）。</li>
+              <li><strong>增量法</strong>：两声级相差越大，弱的一方贡献越小。相差 10 dB 时只增加 0.4 dB，相差 20 dB 时几乎可忽略。</li>
+              <li><strong>相干叠加</strong>：同频且相位固定时声压按矢量相加，等强同相可增加 6 dB；反相则相互抵消，这是主动降噪的原理。</li>
+              <li><strong>结论</strong>：治理噪声时，总是先降「最强的那个声源」最有效；当总级中有多个等强声源时，逐个降低的收益会明显变小。</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------ 面板 3：修正与换算 ------------------------ -->
+    <div class="lv-panel" data-panel="convert" hidden>
+      <div class="split even">
+        <div class="split-col">
+          <section class="card">
+            <h3>背景噪声修正 <span class="hint">(从实测总级中扣除背景)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvBgTotal">实测总声级 <span class="unit-tag">dB</span></label>
+                <input id="lvBgTotal" type="number" step="0.1" value="75" />
+              </div>
+              <div class="field">
+                <label for="lvBgLevel">背景声级 <span class="unit-tag">dB</span></label>
+                <input id="lvBgLevel" type="number" step="0.1" value="70" />
+              </div>
+            </div>
+            <div id="lvBgResult" class="kv-result"></div>
+            <div id="lvBgMsg" class="callout-row"></div>
+          </section>
+
+          <section class="card">
+            <h3>声压级 ↔ 声压</h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvSplIn">声压级 <span class="unit-tag">dB</span></label>
+                <input id="lvSplIn" type="number" step="0.1" value="94" />
+              </div>
+              <div class="field">
+                <label for="lvPaIn">声压 <span class="unit-tag">Pa</span></label>
+                <input id="lvPaIn" type="number" step="0.0001" value="1" />
+              </div>
+            </div>
+            <div id="lvSplResult" class="kv-result"></div>
+            <div id="lvPaResult" class="kv-result"></div>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card">
+            <h3>距离衰减 <span class="hint">(自由场)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvR1">起始距离 r₁ <span class="unit-tag">m</span></label>
+                <input id="lvR1" type="number" step="0.5" min="0.1" value="1" />
+              </div>
+              <div class="field">
+                <label for="lvR2">目标距离 r₂ <span class="unit-tag">m</span></label>
+                <input id="lvR2" type="number" step="0.5" min="0.1" value="10" />
+              </div>
+              <div class="field">
+                <label for="lvDistType">声源类型</label>
+                <select id="lvDistType">
+                  <option value="point">点声源（6 dB/倍距）</option>
+                  <option value="line">线声源（3 dB/倍距）</option>
+                </select>
+              </div>
+            </div>
+            <div id="lvDistResult" class="kv-result"></div>
+          </section>
+
+          <section class="card">
+            <h3>声功率级 ↔ 声压级 <span class="hint">(点声源)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="lvLw">声功率级 L<sub>W</sub> <span class="unit-tag">dB</span></label>
+                <input id="lvLw" type="number" step="0.5" value="100" />
+              </div>
+              <div class="field">
+                <label for="lvLp">声压级 L<sub>p</sub> <span class="unit-tag">dB</span></label>
+                <input id="lvLp" type="number" step="0.5" value="72" />
+              </div>
+              <div class="field">
+                <label for="lvR3">距离 r <span class="unit-tag">m</span></label>
+                <input id="lvR3" type="number" step="0.5" min="0.1" value="10" />
+              </div>
+              <div class="field">
+                <label for="lvQ">指向性因数 Q</label>
+                <select id="lvQ">
+                  <option value="1">1 · 自由场（悬空）</option>
+                  <option value="2" selected>2 · 半自由场（地面）</option>
+                  <option value="4">4 · 1/4 空间（墙角）</option>
+                  <option value="8">8 · 1/8 空间（三面交角）</option>
+                </select>
+              </div>
+            </div>
+            <div id="lvPwResult" class="kv-result"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>能量叠加（不相干声源）</strong>：L = 10·lg Σ10^(Li/10)。两台互不相干的设备（不同频率成分、随机相位）按声压平方相加，不能把 dB 直接相加。</li>
+        <li><strong>增量法</strong>：设两声级差 Δ = |L₁ − L₂|，则增加量 ΔL = 10·lg(1 + 10^(−Δ/10))。Δ = 0 → +3.0 dB，Δ = 3 → +1.8 dB，Δ = 10 → +0.4 dB，Δ ≥ 15 → 可忽略。</li>
+        <li><strong>相干叠加</strong>：同频且有固定相位差 φ 时，L = 10·lg[10^(L₁/10) + 10^(L₂/10) + 2·10^((L₁+L₂)/20)·cos φ]。φ = 0 同相（等强时 +6 dB），φ = 90° 退化为能量叠加，φ = 180° 反相（等强时完全抵消）。</li>
+        <li><strong>多声源叠加</strong>：各声源按能量相加；某声源的能量占比 = 10^(Li/10)·n / Σ，撤除该声源后总级的下降量反映其重要性 —— 占比小于 10%（即撤除后下降不足 0.5 dB）的声源基本可忽略。</li>
+        <li><strong>达标反算</strong>：把目标值换算为能量后减去其余声源的能量，得到该声源允许的剩余能量，再反算需降低的 dB；若其余声源合计已超过目标，则仅降此声源无法达标。</li>
+        <li><strong>背景噪声修正</strong>：L源 = 10·lg(10^(L总/10) − 10^(L背景/10))。实测总级与背景级相差 &lt; 3 dB 时修正结果偏差过大，应避免；相差 ≥ 10 dB 时背景影响可忽略。工程上常用取整修正表（差 3 → 扣 3 dB，差 4–5 → 扣 2 dB，差 6–9 → 扣 1 dB，≥ 10 → 不修正）。</li>
+        <li><strong>距离衰减</strong>：点声源（自由场）按 6 dB/倍距（ΔL = 20·lg(r₂/r₁)）；线声源（如长车流、管道）按 3 dB/倍距（ΔL = 10·lg(r₂/r₁)）。实测中因地面反射与空气吸收，衰减量通常介于两者之间。</li>
+        <li><strong>声功率级换算</strong>：点声源 Lp = Lw + 10·lg(Q/4π) − 20·lg r，Q = 1（自由场，−11 dB）、2（半自由场，−8 dB）、4（墙角，−5 dB）、8（三面交角，−2 dB）。</li>
+        <li><strong>注意</strong>：本模块为能量（功率）意义上的叠加，适用于稳态、互不相干的声源；若声源同频且相位关系稳定（如单一低频纯音、驻波场），应改用相干叠加。</li>
+      </ul>
+    </section>
+  </section>
 
 </main>
 
 <footer class="site-footer">
-  <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型。</p>
+  <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型；计权隔声量 Rw — GB/T 50121-2005；声压级叠加 — 声能量与相干叠加基本公式。</p>
   <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
 </footer>
 
@@ -846,12 +1149,14 @@
 <script src="js/room.js"></script>
 <script src="js/insulation.js"></script>
 <script src="js/barrier.js"></script>
+<script src="js/levels.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
 <script src="js/view-rt60.js"></script>
 <script src="js/view-stc.js"></script>
 <script src="js/view-barrier.js"></script>
+<script src="js/view-levels.js"></script>
 <script src="js/router.js"></script>
 </body>
 </html>

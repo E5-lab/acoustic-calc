@@ -3,6 +3,7 @@
  * 路由表：
  *   #/              总览
  *   #/noise         背景噪声评价（1/1 倍频程）        #third 兼容 1/3 倍频程
+ *   #/levels        声压级叠加计算
  *   #/perforation   穿孔率计算
  *   #/absorber      多孔吸声材料阻抗
  *   #/rt60          室内混响时间
@@ -15,6 +16,7 @@
   var VIEWS = {
     home: 'view-home',
     noise: 'view-noise',
+    levels: 'view-levels',
     perforation: 'view-perforation',
     absorber: 'view-absorber',
     rt60: 'view-rt60',
@@ -25,6 +27,7 @@
   var TITLES = {
     home: '声学计算工具箱 · Acoustic Toolbox',
     noise: '背景噪声评价 · 声学计算工具箱',
+    levels: '声压级叠加计算 · 声学计算工具箱',
     perforation: '穿孔率计算 · 声学计算工具箱',
     absorber: '多孔吸声材料阻抗 · 声学计算工具箱',
     rt60: '室内混响时间 RT60 · 声学计算工具箱',
@@ -35,6 +38,7 @@
   // 视图挂载器（首次进入时初始化，之后仅刷新）
   var MOUNTS = [
     { route: 'noise', get: function () { return window.NoiseView; } },
+    { route: 'levels', get: function () { return window.LevelsView; } },
     { route: 'perforation', get: function () { return window.PerforationView; } },
     { route: 'absorber', get: function () { return window.AbsorberView; } },
     { route: 'rt60', get: function () { return window.Rt60View; } },
