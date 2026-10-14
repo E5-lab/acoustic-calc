@@ -9,6 +9,7 @@
  *   #/rt60          室内混响时间
  *   #/stc           墙体隔声量
  *   #/barrier       声屏障衰减
+ *   #/vibration     弹簧减振器隔振效率
  */
 (function () {
   'use strict';
@@ -21,7 +22,8 @@
     absorber: 'view-absorber',
     rt60: 'view-rt60',
     stc: 'view-stc',
-    barrier: 'view-barrier'
+    barrier: 'view-barrier',
+    vibration: 'view-vibration'
   };
 
   var TITLES = {
@@ -32,7 +34,8 @@
     absorber: '多孔吸声材料阻抗 · 声学计算工具箱',
     rt60: '室内混响时间 RT60 · 声学计算工具箱',
     stc: '墙体隔声量 STC · 声学计算工具箱',
-    barrier: '声屏障衰减计算 · 声学计算工具箱'
+    barrier: '声屏障衰减计算 · 声学计算工具箱',
+    vibration: '弹簧减振（隔振效率计算书） · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -43,7 +46,8 @@
     { route: 'absorber', get: function () { return window.AbsorberView; } },
     { route: 'rt60', get: function () { return window.Rt60View; } },
     { route: 'stc', get: function () { return window.StcView; } },
-    { route: 'barrier', get: function () { return window.BarrierView; } }
+    { route: 'barrier', get: function () { return window.BarrierView; } },
+    { route: 'vibration', get: function () { return window.VibrationView; } }
   ];
 
   function parse() {
