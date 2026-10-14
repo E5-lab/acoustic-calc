@@ -887,3 +887,144 @@ select.btn {
   .card { padding: 16px; }
   .hero-rate { font-size: 38px; }
 }
+
+/* ==========================================================================
+   扩展模块：数据表格 / 表面行 / 标签页 / 图示
+   ========================================================================== */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+.detail-table.wide {
+  font-size: 12.5px;
+  min-width: 420px;
+}
+.detail-table.wide th,
+.detail-table.wide td {
+  padding: 6px 10px;
+  text-align: right;
+}
+.detail-table.wide th:first-child,
+.detail-table.wide td:first-child { text-align: left; }
+.detail-table.wide tbody tr:nth-child(odd) { background: var(--card-soft); }
+.detail-table.wide td.ok { color: var(--ok); }
+.detail-table.wide td.warn { color: var(--warn); }
+.detail-table.wide td.bad { color: var(--danger); font-weight: 600; }
+.detail-table caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 11.5px;
+  color: var(--faint);
+  padding-bottom: 6px;
+}
+
+/* 表面/材料行 */
+.mat-list { display: flex; flex-direction: column; gap: 8px; }
+.mat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.7fr) minmax(0, 1.3fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.mat-row input,
+.mat-row select {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+.mat-row input:focus,
+.mat-row select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.mat-head {
+  font-size: 11.5px;
+  color: var(--faint);
+  letter-spacing: 0.02em;
+}
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.icon-btn:hover { color: var(--danger); border-color: var(--danger); }
+@media (max-width: 720px) {
+  .mat-row { grid-template-columns: 1fr 1fr; }
+  .mat-head { display: none; }
+}
+
+/* 目标区间条 */
+.range-bar {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--card-soft);
+  border: 1px solid var(--border);
+  margin: 10px 0 6px;
+}
+.range-bar .band {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--ok) 35%, transparent);
+  border-radius: 999px;
+}
+.range-bar .mark {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+.range-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* 图例 */
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* 名词条 */
+.kv .k small { color: var(--faint); }
+
+/* 输入组内的说明 */
+.field .hint { font-size: 11.5px; }
+
+/* STC 16 带输入网格 */
+.band-grid.stc16 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+@media (max-width: 760px) {
+  .band-grid.stc16 { grid-template-columns: repeat(auto-fit, minmax(82px, 1fr)); }
+}

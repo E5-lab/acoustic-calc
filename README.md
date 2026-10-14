@@ -32,24 +32,66 @@
 - **板材开孔估算**：按板面尺寸折算总孔数与总开孔面积。
 - **导出**：复制文本摘要、导出 CSV。
 
+### ③ 多孔吸声材料阻抗（`#/absorber`）
+
+- **Delany–Bazley 模型**：由流阻率 σ 与频率推算特征阻抗 Zc/(ρ₀c₀) 与复波数 k/k₀（Bies & Hansen 系数）。
+- **层状传递**：刚性背衬 Zs = Zc·coth(γd)；带空腔时按空气层阻抗做层状介质传递。
+- **倍频带法向吸声系数**：63–4000 Hz 共 7 带，附 NRC（250/500/1k/2k 均值，0.05 取整）与适用性判定（0.01 ≤ X ≤ 1）。
+- **流阻率预设**：9 类常用多孔材料（玻璃棉/岩棉/聚酯纤维/三聚氰胺泡沫等）。
+- **厚度建议**：按目标频率 1/4 波长条件反算层厚。
+
+### ④ 室内混响时间 RT60（`#/rt60`）
+
+- **Sabine / Eyring**：125–4000 Hz 六带逐带计算，两式对照。
+- **材料吸声系数库**：内置 20 类常用表面构造的倍频带吸声系数，支持自定义系数。
+- **表面归集**：列出部分表面，其余自动按所选材料计入；空气吸收按 ISO 9613-1 典型值计入（可关闭）。
+- **用途判定**：13 类房间用途的中频推荐混响范围，达标判定 + 区间条可视化。
+- **改进建议**：反算达标所需增加的吸声量与等效吸声面积。
+
+### ⑤ 墙体隔声量 STC（`#/stc`）
+
+- **质量定律**：R = 20lg(mf) − 48，由材料密度×厚度自动算面密度（12 类材料预设）。
+- **STC 评级**：ASTM E413，125–4000 Hz 共 16 个 1/3 倍频带标准轮廓逐 dB 拟合（缺量之和 ≤ 32，单带 ≤ 8）。
+- **三种输入**：单层板 / 双层构件经验估算 / 直接填入 16 带实测值。
+- **吻合频率提示**：f_c = c₀²/(1.8·c_L·t)，落在评价范围内时提示实测 STC 会低于估算。
+- **逐带明细**：隔声量、轮廓线与缺量（超限标红）。
+
+### ⑥ 声屏障衰减（`#/barrier`）
+
+- **菲涅尔数法**：由声源/屏障/接收点几何计算程差 δ 与 N = 2fδ/c₀。
+- **双公式**：Maekawa 与 Kurze–Anderson，可切换；默认 24 dB 实用上限（可调）。
+- **声源谱库**：9 类典型声源（道路交通/轨道/施工/风机/水泵/变压器等），A 计权能量叠加得插入损失。
+- **断面示意图**：Canvas 按尺寸绘制声源、屏障、接收点、视线与绕射路径，标注程差与菲涅尔数。
+- **视线校核与高度反算**：屏障顶低于视线时直接提示无效；给定目标插入损失反算所需屏障高度。
+
 ### 计算内核与测试
 
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
-- `public/js/perforation.js` — 穿孔率内核（UMD）
-- `node tests/engine.test.js` 与 `node tests/perforation.test.js` 共 109 项断言全部通过
+- `public/js/perforation.js`、`absorber.js`、`room.js`、`insulation.js`、`barrier.js` — 各模块计算内核（均为 UMD）
+- `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
+- `node tests/*.test.js` 共 6 个测试文件、**251 项断言全部通过**；另有 60 项浏览器端交互验证（CDP 自动化）
 
 ## 目录结构
 
 ```
 .
 ├─ public/                     # 站点根目录（Cloudflare Worker 静态资源目录）
-│  ├─ index.html               # 应用外壳：顶栏导航 + 三个视图（home / noise / perforation）
+│  ├─ index.html               # 应用外壳：顶栏导航 + 七个视图
 │  ├─ css/styles.css           # 设计系统（亮/暗色自适应）
 │  └─ js/
 │     ├─ acoustics.js          # 噪声评价内核
 │     ├─ perforation.js        # 穿孔率内核
+│     ├─ absorber.js           # 多孔吸声内核（Delany–Bazley）
+│     ├─ room.js               # 混响时间内核（Sabine/Eyring + 材料库）
+│     ├─ insulation.js         # 隔声内核（质量定律 + ASTM E413 STC）
+│     ├─ barrier.js            # 声屏障内核（菲涅尔数法）
+│     ├─ chart-util.js         # 轻量 Canvas 图表工具
 │     ├─ app.js                # 噪声评价视图
-│     ├─ perforation-view.js   # 穿孔率视图（含 Canvas 阵列示意图）
+│     ├─ perforation-view.js   # 穿孔率视图（阵列示意图）
+│     ├─ view-absorber.js      # 吸声阻抗视图
+│     ├─ view-rt60.js          # 混响时间视图
+│     ├─ view-stc.js           # 墙体隔声视图
+│     ├─ view-barrier.js       # 声屏障视图（断面示意图）
 │     └─ router.js             # 哈希路由与视图挂载
 ├─ tests/                      # 内核单元测试（Node 运行）
 ├─ wrangler.toml               # Cloudflare Worker 配置
@@ -69,6 +111,10 @@ npx serve public
 ```bash
 node tests/engine.test.js
 node tests/perforation.test.js
+node tests/absorber.test.js
+node tests/room.test.js
+node tests/insulation.test.js
+node tests/barrier.test.js
 ```
 
 ## 计算方法与公式
@@ -79,6 +125,11 @@ node tests/perforation.test.js
 | NC | 逐带对 NC 曲线表插值求指数，取各带最大值（ANSI/ASA S12.2 切线法） |
 | NR | 逐带对 NR 曲线表插值求指数，取各带最大值（ISO/R 1996） |
 | RC | RC = round(mean(L₅₀₀, L₁₀₀₀, L₂₀₀₀))；低频带(≤500 Hz)超参考曲线 >5 dB → R，高频带(≥2000 Hz) >3 dB → H，否则 N |
+| 穿孔率 | σ = πd²/4 ÷ 单元面积（正方形 P²、45° 菱形 P²/2、矩形 P1·P2/2、等边三角形 (√3/2)P²） |
+| 吸声系数 | Delany–Bazley：Zc/(ρ₀c₀) = 1+0.0571X⁻⁰·⁷⁵⁴−j0.087X⁻⁰·⁷³²，k/k₀ = 1+0.0978X⁻⁰·⁷⁰⁰−j0.189X⁻⁰·⁵⁹⁵；α = 1−|(Zs−ρ₀c₀)/(Zs+ρ₀c₀)|² |
+| 混响时间 | Sabine 0.161V/A；Eyring 0.161V/(−S·ln(1−ᾱ)+4mV)；A = ΣαᵢSᵢ+4mV |
+| 隔声量 | 质量定律 R = 20lg(mf)−48；STC 按 ASTM E413 16 带轮廓拟合 |
+| 声屏障 | N = 2fδ/c₀；Kurze–Anderson ΔL = 10lg(3+20N)；Maekawa ΔL = 5+20lg(√(2πN)/tanh√(2πN)) |
 
 ## 数据来源与精度说明
 
@@ -125,6 +176,7 @@ wrangler deploy          # 读取 wrangler.toml，将 public/ 作为资源发布
 - [x] ~~支持多测点能量平均、结果导出（CSV/摘要复制）。~~（v1.1 已实现）
 - [x] ~~RC 各频带超出参考曲线明细。~~（v1.1 已实现：RC 结果卡内嵌明细表）
 - [x] ~~把站点重构为模块化多视图（参考主流工具站审美），上线穿孔率计算模块。~~（v1.3：顶栏导航 + 总览/噪声评价/穿孔率三视图，哈希路由）
+- [x] ~~补全「开发中」模块：多孔吸声材料阻抗、混响时间 RT60、墙体隔声 STC、声屏障衰减。~~（v1.4：四个模块全部上线，各自含内核+视图+测试）
 - [ ] RNC（Room Noise Criteria，S12.2-2019）：低频波动/喘振型 HVAC 噪声评价，可作为下一步。
 - [ ] NC 16 Hz 曲线列为线性推算值，取得标准 Table 1 完整低频数据后可替换。
 - [ ] 测量不确定度与多次测量统计（S12.2 Annex A/B 思路）。

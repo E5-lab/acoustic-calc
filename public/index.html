@@ -22,8 +22,12 @@
     </a>
     <nav class="mainnav" aria-label="模块导航">
       <a href="#/" data-route="home">总览</a>
-      <a href="#/noise" data-route="noise">背景噪声评价</a>
-      <a href="#/perforation" data-route="perforation">穿孔率计算</a>
+      <a href="#/noise" data-route="noise">噪声评价</a>
+      <a href="#/perforation" data-route="perforation">穿孔率</a>
+      <a href="#/absorber" data-route="absorber">吸声阻抗</a>
+      <a href="#/rt60" data-route="rt60">混响时间</a>
+      <a href="#/stc" data-route="stc">墙体隔声</a>
+      <a href="#/barrier" data-route="barrier">声屏障</a>
     </nav>
   </div>
 </header>
@@ -69,7 +73,7 @@
             <span class="mc-desc">正方形 / 45° 菱形 / 矩形错排 / 等边三角形阵列的穿孔率，含反算中心距、加工校核与微穿孔板共振估算。</span>
           </span>
         </a>
-        <div class="module-card soon" aria-disabled="true">
+        <a class="module-card" href="#/absorber">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 32c6-2 8-14 14-14s6 10 10 10 6-6 10-8" />
@@ -77,10 +81,10 @@
             </svg>
           </span>
           <span class="mc-body">
-            <span class="mc-title">多孔吸声材料阻抗 <span class="mc-tag">开发中</span></span>
-            <span class="mc-desc">Delany–Bazley 经验模型、流阻率拟合与吸声系数推算。</span>
+            <span class="mc-title">多孔吸声材料阻抗 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">Delany–Bazley 模型由流阻率推算特征阻抗、表面阻抗与倍频带法向吸声系数，含 NRC、空腔增益与厚度建议。</span>
           </span>
-        </div>
+        </a>
       </div>
     </div>
 
@@ -98,7 +102,7 @@
             <span class="mc-desc">A 声级 / NC / NR / RC Mark II 倍频带评价，支持 1/1 与 1/3 倍频程、多测点能量平均、房间目标值对照。</span>
           </span>
         </a>
-        <div class="module-card soon" aria-disabled="true">
+        <a class="module-card" href="#/rt60">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="6" y="10" width="36" height="28" rx="3" />
@@ -106,28 +110,28 @@
             </svg>
           </span>
           <span class="mc-body">
-            <span class="mc-title">室内混响时间 RT60 <span class="mc-tag">开发中</span></span>
-            <span class="mc-desc">Sabine / Eyring 计算、伊林-诺里斯修正与吸声量统计。</span>
+            <span class="mc-title">室内混响时间 RT60 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">Sabine / Eyring 逐频带计算，内置 20 类常用材料吸声系数库与空气吸收修正，附房间用途推荐值判定与改进建议。</span>
           </span>
-        </div>
-        <div class="module-card soon" aria-disabled="true">
+        </a>
+        <a class="module-card" href="#/stc">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M8 12h32M8 20h32M8 28h32M8 36h32" />
             </svg>
           </span>
           <span class="mc-body">
-            <span class="mc-title">墙体隔声量 STC <span class="mc-tag">开发中</span></span>
-            <span class="mc-desc">质量定律估算、复合墙体与缝隙漏声修正。</span>
+            <span class="mc-title">墙体隔声量 STC <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">质量定律估算或直接输入实测隔声量，按 ASTM E413 完成 16 带 STC 评级，附双层构件估算与吻合频率提示。</span>
           </span>
-        </div>
+        </a>
       </div>
     </div>
 
     <div class="module-group">
       <div class="group-label">环境噪声控制</div>
       <div class="module-grid">
-        <div class="module-card soon" aria-disabled="true">
+        <a class="module-card" href="#/barrier">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M8 38V18h6v20zM20 38V10h6v28zM32 38V22h6v16z" />
@@ -135,18 +139,19 @@
             </svg>
           </span>
           <span class="mc-body">
-            <span class="mc-title">声屏障衰减计算 <span class="mc-tag">开发中</span></span>
-            <span class="mc-desc">无限长屏障绕射衰减、菲涅尔数法与插入损失估算。</span>
+            <span class="mc-title">声屏障衰减计算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">菲涅尔数法逐频带绕射衰减（Maekawa / Kurze–Anderson），叠加声源谱给出 A 计权插入损失，附断面示意与所需高度反算。</span>
           </span>
-        </div>
+        </a>
       </div>
     </div>
 
     <section class="card notes">
       <h2>使用说明</h2>
       <ul>
-        <li>顶部导航切换模块，也可用地址栏直接访问：<code>#/noise</code>（背景噪声评价）、<code>#/perforation</code>（穿孔率计算）。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；内核函数有单元测试覆盖（<code>tests/</code>，Node 运行）。</li>
+        <li>顶部导航切换模块，也可用地址栏直接访问：<code>#/noise</code> 噪声评价、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障。</li>
+        <li>模块之间可配合使用：吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 250+ 条断言）。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -373,6 +378,424 @@
     </section>
   </section>
 
+  <!-- ====================== 多孔吸声材料阻抗 ====================== -->
+  <section class="view" id="view-absorber" data-view="absorber">
+    <div class="page-head">
+      <h2>多孔吸声材料阻抗</h2>
+      <p class="hint">由流阻率推算特征阻抗与表面阻抗，得到倍频带法向吸声系数（Delany–Bazley 模型）</p>
+    </div>
+
+    <div class="split">
+      <div class="split-col">
+        <section class="card">
+          <h3><span class="step">1</span> 材料参数</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="absPreset">材料预设</label>
+              <select id="absPreset"></select>
+            </div>
+            <div class="field">
+              <label for="absSigma">流阻率 σ <span class="unit-tag">Pa·s/m²（rayl/m）</span></label>
+              <input id="absSigma" type="number" step="500" min="200" value="9000" />
+            </div>
+            <div class="field">
+              <label for="absThick">材料厚度 d <span class="unit-tag">mm</span></label>
+              <input id="absThick" type="number" step="5" min="1" value="50" />
+            </div>
+            <div class="field">
+              <label for="absGap">背后空腔 D <span class="unit-tag">mm（0 = 贴刚性壁）</span></label>
+              <input id="absGap" type="number" step="10" min="0" value="0" />
+            </div>
+          </div>
+          <div id="absMsg" class="callout-row"></div>
+        </section>
+
+        <section class="card">
+          <h3>吸声系数频率特性</h3>
+          <div class="canvas-wrap"><canvas id="absChart" height="300"></canvas></div>
+          <div class="legend">
+            <span><i style="background:#2563eb"></i>法向入射吸声系数 α</span>
+            <span><i style="background:#f97316"></i>NRC 中频均值</span>
+          </div>
+        </section>
+      </div>
+
+      <div class="split-col">
+        <section class="card result-hero">
+          <div class="rc-title">降噪系数 NRC</div>
+          <div class="hero-rate" id="absNrc">—</div>
+          <div class="sub" id="absVerdict"></div>
+          <div class="stat-grid" id="absStats"></div>
+          <div class="btn-row toolbar">
+            <button id="absCopy" class="btn">复制摘要</button>
+            <button id="absCsv" class="btn">导出 CSV</button>
+            <span id="absCopyMsg" class="aux-msg"></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>倍频带明细 <span class="hint">(阻抗已对 ρ₀c₀ 归一化)</span></h3>
+          <div id="absTable" class="table-wrap"></div>
+        </section>
+
+        <section class="card">
+          <h3>厚度建议 <span class="hint">(按目标频率的 1/4 波长)</span></h3>
+          <div class="field-row compact">
+            <div class="field">
+              <label for="absTargetF">目标吸声频率 <span class="unit-tag">Hz</span></label>
+              <input id="absTargetF" type="number" step="10" min="50" value="500" />
+            </div>
+            <div class="field field-auto">
+              <label>&nbsp;</label>
+              <button id="absRecommend" class="btn">给出建议厚度</button>
+            </div>
+          </div>
+          <div id="absRecResult" class="kv-result"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>参数</strong>：X = ρ₀f / σ，σ 为流阻率（Pa·s/m²），空气密度 ρ₀ = 1.2 kg/m³、声速 c₀ = 343 m/s。</li>
+        <li><strong>特征阻抗</strong>：Zc/(ρ₀c₀) = 1 + 0.0571X<sup>−0.754</sup> − j0.087X<sup>−0.732</sup>；<strong>复波数</strong>：k/k₀ = 1 + 0.0978X<sup>−0.700</sup> − j0.189X<sup>−0.595</sup>（Delany–Bazley 经验模型，Bies &amp; Hansen 系数）。</li>
+        <li><strong>表面阻抗</strong>：刚性背衬 Zs = Zc·coth(γd)；带空腔时按空气层阻抗 Z<sub>gap</sub> = −jρ₀c₀cot(k₀D) 做层状介质传递，γ = jk。</li>
+        <li><strong>吸声系数</strong>：法向入射 α = 1 − |(Zs − ρ₀c₀)/(Zs + ρ₀c₀)|²，即阻抗管（驻波管）测得的量；扩散场（混响室）吸声系数通常高于此值。</li>
+        <li><strong>NRC</strong>：250 / 500 / 1000 / 2000 Hz 四个倍频带吸声系数的算术平均，按 0.05 取整。</li>
+        <li><strong>适用范围</strong>：0.01 ≤ X ≤ 1。超出范围时结果仅供数量级参考（本页会给出提示）。</li>
+        <li><strong>厚度建议</strong>：由 βd + k₀D ≈ π/2 的条件反解层厚 d，即让目标频率大致落在 1/4 波长共振点附近。实际构造还需考虑护面层、流阻与安装方式。</li>
+        <li><strong>注意</strong>：本模型只描述多孔材料本身，未计入护面（穿孔板/薄膜）与龙骨的影响；带护面层的复合构造请结合穿孔率模块一起评估。</li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ====================== 室内混响时间 RT60 ====================== -->
+  <section class="view" id="view-rt60" data-view="rt60">
+    <div class="page-head">
+      <h2>室内混响时间 RT60</h2>
+      <p class="hint">Sabine / Eyring 逐频带计算，内置常用材料吸声系数库与空气吸收修正</p>
+    </div>
+
+    <div class="split">
+      <div class="split-col">
+        <section class="card">
+          <h3><span class="step">1</span> 房间尺寸 <span class="hint">(m)</span></h3>
+          <div class="field-row compact">
+            <div class="field">
+              <label for="rtL">长</label>
+              <input id="rtL" type="number" step="0.1" min="0.5" value="9" />
+            </div>
+            <div class="field">
+              <label for="rtW">宽</label>
+              <input id="rtW" type="number" step="0.1" min="0.5" value="6" />
+            </div>
+            <div class="field">
+              <label for="rtH">高</label>
+              <input id="rtH" type="number" step="0.1" min="0.5" value="3.5" />
+            </div>
+            <div class="field">
+              <label for="rtAir">空气吸收</label>
+              <select id="rtAir">
+                <option value="1">计入（20 ℃ / 50 % RH）</option>
+                <option value="0">不计入</option>
+              </select>
+            </div>
+          </div>
+          <div class="callout-row">
+            <div class="callout"><span class="dot"></span><span id="rtGeom"></span></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3><span class="step">2</span> 表面构造</h3>
+          <div class="mat-list">
+            <div class="mat-row mat-head"><span>表面名称</span><span>面积 m²</span><span>材料</span><span></span></div>
+            <div id="rtRows"></div>
+          </div>
+          <div class="btn-row">
+            <button id="rtAdd" class="btn small">+ 添加表面</button>
+            <span class="sample-wrap"><select id="rtFiller" class="btn" aria-label="未列出表面的材料"></select></span>
+            <span class="hint">未单独列出的表面按左侧材料计</span>
+          </div>
+          <div id="rtMsg" class="callout-row"></div>
+        </section>
+      </div>
+
+      <div class="split-col">
+        <section class="card result-hero">
+          <div class="rc-title">中频混响时间 RT（500 Hz–1 kHz）</div>
+          <div class="hero-rate"><span id="rtMid">—</span><span class="unit">s</span></div>
+          <div class="sub" id="rtVerdict"></div>
+          <div class="stat-grid" id="rtStats"></div>
+          <div class="btn-row toolbar">
+            <button id="rtCopy" class="btn">复制摘要</button>
+            <button id="rtCsv" class="btn">导出 CSV</button>
+            <span id="rtCopyMsg" class="aux-msg"></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>房间用途判定</h3>
+          <div class="target-row">
+            <label for="rtUse">用途</label>
+            <select id="rtUse"></select>
+          </div>
+          <div id="rtRange"></div>
+          <div id="rtSuggest" class="callout-row"></div>
+        </section>
+
+        <section class="card">
+          <h3>混响时间频率特性</h3>
+          <div class="canvas-wrap"><canvas id="rtChart" height="300"></canvas></div>
+          <div class="legend">
+            <span><i style="background:#2563eb"></i>Sabine</span>
+            <span><i style="background:#10b981"></i>Eyring</span>
+            <span><i style="background:#f59e0b"></i>推荐范围</span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>倍频带明细</h3>
+          <div id="rtTable" class="table-wrap"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>Sabine</strong>：RT = 0.161V / A，A = ΣαᵢSᵢ + 4mV，适合平均吸声系数较小（ᾱ ≲ 0.2）的房间。</li>
+        <li><strong>Eyring</strong>：RT = 0.161V / (−S·ln(1 − ᾱ) + 4mV)，在强吸声房间（ᾱ 较大）比 Sabine 更接近实测。</li>
+        <li><strong>空气吸收</strong>：4mV 项按 ISO 9613-1 在 20 ℃、50 % RH 的典型衰减系数折算，仅在 2 kHz 以上明显；湿度过低时空吸收会显著增大。</li>
+        <li><strong>表面归集</strong>：列表中的表面按各自面积与材料吸声系数计入；房间总表面积（2(lw+wh+lh)）中未被单独列出的部分，按所选「未列出表面材料」计。</li>
+        <li><strong>材料数据</strong>：内置 20 类常用构造的倍频带吸声系数，取自常用建筑声学手册量级值，用于方案比选；重要工程应以实测混响室数据为准。</li>
+        <li><strong>推荐值</strong>：房间用途推荐范围以中频（500 Hz–1 kHz）混响时间为准，量级参考 GB/T 50121 与常用设计手册；大体积房间推荐值通常更长。</li>
+        <li><strong>改进建议</strong>：按目标上限反算所需总吸声量与等效吸声面积（ΔA / α），用于初步确定吸声板用量。</li>
+        <li><strong>注意</strong>：本式假设声场充分扩散；强耦合空间、狭长房间或存在大面积强吸声面时，结果偏差较大。</li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ====================== 墙体隔声量 STC ====================== -->
+  <section class="view" id="view-stc" data-view="stc">
+    <div class="page-head">
+      <h2>墙体隔声量 STC</h2>
+      <p class="hint">质量定律估算或输入实测隔声量，按 ASTM E413 完成 16 个 1/3 倍频带的 STC 评级</p>
+    </div>
+
+    <div class="split">
+      <div class="split-col">
+        <section class="card">
+          <div class="mode-row">
+            <span class="mode-label">输入方式</span>
+            <button class="mode-btn active" data-stc-mode="mass" type="button">单层板质量定律</button>
+            <button class="mode-btn" data-stc-mode="double" type="button">双层构件估算</button>
+            <button class="mode-btn" data-stc-mode="measured" type="button">输入实测隔声量</button>
+          </div>
+
+          <div id="stcMass" class="stc-panel">
+            <div class="field-row compact">
+              <div class="field">
+                <label for="stcMat">材料</label>
+                <select id="stcMat"></select>
+              </div>
+              <div class="field">
+                <label for="stcThick">厚度 <span class="unit-tag">mm</span></label>
+                <input id="stcThick" type="number" step="1" min="1" value="12" />
+              </div>
+              <div class="field">
+                <label for="stcMassVal">面密度 <span class="unit-tag">kg/m²（可手改）</span></label>
+                <input id="stcMassVal" type="number" step="0.1" min="0.5" value="9.6" />
+              </div>
+            </div>
+          </div>
+
+          <div id="stcDouble" class="stc-panel" hidden>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="stcM1">第 1 层材料</label>
+                <select id="stcM1"></select>
+              </div>
+              <div class="field">
+                <label for="stcT1">第 1 层厚度 <span class="unit-tag">mm</span></label>
+                <input id="stcT1" type="number" step="1" min="1" value="12" />
+              </div>
+              <div class="field">
+                <label for="stcM2">第 2 层材料</label>
+                <select id="stcM2"></select>
+              </div>
+              <div class="field">
+                <label for="stcT2">第 2 层厚度 <span class="unit-tag">mm</span></label>
+                <input id="stcT2" type="number" step="1" min="1" value="12" />
+              </div>
+              <div class="field">
+                <label for="stcCav">空腔深度 <span class="unit-tag">mm</span></label>
+                <input id="stcCav" type="number" step="5" min="0" value="75" />
+              </div>
+            </div>
+          </div>
+
+          <div id="stcMeasured" class="stc-panel" hidden>
+            <p class="inline-note">按 125–4000 Hz 共 16 个 1/3 倍频带填入实测隔声量（dB）：</p>
+            <div id="stcGrid" class="band-grid stc16"></div>
+          </div>
+
+          <div id="stcMsg" class="callout-row"></div>
+        </section>
+
+        <section class="card">
+          <h3>隔声量频率特性</h3>
+          <div class="canvas-wrap"><canvas id="stcChart" height="300"></canvas></div>
+          <div class="legend">
+            <span><i style="background:#2563eb"></i>隔声量 R（dB）</span>
+            <span><i style="background:#f59e0b"></i>STC 轮廓线</span>
+          </div>
+        </section>
+      </div>
+
+      <div class="split-col">
+        <section class="card result-hero">
+          <div class="rc-title">STC 隔声等级</div>
+          <div class="hero-rate" id="stcValue">—</div>
+          <div class="sub" id="stcVerdict"></div>
+          <div class="stat-grid" id="stcStats"></div>
+          <div class="btn-row toolbar">
+            <button id="stcCopy" class="btn">复制摘要</button>
+            <button id="stcCsv" class="btn">导出 CSV</button>
+            <span id="stcCopyMsg" class="aux-msg"></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>逐带明细 <span class="hint">(轮廓线与缺量)</span></h3>
+          <div id="stcTable" class="table-wrap"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>质量定律</strong>：R = 20·lg(m·f) − 48（m 为面密度 kg/m²，f 为频率 Hz），适用于单层密实匀质构件在吻合频率以下的扩散场隔声估算，精度约 ±3 dB。</li>
+        <li><strong>面密度</strong>：由材料密度与厚度换算（m = ρ·t）；也可直接在界面上手改，用于已知面密度的复合构件。</li>
+        <li><strong>吻合频率</strong>：f_c = c₀²/(1.8·c_L·t)，c_L 为材料纵波声速。在 f_c 附近隔声量会出现明显谷值，质量定律不再适用，实际 STC 往往显著低于质量定律预测值。</li>
+        <li><strong>STC 评级</strong>：ASTM E413。以 500 Hz 处为 0 dB、向低频每倍频程 −5 dB 的标准轮廓线，在 125–4000 Hz 共 16 个 1/3 倍频带上逐 dB 平移，取满足「缺量之和 ≤ 32 dB 且任一频带缺量 ≤ 8 dB」的最大轮廓值。</li>
+        <li><strong>双层构件</strong>：在总面密度质量定律基础上加 3 dB（两层解耦）并叠加空气层增益 12·lg(1 + D/50)，为常用经验估算式，用于方案比较；实际双层墙还需考虑层间声桥、空腔填充与板缝密封。</li>
+        <li><strong>实测输入</strong>：可直接填入实验室或现场实测的 16 带隔声量（如按 GB/T 50121 / ISO 10140 测得），本工具只做 STC 评级与缺量分析。</li>
+        <li><strong>注意</strong>：STC 主要评价 125–4000 Hz 的空气声隔声，对低频（&lt; 125 Hz）与结构传声不敏感；轨道交通、风机等低频噪声源建议另行按频谱评价（可用噪声评价模块）。</li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ====================== 声屏障衰减计算 ====================== -->
+  <section class="view" id="view-barrier" data-view="barrier">
+    <div class="page-head">
+      <h2>声屏障衰减计算</h2>
+      <p class="hint">菲涅尔数法计算绕射程差与插入损失，叠加声源谱得到 A 计权降噪量</p>
+    </div>
+
+    <div class="split">
+      <div class="split-col">
+        <section class="card">
+          <h3><span class="step">1</span> 几何与声源参数</h3>
+          <div class="field-row compact">
+            <div class="field">
+              <label for="barHs">声源高度 h<sub>s</sub> <span class="unit-tag">m</span></label>
+              <input id="barHs" type="number" step="0.1" value="1" />
+            </div>
+            <div class="field">
+              <label for="barHr">接收点高度 h<sub>r</sub> <span class="unit-tag">m</span></label>
+              <input id="barHr" type="number" step="0.1" value="1.5" />
+            </div>
+            <div class="field">
+              <label for="barHb">屏障顶高度 h<sub>b</sub> <span class="unit-tag">m</span></label>
+              <input id="barHb" type="number" step="0.1" value="3" />
+            </div>
+            <div class="field">
+              <label for="barD1">声源→屏障 d1 <span class="unit-tag">m</span></label>
+              <input id="barD1" type="number" step="0.5" min="0.5" value="10" />
+            </div>
+            <div class="field">
+              <label for="barD2">屏障→接收点 d2 <span class="unit-tag">m</span></label>
+              <input id="barD2" type="number" step="0.5" min="0.5" value="20" />
+            </div>
+            <div class="field">
+              <label for="barSource">声源谱</label>
+              <select id="barSource"></select>
+            </div>
+            <div class="field">
+              <label for="barFormula">绕射公式</label>
+              <select id="barFormula">
+                <option value="kurzeAnderson">Kurze–Anderson</option>
+                <option value="maekawa">Maekawa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="barLimit">实用上限 <span class="unit-tag">dB</span></label>
+              <input id="barLimit" type="number" step="1" min="5" value="24" />
+            </div>
+          </div>
+          <div id="barMsg" class="callout-row"></div>
+        </section>
+
+        <section class="card">
+          <h3><span class="step">2</span> 断面示意 <span class="hint">(按当前尺寸等比绘制)</span></h3>
+          <div class="canvas-wrap"><canvas id="barCanvas" height="330"></canvas></div>
+          <p class="inline-note" id="barNote"></p>
+        </section>
+      </div>
+
+      <div class="split-col">
+        <section class="card result-hero">
+          <div class="rc-title">A 计权插入损失 ΔL</div>
+          <div class="hero-rate"><span id="barIL">—</span><span class="unit">dB</span></div>
+          <div class="sub" id="barVerdict"></div>
+          <div class="stat-grid" id="barStats"></div>
+          <div class="btn-row toolbar">
+            <button id="barCopy" class="btn">复制摘要</button>
+            <button id="barCsv" class="btn">导出 CSV</button>
+            <span id="barCopyMsg" class="aux-msg"></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>倍频带明细</h3>
+          <div id="barTable" class="table-wrap"></div>
+        </section>
+
+        <section class="card">
+          <h3>所需屏障高度反算</h3>
+          <div class="field-row compact">
+            <div class="field">
+              <label for="barTarget">目标插入损失 <span class="unit-tag">dB</span></label>
+              <input id="barTarget" type="number" step="1" min="1" value="10" />
+            </div>
+            <div class="field field-auto">
+              <label>&nbsp;</label>
+              <button id="barSolve" class="btn">反算高度</button>
+            </div>
+          </div>
+          <div id="barSolveResult" class="kv-result"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>几何</strong>：D 为声源到接收点的直线距离，A 为声源到屏障顶的距离，B 为屏障顶到接收点的距离，程差 δ = A + B − D（即绕射相对直达的额外路程）。</li>
+        <li><strong>菲涅尔数</strong>：N = 2δ/λ = 2fδ/c₀。N 越大，绕射衰减越多；同一几何下高频衰减大于低频，因此声屏障对低频噪声效果有限。</li>
+        <li><strong>绕射衰减</strong>：Maekawa ΔL = 5 + 20·lg(√(2πN)/tanh√(2πN))；Kurze–Anderson ΔL = 10·lg(3 + 20N)，后者在小 N 时更平滑，默认使用。</li>
+        <li><strong>A 计权插入损失</strong>：将各倍频带声源级加 A 计权后按能量叠加，分别计算屏障前后的总声级之差，得到与听感相关的降噪量。</li>
+        <li><strong>实用上限</strong>：实际工程中因侧向绕射、屏障透射漏声、声源指向性与地面效应，插入损失通常在 10–20 dB 以内。本页默认按 24 dB 截断，可按项目经验调整。</li>
+        <li><strong>视线校核</strong>：若屏障顶低于声源—接收点视线高度，绕射衰减可忽略（屏障无效），本页会直接提示。</li>
+        <li><strong>所需高度反算</strong>：在给定水平距离与声源谱下逐 0.05 m 试算屏障高度，返回首个满足目标插入损失的高度。</li>
+        <li><strong>注意</strong>：本模型只计绕射，不含地面声反射、气象条件（风速/温度梯度）与多屏障叠加，长距离户外预测请结合 GB/T 17247.2 等标准方法。</li>
+      </ul>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -380,10 +803,19 @@
   <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
 </footer>
 
+<script src="js/chart-util.js"></script>
 <script src="js/acoustics.js"></script>
 <script src="js/perforation.js"></script>
+<script src="js/absorber.js"></script>
+<script src="js/room.js"></script>
+<script src="js/insulation.js"></script>
+<script src="js/barrier.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
+<script src="js/view-absorber.js"></script>
+<script src="js/view-rt60.js"></script>
+<script src="js/view-stc.js"></script>
+<script src="js/view-barrier.js"></script>
 <script src="js/router.js"></script>
 </body>
 </html>

@@ -2,9 +2,12 @@
  * router.js — 极简哈希路由：负责模块（视图）切换与首次挂载
  * 路由表：
  *   #/              总览
- *   #/noise         背景噪声评价（默认 1/1 倍频程）
- *   #/noise-third   背景噪声评价（1/3 倍频程）  #third 为兼容旧链接
+ *   #/noise         背景噪声评价（1/1 倍频程）        #third 兼容 1/3 倍频程
  *   #/perforation   穿孔率计算
+ *   #/absorber      多孔吸声材料阻抗
+ *   #/rt60          室内混响时间
+ *   #/stc           墙体隔声量
+ *   #/barrier       声屏障衰减
  */
 (function () {
   'use strict';
@@ -12,16 +15,32 @@
   var VIEWS = {
     home: 'view-home',
     noise: 'view-noise',
-    perforation: 'view-perforation'
+    perforation: 'view-perforation',
+    absorber: 'view-absorber',
+    rt60: 'view-rt60',
+    stc: 'view-stc',
+    barrier: 'view-barrier'
   };
+
   var TITLES = {
     home: '声学计算工具箱 · Acoustic Toolbox',
     noise: '背景噪声评价 · 声学计算工具箱',
-    perforation: '穿孔率计算 · 声学计算工具箱'
+    perforation: '穿孔率计算 · 声学计算工具箱',
+    absorber: '多孔吸声材料阻抗 · 声学计算工具箱',
+    rt60: '室内混响时间 RT60 · 声学计算工具箱',
+    stc: '墙体隔声量 STC · 声学计算工具箱',
+    barrier: '声屏障衰减计算 · 声学计算工具箱'
   };
 
-  var mounted = false;
-  var current = null;
+  // 视图挂载器（首次进入时初始化，之后仅刷新）
+  var MOUNTS = [
+    { route: 'noise', get: function () { return window.NoiseView; } },
+    { route: 'perforation', get: function () { return window.PerforationView; } },
+    { route: 'absorber', get: function () { return window.AbsorberView; } },
+    { route: 'rt60', get: function () { return window.Rt60View; } },
+    { route: 'stc', get: function () { return window.StcView; } },
+    { route: 'barrier', get: function () { return window.BarrierView; } }
+  ];
 
   function parse() {
     var raw = (location.hash || '').replace(/^#\/?/, '').replace(/\/+$/, '');
@@ -43,28 +62,27 @@
     if (!first) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function activate(route, mode) {
+    MOUNTS.forEach(function (m) {
+      if (m.route !== route) return;
+      var view = m.get();
+      if (!view) return;
+      view.init(mode);
+      view.onShow();
+    });
+  }
+
   function apply(first) {
     var r = parse();
     show(r.route, first);
-
-    if (r.route === 'noise' && window.NoiseView) {
-      window.NoiseView.init(r.mode || 'octave');
-      window.NoiseView.onShow();
-    }
-    if (r.route === 'perforation' && window.PerforationView) {
-      window.PerforationView.init();
-      window.PerforationView.onShow();
-    }
-
-    // 同路由但模式变化的场景（例如从 #/noise 切到 #/noise-third）
+    activate(r.route, r.mode);
+    // 同路由下模式变化（#/noise → #/noise-third）
     if (!first && r.route === 'noise' && r.mode === 'third' && window.NoiseView) {
       window.NoiseView.setMode('third');
     }
-    current = r.route;
   }
 
   function boot() {
-    mounted = true;
     apply(true);
     window.addEventListener('hashchange', function () { apply(false); });
   }
@@ -75,5 +93,5 @@
     boot();
   }
 
-  window.AppRouter = { apply: apply, current: function () { return current; }, mounted: function () { return mounted; } };
+  window.AppRouter = { apply: apply, parse: parse, routes: Object.keys(VIEWS) };
 })();
