@@ -66,6 +66,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('.mainnav a'), function (a) {
       a.classList.toggle('active', a.getAttribute('data-route') === route);
     });
+    // 同步二级菜单的分组高亮与展开状态（见 nav.js）
+    if (window.AppNav && window.AppNav.syncActive) window.AppNav.syncActive(route);
     document.title = TITLES[route] || TITLES.home;
     if (!first) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
