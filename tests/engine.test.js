@@ -61,5 +61,40 @@ assert('RC 分类 = R', rcRumble.classification === 'R');
 var rcHiss = A.rcRating([55,50,45,40,35,30,25,30,25]);
 assert('RC 分类 = H', rcHiss.classification === 'H');
 
+console.log('多测点能量平均');
+// 两个相同测点平均应等于原值
+var avgSame = A.energyAverage([[40,40,40,40,40,40,40,40,40], [40,40,40,40,40,40,40,40,40]]);
+approx('平均(同值 x2)', avgSame[4], 40, 0.001);
+// 40 与 50 dB 的能量平均 = 10log10((10^4 + 10^5)/2) = 47.4036
+var avgTwo = A.energyAverage([[40,40,40,40,40,40,40,40,40], [50,50,50,50,50,50,50,50,50]]);
+approx('平均(40 & 50 dB)', avgTwo[0], 47.4036, 0.01);
+// 单测点带缺测（null）时按该带有效数计算
+var avgNull = A.energyAverage([[40,null,40,40,40,40,40,40,40], [50,50,40,40,40,40,40,40,40]]);
+approx('平均(缺测带取有效值)', avgNull[1], 50, 0.001);
+// 空输入 → 全 null
+var avgEmpty = A.energyAverage([]);
+assert('平均(空输入) 全为 null', avgEmpty.every(function (v) { return v === null; }));
+
+console.log('房间目标值对照');
+var studio = A.findTarget('studio');
+assert('findTarget(studio) 命中', studio && studio.nc[1] === 20);
+assert('未知 id 返回 null', A.findTarget('nope') === null);
+// NC 30 对录音棚（目标 ≤20）应超标，超出 10
+var evFail = A.evaluateTarget(studio, { nc: 30, rc: 30 });
+assert('录音棚 NC30 → 超标', evFail.nc.status === 'fail');
+approx('超标量 = 10', evFail.nc.margin, 10, 0.001);
+assert('总体结论 = fail', evFail.overall === 'fail');
+// NC 18 达标
+var evPass = A.evaluateTarget(studio, { nc: 18, rc: 18 });
+assert('录音棚 NC18 → 达标', evPass.nc.status === 'pass');
+assert('总体结论 = pass', evPass.overall === 'pass');
+// NC 缺失时退回 RC 判定
+var evFallback = A.evaluateTarget(studio, { nc: null, rc: 18 });
+assert('NC 缺失 → 以 RC 判定', evFallback.basedOn === 'RC' && evFallback.overall === 'pass');
+// 目标表完整性：每项都有 id/name/nc/rc
+assert('目标表条目完整', A.ROOM_TARGETS.length >= 10 && A.ROOM_TARGETS.every(function (t) {
+  return t.id && t.name && Array.isArray(t.nc) && t.nc.length === 2 && Array.isArray(t.rc) && t.rc.length === 2;
+}));
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);

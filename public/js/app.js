@@ -5,13 +5,29 @@
   'use strict';
   var A = window.Acoustics;
   var BANDS = A.BANDS;
-  var SAMPLE = [58, 52, 45, 40, 36, 33, 30, 28, 26];
+
+  // 示例频谱（31.5–8000 Hz 共 9 带）
+  var SAMPLES = [
+    { name: '典型办公室实测', levels: [58, 52, 45, 40, 36, 33, 30, 28, 26] },
+    { name: '安静卧室', levels: [55, 46, 38, 31, 27, 24, 22, 20, 18] },
+    { name: '会议室', levels: [57, 48, 41, 35, 31, 29, 28, 27, 25] },
+    { name: '中性频谱（N 判定示例）', levels: [55, 50, 45, 40, 35, 30, 25, 20, 15] },
+    { name: '低频隆隆（R 判定示例）', levels: [62, 60, 56, 52, 35, 30, 25, 20, 15] },
+    { name: '高频嘶声（H 判定示例）', levels: [55, 50, 45, 40, 35, 30, 25, 30, 25] }
+  ];
+  var DEFAULT_SAMPLE = 0;
+  var DEFAULT_ROOM = 'private';
 
   function $(id) { return document.getElementById(id); }
   function fmt(n, d) {
     if (n == null || isNaN(n)) return '—';
     return Number(n).toFixed(d == null ? 1 : d);
   }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  var lastResult = null;
 
   function buildGrid() {
     var grid = $('bandGrid');
@@ -33,6 +49,26 @@
     });
   }
 
+  function buildSampleOptions() {
+    var sel = $('sampleSelect');
+    SAMPLES.forEach(function (s, i) {
+      var opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildRoomOptions() {
+    var sel = $('roomSelect');
+    A.ROOM_TARGETS.forEach(function (t) {
+      var opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.name + '（目标 NC ' + t.nc[0] + '–' + t.nc[1] + '）';
+      sel.appendChild(opt);
+    });
+  }
+
   function readLevels() {
     return BANDS.map(function (f, i) {
       var v = parseFloat($('band-' + i).value);
@@ -40,13 +76,19 @@
     });
   }
 
-  function fillSample() {
-    BANDS.forEach(function (f, i) { $('band-' + i).value = SAMPLE[i]; });
-    calculate();
+  function writeLevels(levels) {
+    BANDS.forEach(function (f, i) {
+      var v = levels[i];
+      $('band-' + i).value = (v == null || isNaN(v)) ? '' : (Math.round(v * 10) / 10);
+    });
   }
+
   function clearAll() {
     BANDS.forEach(function (f, i) { $('band-' + i).value = ''; });
     $('results').style.display = 'none';
+    $('exportRow').style.display = 'none';
+    lastResult = null;
+    renderTarget();
   }
 
   function calculate() {
@@ -71,15 +113,166 @@
       '<div class="big">NR ' + fmt(nr.value) + '</div>' +
       '<div class="sub">标准标号 NR-' + (nr.designation != null ? nr.designation : '—') +
       ' &nbsp;·&nbsp; 控制带 ' + (nr.controllingBand != null ? nr.controllingBand + ' Hz' : '—') + '</div>';
-    var clsLabel = { N: '中性 Neutral', R: '低频隆隆 Rumble', H: '高频嘶声 Hiss', RH: '隆隆 + 嘶声' };
+
+    var clsLabel = A.RC_CLASS_LABEL;
     $('resRC').innerHTML =
       '<div class="big">RC ' + (rc.rc != null ? rc.rc : '—') + ' (' + rc.classification + ')</div>' +
       '<div class="sub">' + (clsLabel[rc.classification] || '') +
       ' &nbsp;·&nbsp; LMF ' + fmt(rc.lmf) + ' dB' +
-      (rc.rv ? ' &nbsp;·&nbsp; <span class="warn">⚠ 31.5 Hz &gt; 75 dB 疑似振动风险</span>' : '') + '</div>';
+      (rc.rv ? ' &nbsp;·&nbsp; <span class="warn">⚠ 31.5 Hz &gt; 75 dB 疑似振动风险</span>' : '') +
+      '</div>' + rcDetailTable(rc);
 
     $('results').style.display = 'grid';
+    $('exportRow').style.display = 'flex';
+    lastResult = { levels: levels, a: a, nc: nc, nr: nr, rc: rc };
+    renderTarget();
     drawChart(levels, nc.value, nr.value, rc.ref);
+  }
+
+  // RC 各带超出参考曲线明细
+  function rcDetailTable(rc) {
+    var rows = [];
+    [500, 250, 125, 63, 31.5, 2000, 4000, 8000].forEach(function (f) {
+      var d = null;
+      rc.details.forEach(function (x) { if (x.band === f) d = x; });
+      if (!d) return;
+      var limit = (f <= 500) ? 5 : 3;
+      var over = d.excess > limit;
+      rows.push('<tr><td>' + f + ' Hz</td><td' + (over ? ' class="over"' : '') + '>' +
+        (d.excess >= 0 ? '+' : '') + d.excess.toFixed(1) + '</td><td>' + limit + '</td></tr>');
+    });
+    return '<table class="detail-table"><thead><tr><th>频带</th><th>超出参考</th><th>限值</th></tr></thead><tbody>' +
+      rows.join('') + '</tbody></table>';
+  }
+
+  // 房间目标值对照
+  function renderTarget() {
+    var box = $('targetResult');
+    if (!lastResult) { box.innerHTML = ''; return; }
+    var sel = $('roomSelect').value;
+    var target = A.findTarget(sel) || A.ROOM_TARGETS[0];
+    var ev = A.evaluateTarget(target, { nc: lastResult.nc.value, rc: lastResult.rc.rc });
+
+    var verdictText = { pass: '✔ 达标', fail: '✘ 超标', na: '数据不足' };
+    function item(label, r, unit) {
+      var cls = r.status === 'pass' ? 'pass' : (r.status === 'fail' ? 'fail' : '');
+      var sub = r.status === 'na' ? '未测得该指标'
+        : (r.status === 'pass' ? '目标 ≤ ' + r.target[1] + unit
+           : '超出 ' + r.margin.toFixed(1) + unit + '（目标 ≤ ' + r.target[1] + unit + '）');
+      return '<div class="target-item ' + cls + '">' +
+        '<div class="t-label">' + label + '（目标 ' + r.target[0] + '–' + r.target[1] + '）</div>' +
+        '<div class="t-value">' + (r.value == null ? '—' : fmt(r.value, label.indexOf('RC') === 0 ? 0 : 1)) +
+        (r.value == null ? '' : ' <span class="unit">' + unit + '</span>') + '</div>' +
+        '<div class="t-sub">' + sub + '</div></div>';
+    }
+
+    box.innerHTML =
+      '<div class="verdict ' + ev.overall + '">' + (verdictText[ev.overall] || '') +
+      '（以 ' + ev.basedOn + ' 判定）</div>' +
+      item('NC 目标', ev.nc, '') +
+      item('RC 目标', ev.rc, '') +
+      '<div class="target-note">判定标准：实测值 ≤ 目标上限即达标。' +
+      (target.note ? '该用途备注：' + esc(target.note) + '。' : '') +
+      '目标值仅供工程参考，正式验收以合同/规范目标为准。</div>';
+  }
+
+  // 生成可复制的文本摘要
+  function summaryText() {
+    if (!lastResult) return '';
+    var r = lastResult, L = r.levels;
+    var lines = [];
+    lines.push('声学计算器 · 结果摘要');
+    lines.push('测量频谱 (dB)：' + BANDS.map(function (f, i) {
+      return f + 'Hz=' + (L[i] == null ? '—' : L[i]);
+    }).join(', '));
+    lines.push('A 声级：' + fmt(r.a.LA) + ' dBA（线性 ' + fmt(r.a.Llin) + ' dB，SIL ' + fmt(r.a.sil) + ' dB）');
+    lines.push('NC：' + fmt(r.nc.value) + '（NC-' + r.nc.designation + '，控制带 ' +
+      (r.nc.controllingBand != null ? r.nc.controllingBand + 'Hz' : '—') + '）');
+    lines.push('NR：' + fmt(r.nr.value) + '（NR-' + r.nr.designation + '，控制带 ' +
+      (r.nr.controllingBand != null ? r.nr.controllingBand + 'Hz' : '—') + '）');
+    lines.push('RC：' + r.rc.rc + ' (' + r.rc.classification + ')，LMF ' + fmt(r.rc.lmf) + ' dB' +
+      (r.rc.rv ? '，31.5Hz 振动风险' : ''));
+    return lines.join('\n');
+  }
+
+  function copySummary() {
+    var txt = summaryText();
+    if (!txt) return;
+    var done = function () { flash('copyMsg', '已复制'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done, function () { fallbackCopy(txt, done); });
+    } else {
+      fallbackCopy(txt, done);
+    }
+  }
+  function fallbackCopy(txt, done) {
+    var ta = document.createElement('textarea');
+    ta.value = txt;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { alert('复制失败，请手动选择文本。'); }
+    document.body.removeChild(ta);
+  }
+  function flash(id, msg) {
+    var el = $(id);
+    el.textContent = msg;
+    setTimeout(function () { el.textContent = ''; }, 2000);
+  }
+
+  function exportCsv() {
+    if (!lastResult) return;
+    var r = lastResult;
+    var rows = [];
+    rows.push(['项目', '值', '单位/备注']);
+    rows.push(['A 声级', fmt(r.a.LA, 2), 'dBA']);
+    rows.push(['线性声级', fmt(r.a.Llin, 2), 'dB']);
+    rows.push(['SIL', fmt(r.a.sil, 2), 'dB']);
+    rows.push(['NC', fmt(r.nc.value, 2), 'NC-' + r.nc.designation]);
+    rows.push(['NR', fmt(r.nr.value, 2), 'NR-' + r.nr.designation]);
+    rows.push(['RC', r.rc.rc, 'RC ' + r.rc.classification]);
+    rows.push([]);
+    rows.push(['频率(Hz)', '实测(dB)', 'RC参考(dB)', '超出(dB)']);
+    BANDS.forEach(function (f, i) {
+      rows.push([f,
+        r.levels[i] == null ? '' : r.levels[i],
+        fmt(r.rc.ref[i], 2),
+        (r.levels[i] == null ? '' : fmt(r.levels[i] - r.rc.ref[i], 2))]);
+    });
+    var csv = '\ufeff' + rows.map(function (row) {
+      return row.map(function (c) { return '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"'; }).join(',');
+    }).join('\r\n');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'acoustic-result.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  // 多测点能量平均
+  function applyAverage() {
+    var raw = $('avgInput').value || '';
+    var rows = raw.split(/\r?\n/).map(function (line) {
+      var nums = line.trim().split(/[\s,;\t]+/).filter(function (s) { return s !== ''; })
+        .map(function (s) { return parseFloat(s); });
+      return nums.filter(function (v) { return !isNaN(v); });
+    }).filter(function (r) { return r.length > 0; });
+
+    if (!rows.length) { flash('avgMsg', '请先粘贴频谱数据'); return; }
+    var bad = rows.some(function (r) { return r.length !== BANDS.length; });
+    if (bad) {
+      flash('avgMsg', '每行需 ' + BANDS.length + ' 个数（当前行数 ' + rows.length + '）');
+      return;
+    }
+    var avg = A.energyAverage(rows);
+    writeLevels(avg);
+    flash('avgMsg', '已按 ' + rows.length + ' 个测点能量平均');
+    calculate();
   }
 
   // 生成某 NC/NR 曲线在给定指数 n 处的值（BANDS 对齐）
@@ -177,9 +370,23 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     buildGrid();
+    buildSampleOptions();
+    buildRoomOptions();
+    $('roomSelect').value = DEFAULT_ROOM;
     $('btnCalc').addEventListener('click', calculate);
-    $('btnSample').addEventListener('click', fillSample);
+    $('sampleSelect').addEventListener('change', function () {
+      var i = parseInt(this.value, 10);
+      if (isNaN(i)) return;
+      writeLevels(SAMPLES[i].levels);
+      this.value = '';
+      calculate();
+    });
     $('btnClear').addEventListener('click', clearAll);
-    fillSample();
+    $('btnAvg').addEventListener('click', applyAverage);
+    $('btnCopy').addEventListener('click', copySummary);
+    $('btnCsv').addEventListener('click', exportCsv);
+    $('roomSelect').addEventListener('change', renderTarget);
+    writeLevels(SAMPLES[DEFAULT_SAMPLE].levels);
+    calculate();
   });
 })();

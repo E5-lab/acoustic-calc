@@ -149,6 +149,74 @@
     };
   }
 
+  // ---- 常用房间设计目标（工程参考）----
+  // NC 目标范围引自 ASHRAE Handbook — HVAC Applications, Ch.48 「Noise Criteria」常用推荐值；
+  // NR / RC 为对应的目标等价值（工程近似：这些单值指标在室内背景噪声设计中常取相近数值）。
+  // 判定以 NC 为主，NR / RC 供交叉参考。
+  var ROOM_TARGETS = [
+    { id: 'studio',     name: '录音棚 / 播音室',       nc: [15, 20], rc: [15, 20], note: '对语言与音乐录制最严格' },
+    { id: 'concert',    name: '音乐厅 / 剧院',         nc: [20, 25], rc: [20, 25], note: '混响前需低背景噪声' },
+    { id: 'auditorium', name: '礼堂 / 教堂',           nc: [25, 30], rc: [25, 30], note: '' },
+    { id: 'cinema',     name: '影院',                  nc: [25, 30], rc: [25, 30], note: '' },
+    { id: 'bedroom',    name: '卧室 / 住宅',           nc: [25, 30], rc: [25, 30], note: '夜间宜取低值' },
+    { id: 'private',    name: '单人办公室',            nc: [30, 35], rc: [30, 35], note: '' },
+    { id: 'meeting',    name: '会议室 / 教室',         nc: [30, 35], rc: [30, 35], note: '语言清晰度关键' },
+    { id: 'ward',       name: '病房 / 诊室',           nc: [30, 35], rc: [30, 35], note: '' },
+    { id: 'library',    name: '图书馆 / 阅览室',       nc: [35, 40], rc: [35, 40], note: '' },
+    { id: 'openoffice', name: '开放式办公室',          nc: [40, 45], rc: [40, 45], note: '需配合吸声与掩蔽声' },
+    { id: 'restaurant', name: '餐厅 / 食堂',           nc: [40, 45], rc: [40, 45], note: '' },
+    { id: 'mall',       name: '商场 / 超市',           nc: [45, 50], rc: [45, 50], note: '' },
+    { id: 'gym',        name: '健身房 / 车间',         nc: [50, 60], rc: [50, 60], note: '仅作劳动保护参考' }
+  ];
+
+  // 目标达标判定：value <= hi 达标；超出 hi 判不合格，并给出超出量。
+  function judge(value, range) {
+    if (value == null || isNaN(value)) return { value: null, target: range, status: 'na', margin: null };
+    var hi = range[1];
+    var status = value <= hi ? 'pass' : 'fail';
+    return { value: value, target: range, status: status, margin: value - hi };
+  }
+
+  function evaluateTarget(target, ratings) {
+    var nc = judge(ratings.nc, target.nc);
+    var rc = judge(ratings.rc, target.rc);
+    // 总体结论以 NC 为准（NC 是室内背景噪声最常用的评价指标）；NC 缺失时退回 RC。
+    var primary = (nc.status !== 'na') ? nc : rc;
+    var overall = primary.status === 'na' ? 'na' : primary.status;
+    return { nc: nc, rc: rc, overall: overall, basedOn: (nc.status !== 'na') ? 'NC' : 'RC' };
+  }
+
+  function findTarget(id) {
+    for (var i = 0; i < ROOM_TARGETS.length; i++) {
+      if (ROOM_TARGETS[i].id === id) return ROOM_TARGETS[i];
+    }
+    return null;
+  }
+
+  // ---- 多测点能量平均（power average）----
+  // rows: 二维数组，每行是一条 9 带频谱（允许 null 缺测）。
+  // 逐带按 10·log10( Σ10^(L/10) / n ) 计算，n 为该带有效测点数。
+  function energyAverage(rows) {
+    var valid = (rows || []).filter(function (r) { return Array.isArray(r) && r.length; });
+    if (!valid.length) return BANDS.map(function () { return null; });
+    return BANDS.map(function (f, i) {
+      var sum = 0, n = 0;
+      valid.forEach(function (r) {
+        var v = r[i];
+        if (v != null && !isNaN(v)) { sum += Math.pow(10, v / 10); n++; }
+      });
+      return n ? 10 * Math.log10(sum / n) : null;
+    });
+  }
+
+  // 频谱质量分级（RC Mark II 的简化描述，便于界面展示）
+  var RC_CLASS_LABEL = {
+    N: '中性 Neutral',
+    R: '低频隆隆 Rumble',
+    H: '高频嘶声 Hiss',
+    RH: '隆隆 + 嘶声'
+  };
+
   // ---- RC 房间标准曲线 Mark II ----
   // RC 参考曲线：1000 Hz 处 = C，斜率 -5 dB/倍频程；16/31.5 Hz 设下限 max(C+25, 55)
   function rcCurve(C, f) {
@@ -198,12 +266,17 @@
     NC_TABLE: NC_TABLE,
     NR_BANDS: NR_BANDS,
     NR_TABLE: NR_TABLE,
+    ROOM_TARGETS: ROOM_TARGETS,
+    RC_CLASS_LABEL: RC_CLASS_LABEL,
     aWeighted: aWeighted,
     ncRating: ncRating,
     nrRating: nrRating,
     rcRating: rcRating,
     rcCurve: rcCurve,
-    bandRating: bandRating
+    bandRating: bandRating,
+    evaluateTarget: evaluateTarget,
+    findTarget: findTarget,
+    energyAverage: energyAverage
   };
 
   if (typeof module !== 'undefined' && module.exports) {

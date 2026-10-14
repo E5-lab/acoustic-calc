@@ -18,9 +18,23 @@
       <div id="bandGrid" class="band-grid"></div>
       <div class="btn-row">
         <button id="btnCalc" class="btn primary">计算</button>
-        <button id="btnSample" class="btn">载入示例</button>
+        <span class="sample-wrap">
+          <select id="sampleSelect" class="btn" aria-label="载入示例频谱">
+            <option value="">载入示例…</option>
+          </select>
+        </span>
         <button id="btnClear" class="btn ghost">清空</button>
       </div>
+
+      <details class="aux">
+        <summary>多测点能量平均</summary>
+        <p class="aux-hint">每行粘贴一条完整频谱的 9 个数值（31.5–8000 Hz，空格或逗号分隔），求各带能量平均后填入上方输入框。</p>
+        <textarea id="avgInput" rows="4" placeholder="例：&#10;58 52 45 40 36 33 30 28 26&#10;57 51 44 39 35 32 29 27 25"></textarea>
+        <div class="btn-row">
+          <button id="btnAvg" class="btn">平均并填入</button>
+          <span id="avgMsg" class="aux-msg"></span>
+        </div>
+      </details>
     </section>
 
     <section id="results" class="results" style="display:none">
@@ -42,6 +56,21 @@
       </div>
     </section>
 
+    <div id="exportRow" class="btn-row" style="display:none">
+      <button id="btnCopy" class="btn">复制结果摘要</button>
+      <button id="btnCsv" class="btn">导出 CSV</button>
+      <span id="copyMsg" class="aux-msg"></span>
+    </div>
+
+    <section class="card">
+      <h2>房间目标值对照 <span class="hint">(选用途，自动判定达标)</span></h2>
+      <div class="target-row">
+        <label for="roomSelect">房间用途</label>
+        <select id="roomSelect"></select>
+      </div>
+      <div id="targetResult" class="target-result"></div>
+    </section>
+
     <section class="card">
       <h2>频谱与标准曲线对比</h2>
       <canvas id="chart" width="720" height="360"></canvas>
@@ -54,12 +83,14 @@
         <li><strong>NC</strong>：ANSI/ASA S12.2 切线插值法，逐带插值曲线指数，取最大者为 NC 值（控制带标出其来源频带）。</li>
         <li><strong>NR</strong>：ISO/R 1996 切线插值法，同理取各带最大 NR 指数。</li>
         <li><strong>RC Mark II</strong>：RC = round(均值(L₅₀₀, L₁₀₀₀, L₂₀₀₀))；低频带(≤500 Hz)超出参考曲线 &gt;5 dB 判 R，高频带(≥2000 Hz) &gt;3 dB 判 H，否则 N；31.5 Hz &gt;75 dB 标注振动风险。</li>
+        <li><strong>多测点能量平均</strong>：逐带 L̄ = 10·log₁₀( Σ10<sup>Lᵢ/10</sup> / n )，即功率平均（非算术平均）。</li>
+        <li><strong>目标值对照</strong>：房间目标范围引自 ASHRAE Handbook HVAC Applications 常用 NC 推荐值，RC 取等价目标，判定以 NC 为主、RC 交叉参考。</li>
       </ul>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>数据来源：NC — Beranek/ASHRAE；NR — ISO/R 1996；A 计权 — IEC 61672。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
+    <p>数据来源：NC — Beranek/ASHRAE；NR — ISO/R 1996；A 计权 — IEC 61672；房间目标 — ASHRAE 常用推荐值。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
   </footer>
 
   <script src="js/acoustics.js"></script>
