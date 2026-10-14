@@ -18,7 +18,7 @@
   var DEFAULT_SAMPLE = 0;
   var DEFAULT_ROOM = 'private';
 
-  var mode = (typeof location !== 'undefined' && location.hash === '#third') ? 'third' : 'octave'; // 'octave' | 'third'
+  var mode = 'octave'; // 'octave' | 'third'，由路由或页面模式按钮切换
 
   function $(id) { return document.getElementById(id); }
   function fmt(n, d) {
@@ -496,7 +496,12 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  // ---- 视图生命周期（由 router.js 调用）----
+  var inited = false;
+  function init(initialMode) {
+    if (inited) { if (initialMode) setMode(initialMode); return; }
+    inited = true;
+    if (initialMode === 'third' || initialMode === 'octave') mode = initialMode;
     buildSampleOptions();
     buildRoomOptions();
     buildGrid();
@@ -513,7 +518,7 @@
     $('btnCopy').addEventListener('click', copySummary);
     $('btnCsv').addEventListener('click', exportCsv);
     $('roomSelect').addEventListener('change', renderTarget);
-    var btns = document.querySelectorAll('.mode-btn');
+    var btns = document.querySelectorAll('#view-noise .mode-btn');
     Array.prototype.forEach.call(btns, function (b) {
       b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
       b.classList.toggle('active', b.getAttribute('data-mode') === mode);
@@ -522,5 +527,16 @@
       ? octaveToThird(SAMPLES[DEFAULT_SAMPLE].levels)
       : SAMPLES[DEFAULT_SAMPLE].levels);
     calculate();
-  });
+  }
+
+  // 视图重新可见时重绘图表（Canvas 尺寸在隐藏状态下不参与布局计算）
+  function onShow() {
+    if (lastResult) drawChart();
+  }
+
+  window.NoiseView = {
+    init: init,
+    setMode: setMode,
+    onShow: onShow
+  };
 })();

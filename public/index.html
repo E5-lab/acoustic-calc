@@ -3,23 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>声学计算器 · Acoustic Calculator</title>
+  <title>声学计算工具箱 · Acoustic Toolbox</title>
+  <meta name="description" content="室内背景噪声评价（A 声级 / NC / NR / RC）与穿孔板穿孔率计算，纯静态、零依赖、按标准方法实现。" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <h1>声学计算器</h1>
-    <p class="subtitle">A 声级 · NC · NR · RC — 室内背景噪声倍频带评价工具</p>
-  </header>
+<a class="skip-link" href="#main">跳到主要内容</a>
 
-  <main class="container">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#/">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M4 16h3l3-7 4 14 3-9 2 4h9" />
+        </svg>
+      </span>
+      <span class="brand-name">声学计算工具箱<small>Acoustic Toolbox</small></span>
+    </a>
+    <nav class="mainnav" aria-label="模块导航">
+      <a href="#/" data-route="home">总览</a>
+      <a href="#/noise" data-route="noise">背景噪声评价</a>
+      <a href="#/perforation" data-route="perforation">穿孔率计算</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="container">
+
+  <!-- ============================ 总览 ============================ -->
+  <section class="view" id="view-home" data-view="home">
+    <div class="hero">
+      <span class="eyebrow">纯静态 · 零依赖 · 标准依据</span>
+      <h1 class="hero-title">声学计算工具箱</h1>
+      <p class="hero-sub">把常用的建筑与材料声学计算拆成独立模块，一个模块解决一类问题 —— 输入参数、给出结果，并附计算依据。所有运算在浏览器本地完成，数据不上传。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#/noise">背景噪声评价</a>
+        <a class="btn" href="#/perforation">穿孔率计算</a>
+      </div>
+      <div class="badge-row">
+        <span class="badge">ANSI/ASA S12.2-2019</span>
+        <span class="badge">ISO/R 1996</span>
+        <span class="badge">IEC 61672</span>
+        <span class="badge">GB/T 50121 常用参考</span>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>功能模块</h2>
+      <p class="hint">按类别划分，后续模块陆续上线</p>
+    </div>
+
+    <div class="module-group">
+      <div class="group-label">材料声学计算</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/perforation">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="6" width="40" height="36" rx="4" />
+              <circle cx="16" cy="18" r="4" /><circle cx="32" cy="18" r="4" />
+              <circle cx="16" cy="32" r="4" /><circle cx="32" cy="32" r="4" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">穿孔率计算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">正方形 / 45° 菱形 / 矩形错排 / 等边三角形阵列的穿孔率，含反算中心距、加工校核与微穿孔板共振估算。</span>
+          </span>
+        </a>
+        <div class="module-card soon" aria-disabled="true">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 32c6-2 8-14 14-14s6 10 10 10 6-6 10-8" />
+              <path d="M6 40h36" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">多孔吸声材料阻抗 <span class="mc-tag">开发中</span></span>
+            <span class="mc-desc">Delany–Bazley 经验模型、流阻率拟合与吸声系数推算。</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <div class="group-label">建筑声学模拟</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/noise">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 30h6l4-10 5 20 4-14 3 8h14" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">背景噪声评价 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">A 声级 / NC / NR / RC Mark II 倍频带评价，支持 1/1 与 1/3 倍频程、多测点能量平均、房间目标值对照。</span>
+          </span>
+        </a>
+        <div class="module-card soon" aria-disabled="true">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="6" y="10" width="36" height="28" rx="3" />
+              <path d="M14 10v28M34 10v28M6 24h36" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">室内混响时间 RT60 <span class="mc-tag">开发中</span></span>
+            <span class="mc-desc">Sabine / Eyring 计算、伊林-诺里斯修正与吸声量统计。</span>
+          </span>
+        </div>
+        <div class="module-card soon" aria-disabled="true">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 12h32M8 20h32M8 28h32M8 36h32" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">墙体隔声量 STC <span class="mc-tag">开发中</span></span>
+            <span class="mc-desc">质量定律估算、复合墙体与缝隙漏声修正。</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <div class="group-label">环境噪声控制</div>
+      <div class="module-grid">
+        <div class="module-card soon" aria-disabled="true">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 38V18h6v20zM20 38V10h6v28zM32 38V22h6v16z" />
+              <path d="M4 42h40" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声屏障衰减计算 <span class="mc-tag">开发中</span></span>
+            <span class="mc-desc">无限长屏障绕射衰减、菲涅尔数法与插入损失估算。</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <section class="card notes">
+      <h2>使用说明</h2>
+      <ul>
+        <li>顶部导航切换模块，也可用地址栏直接访问：<code>#/noise</code>（背景噪声评价）、<code>#/perforation</code>（穿孔率计算）。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；内核函数有单元测试覆盖（<code>tests/</code>，Node 运行）。</li>
+        <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ========================= 背景噪声评价 ========================= -->
+  <section class="view" id="view-noise" data-view="noise">
+    <div class="page-head">
+      <h2>背景噪声评价</h2>
+      <p class="hint">输入倍频带声压级，得到 A 声级、NC、NR、RC Mark II 评价结果与房间目标值对照</p>
+    </div>
+
     <section class="card">
       <div class="mode-row">
         <span class="mode-label">输入模式</span>
         <button class="mode-btn active" data-mode="octave" type="button">1/1 倍频程</button>
         <button class="mode-btn" data-mode="third" type="button">1/3 倍频程</button>
       </div>
-      <h2>倍频带声压级输入 <span class="hint" id="bandHint">(dB，1/1 倍频程 16 Hz–8 kHz 共 10 带)</span></h2>
+      <h3>倍频带声压级输入 <span class="hint" id="bandHint">(dB，1/1 倍频程 16 Hz–8 kHz 共 10 带)</span></h3>
       <div id="bandGrid" class="band-grid"></div>
       <div class="btn-row">
         <button id="btnCalc" class="btn primary">计算</button>
@@ -64,14 +210,14 @@
       </div>
     </section>
 
-    <div id="exportRow" class="btn-row" style="display:none">
+    <div id="exportRow" class="btn-row plain" style="display:none">
       <button id="btnCopy" class="btn">复制结果摘要</button>
       <button id="btnCsv" class="btn">导出 CSV</button>
       <span id="copyMsg" class="aux-msg"></span>
     </div>
 
     <section class="card">
-      <h2>房间目标值对照 <span class="hint">(选用途，自动判定达标)</span></h2>
+      <h3>房间目标值对照 <span class="hint">(选用途，自动判定达标)</span></h3>
       <div class="target-row">
         <label for="roomSelect">房间用途</label>
         <select id="roomSelect"></select>
@@ -80,7 +226,7 @@
     </section>
 
     <section class="card">
-      <h2>频谱与标准曲线对比</h2>
+      <h3>频谱与标准曲线对比</h3>
       <canvas id="chart" width="720" height="360"></canvas>
     </section>
 
@@ -99,13 +245,145 @@
         <li><strong>目标值对照</strong>：房间目标范围引自 ASHRAE Handbook HVAC Applications 常用 NC 推荐值，RC 取等价目标，判定以 NC 为主、RC 交叉参考。</li>
       </ul>
     </section>
-  </main>
+  </section>
 
-  <footer class="site-footer">
-    <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；房间目标 — ASHRAE 常用推荐值。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
-  </footer>
+  <!-- ========================= 穿孔率计算 ========================= -->
+  <section class="view" id="view-perforation" data-view="perforation">
+    <div class="page-head">
+      <h2>穿孔率计算</h2>
+      <p class="hint">穿孔板 / 微穿孔板的开孔率，按阵列形制由孔径与中心距直接求得</p>
+    </div>
 
-  <script src="js/acoustics.js"></script>
-  <script src="js/app.js"></script>
+    <div class="split">
+      <div class="split-col">
+        <section class="card">
+          <h3><span class="step">1</span> 选择阵列形制</h3>
+          <div class="pattern-grid" id="patternGrid"></div>
+        </section>
+
+        <section class="card">
+          <h3><span class="step">2</span> 输入设计参数 <span class="hint">(mm)</span></h3>
+          <div class="field-row" id="perfFields"></div>
+          <div class="callout-row" id="perfMsg"></div>
+        </section>
+
+        <section class="card">
+          <h3><span class="step">3</span> 阵列示意 <span class="hint">(按当前参数等比绘制)</span></h3>
+          <div class="canvas-wrap"><canvas id="perfCanvas" height="330"></canvas></div>
+          <p class="inline-note" id="perfDiagramNote"></p>
+        </section>
+      </div>
+
+      <div class="split-col">
+        <section class="card result-hero">
+          <div class="rc-title">穿孔率 σ</div>
+          <div class="hero-rate"><span id="perfRate">—</span><span class="unit">%</span></div>
+          <div class="sub" id="perfClass"></div>
+          <div id="perfFormula" class="formula"></div>
+          <div class="stat-grid" id="perfStats"></div>
+          <div class="btn-row toolbar">
+            <button id="perfCopy" class="btn">复制摘要</button>
+            <button id="perfCsv" class="btn">导出 CSV</button>
+            <button id="perfReset" class="btn ghost">重置参数</button>
+            <span id="perfCopyMsg" class="aux-msg"></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>加工校核</h3>
+          <div id="perfWarn"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="split even">
+      <section class="card">
+        <h3>反算中心距 <span class="hint">(已知目标穿孔率)</span></h3>
+        <p class="inline-note">给出孔径与目标穿孔率，反求所需中心距；矩形错排需先固定 P2。</p>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="revRate">目标穿孔率 (%)</label>
+            <input id="revRate" type="number" step="0.1" min="0.05" max="80" value="5" />
+          </div>
+          <div class="field">
+            <label for="revP2">固定 P2 (mm，仅矩形错排)</label>
+            <input id="revP2" type="number" step="0.1" min="0.1" value="12" />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button id="revSolve" class="btn primary">反算</button>
+          <span id="revMsg" class="aux-msg"></span>
+        </div>
+        <div id="revResult" class="kv-result"></div>
+      </section>
+
+      <section class="card">
+        <h3>微穿孔板共振估算 <span class="hint">(可选)</span></h3>
+        <p class="inline-note">f₀ = c / 2π · √(σ / (t′ · D))，t′ = t + 0.85d（Maa 端部修正），适用于孔径 ≤ 3 mm、穿孔率 ≤ 5%。</p>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mppT">板厚 t (mm)</label>
+            <input id="mppT" type="number" step="0.1" min="0.1" value="1" />
+          </div>
+          <div class="field">
+            <label for="mppD">空腔深度 D (mm)</label>
+            <input id="mppD" type="number" step="1" min="1" value="50" />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button id="mppSolve" class="btn">估算共振频率</button>
+          <span id="mppMsg" class="aux-msg"></span>
+        </div>
+        <div id="mppResult" class="kv-result"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h3>板材开孔估算 <span class="hint">(按当前穿孔率)</span></h3>
+      <div class="field-row compact">
+        <div class="field">
+          <label for="plateW">板宽 (mm)</label>
+          <input id="plateW" type="number" step="1" min="1" value="1000" />
+        </div>
+        <div class="field">
+          <label for="plateH">板长 (mm)</label>
+          <input id="plateH" type="number" step="1" min="1" value="2000" />
+        </div>
+        <div class="field field-auto">
+          <label>&nbsp;</label>
+          <button id="plateCalc" class="btn">估算</button>
+        </div>
+      </div>
+      <div id="plateResult" class="kv-result"></div>
+    </section>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>基本关系</strong>：穿孔率 σ = 单孔面积 / 单元面积 × 100%，单孔面积 = πd²/4；孔径 d 与中心距（孔心距）单位一致即可（本页统一用 mm）。</li>
+        <li><strong>正方形对称阵列</strong>：单元面积 P²（一个孔对应 P × P 的方格），σ = πd² / (4P²) × 100%。</li>
+        <li><strong>45° 菱形错排</strong>：隔行错开半个孔距、行距 P/2，单元面积 P²/2，σ = πd² / (2P²) × 100%（沿用 E5-lab/AC_Calc 参考实现的约定）。</li>
+        <li><strong>矩形非等边错排</strong>：横向中心距 P1、纵向行距 P2/2，单元面积 P1·P2/2，σ = πd² / (2·P1·P2) × 100%。</li>
+        <li><strong>等边三角形错排（六方）</strong>：行距 (√3/2)P，单元面积 (√3/2)P²，σ = πd² / (2√3·P²) × 100%。这是等边三角阵列的几何精确解，同孔径同孔距下穿孔率高于正方形阵列约 15.5%。</li>
+        <li><strong>反算</strong>：由 σ 反解中心距，例如正方形阵列 P = √(πd² / (4σ))（σ 为分数），矩形错排需固定 P2 后解 P1。</li>
+        <li><strong>加工校核</strong>：孔间剩余壁厚 = 中心距 − 孔径，小于 0.8 mm 时冲孔/钻孔易变形；穿孔率 &gt; 30% 时板面强度需另行校核。</li>
+        <li><strong>微穿孔板共振</strong>：f₀ = c/(2π)·√(σ/(t′·D))，t′ = t + 0.85d 为计入端部修正的有效板厚，D 为空腔深度；用于判断吸声峰值大致落点，配合 1/4 波长关系可做空腔深度初选。实际结构建议以阻抗管/混响室实测为准。</li>
+        <li><strong>常用区间</strong>：微穿孔板 σ 约 0.5%–3%（d 0.5–2 mm）；常规穿孔吸声板 σ 约 3%–15%；σ &gt; 30% 接近全透声，吸声取决于后置材料。</li>
+      </ul>
+    </section>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型。</p>
+  <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
+</footer>
+
+<script src="js/acoustics.js"></script>
+<script src="js/perforation.js"></script>
+<script src="js/app.js"></script>
+<script src="js/perforation-view.js"></script>
+<script src="js/router.js"></script>
 </body>
 </html>

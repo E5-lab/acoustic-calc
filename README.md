@@ -1,8 +1,10 @@
-# 声学计算器 · Acoustic Calculator
+# 声学计算工具箱 · Acoustic Toolbox
 
-纯静态、零依赖的室内背景噪声评价工具，支持 **A 声级 / NC / NR / RC** 倍频带指标计算，兼容 **1/1 与 1/3 倍频程**输入。源码托管于 GitHub，可一键发布到 **Cloudflare Worker（Workers Builds）**。
+纯静态、零依赖的建筑与材料声学计算工具集，按**模块化视图**组织（总览 / 背景噪声评价 / 穿孔率计算），哈希路由切换、深链可用。源码托管于 GitHub，可一键发布到 **Cloudflare Worker（Workers Builds）**。
 
-## 功能
+## 模块
+
+### ① 背景噪声评价（`#/noise`）
 
 - **A 声级（A-weighted）**：IEC 61672 解析式 A 计权（支持任意 1/3 倍频带中心频率），能量叠加法计算 dBA，同时给出线性（未计权）声级与 SIL 语言干扰级（SIL 按定义取倍频带 500/1000/2000/4000 Hz 均值）。
 - **NC（Noise Criterion）**：ANSI/ASA S12.2-2019 切线插值法（31.5–8000 Hz 共 9 带），输出连续 NC 值、标准标号与控制频带。
@@ -17,16 +19,40 @@
 - **结果导出**：一键复制文本摘要、导出 CSV（含各频带实测 / RC 参考 / 超出量）。
 - **频谱对比图**：Canvas 对数频率轴绘制实测频谱与 NC / NR / RC 参考曲线叠加。
 
+### ② 穿孔率计算（`#/perforation`）
+
+参考 E5-lab/AC_Calc 的实现并扩展，全部公式按「单元面积」统一推导：
+
+- **四种阵列形制**：正方形对称阵列 σ = πd²/(4P²)、45° 菱形错排 σ = πd²/(2P²)、矩形非等边错排 σ = πd²/(2·P1·P2)、等边三角形错排（六方，几何精确解）σ = πd²/(2√3·P²)。
+- **派生量**：单孔面积、单元面积、孔数密度（个/m²）、孔径/中心距比、剩余板面比例。
+- **阵列示意图**：Canvas 按当前参数等比绘制孔阵，标注孔径、孔心距、行距与单元面积虚线框。
+- **反算中心距**：给定目标穿孔率反求 P（矩形错排固定 P2 求 P1），含回代自检。
+- **加工校核**：孔间剩余壁厚 < 0.8 mm 提示加工风险；σ > 30% 提示结构校核；σ < 0.3% 提示进入微穿孔板区间。
+- **微穿孔板共振估算**：f₀ = c/(2π)·√(σ/(t′·D))，t′ = t + 0.85d（Maa 端部修正），附适用范围判定与 1/4 波长参考。
+- **板材开孔估算**：按板面尺寸折算总孔数与总开孔面积。
+- **导出**：复制文本摘要、导出 CSV。
+
+### 计算内核与测试
+
+- `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
+- `public/js/perforation.js` — 穿孔率内核（UMD）
+- `node tests/engine.test.js` 与 `node tests/perforation.test.js` 共 109 项断言全部通过
+
 ## 目录结构
 
 ```
 .
-├─ public/                 # 站点根目录（Cloudflare Worker 静态资源目录）
-│  ├─ index.html
-│  ├─ css/styles.css
-│  └─ js/acoustics.js, app.js
-├─ tests/engine.test.js    # 计算内核单元验证（Node 运行）
-├─ wrangler.toml          # Cloudflare Worker 配置
+├─ public/                     # 站点根目录（Cloudflare Worker 静态资源目录）
+│  ├─ index.html               # 应用外壳：顶栏导航 + 三个视图（home / noise / perforation）
+│  ├─ css/styles.css           # 设计系统（亮/暗色自适应）
+│  └─ js/
+│     ├─ acoustics.js          # 噪声评价内核
+│     ├─ perforation.js        # 穿孔率内核
+│     ├─ app.js                # 噪声评价视图
+│     ├─ perforation-view.js   # 穿孔率视图（含 Canvas 阵列示意图）
+│     └─ router.js             # 哈希路由与视图挂载
+├─ tests/                      # 内核单元测试（Node 运行）
+├─ wrangler.toml               # Cloudflare Worker 配置
 └─ README.md
 ```
 
@@ -42,6 +68,7 @@ npx serve public
 
 ```bash
 node tests/engine.test.js
+node tests/perforation.test.js
 ```
 
 ## 计算方法与公式
@@ -97,6 +124,7 @@ wrangler deploy          # 读取 wrangler.toml，将 public/ 作为资源发布
 - [x] ~~增加典型房间目标值对照表（办公室/录音棚/病房等）与达标判定。~~（v1.1 已实现：13 类房间 NC/RC 目标自动判定）
 - [x] ~~支持多测点能量平均、结果导出（CSV/摘要复制）。~~（v1.1 已实现）
 - [x] ~~RC 各频带超出参考曲线明细。~~（v1.1 已实现：RC 结果卡内嵌明细表）
+- [x] ~~把站点重构为模块化多视图（参考主流工具站审美），上线穿孔率计算模块。~~（v1.3：顶栏导航 + 总览/噪声评价/穿孔率三视图，哈希路由）
 - [ ] RNC（Room Noise Criteria，S12.2-2019）：低频波动/喘振型 HVAC 噪声评价，可作为下一步。
 - [ ] NC 16 Hz 曲线列为线性推算值，取得标准 Table 1 完整低频数据后可替换。
 - [ ] 测量不确定度与多次测量统计（S12.2 Annex A/B 思路）。
