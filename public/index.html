@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>声学计算器 · Acoustic Calculator</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>声学计算器</h1>
+    <p class="subtitle">A 声级 · NC · NR · RC — 室内背景噪声倍频带评价工具</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>倍频带声压级输入 <span class="hint">(dB，31.5–8000 Hz)</span></h2>
+      <div id="bandGrid" class="band-grid"></div>
+      <div class="btn-row">
+        <button id="btnCalc" class="btn primary">计算</button>
+        <button id="btnSample" class="btn">载入示例</button>
+        <button id="btnClear" class="btn ghost">清空</button>
+      </div>
+    </section>
+
+    <section id="results" class="results" style="display:none">
+      <div class="result-card">
+        <div class="rc-title">A 声级</div>
+        <div id="resA"></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-title">NC 噪声标准曲线</div>
+        <div id="resNC"></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-title">NR 噪声评价曲线</div>
+        <div id="resNR"></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-title">RC 房间标准曲线</div>
+        <div id="resRC"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>频谱与标准曲线对比</h2>
+      <canvas id="chart" width="720" height="360"></canvas>
+    </section>
+
+    <section class="card notes">
+      <h2>计算方法</h2>
+      <ul>
+        <li><strong>A 声级</strong>：L<sub>A</sub> = 10·log₁₀ Σ 10<sup>(Lᵢ + Aᵢ)/10</sup>，Aᵢ 为 IEC 61672 倍频带 A 计权修正值。</li>
+        <li><strong>NC</strong>：ANSI/ASA S12.2 切线插值法，逐带插值曲线指数，取最大者为 NC 值（控制带标出其来源频带）。</li>
+        <li><strong>NR</strong>：ISO/R 1996 切线插值法，同理取各带最大 NR 指数。</li>
+        <li><strong>RC Mark II</strong>：RC = round(均值(L₅₀₀, L₁₀₀₀, L₂₀₀₀))；低频带(≤500 Hz)超出参考曲线 &gt;5 dB 判 R，高频带(≥2000 Hz) &gt;3 dB 判 H，否则 N；31.5 Hz &gt;75 dB 标注振动风险。</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>数据来源：NC — Beranek/ASHRAE；NR — ISO/R 1996；A 计权 — IEC 61672。本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
+  </footer>
+
+  <script src="js/acoustics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

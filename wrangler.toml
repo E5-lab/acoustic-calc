@@ -1,0 +1,7 @@
+name = "acoustic-calc"
+compatibility_date = "2025-09-01"
+
+# Cloudflare Worker 静态资源目录：站点文件都放在 public/ 下。
+# name 必须与 Cloudflare 控制台里该 Worker 的项目名完全一致，否则构建会失败。
+[assets]
+directory = "./public"
