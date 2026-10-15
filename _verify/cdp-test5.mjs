@@ -155,7 +155,7 @@ try {
     return { count: as.length, routes: Array.prototype.map.call(as, function(a){ return a.getAttribute('data-route'); }),
              active: document.querySelector('.mainnav a.active') ? document.querySelector('.mainnav a.active').getAttribute('data-route') : null };
   `);
-  assert('导航共 9 项', nav.count === 9, 'count=' + nav.count);
+  assert('导航共 10 项', nav.count === 10, 'count=' + nav.count);
   assert('导航含 vibration 路由', nav.routes.indexOf('vibration') >= 0, nav.routes.join(','));
   assert('导航含 levels / barrier 路由', nav.routes.indexOf('levels') >= 0 && nav.routes.indexOf('barrier') >= 0);
 
@@ -166,7 +166,7 @@ try {
              hasVb: !!document.querySelector('.module-card[href="#/vibration"]'),
              groups: Array.prototype.map.call(document.querySelectorAll('.group-label'), function(g){ return g.textContent.trim(); }) };
   `);
-  assert('首页模块卡共 8 张且全部为「可用」', cards.count === 8 && cards.live === 8, JSON.stringify(cards));
+  assert('首页模块卡共 9 张且全部为「可用」', cards.count === 9 && cards.live === 9, JSON.stringify(cards));
   assert('首页含减振模块入口', cards.hasVb === true);
   assert('首页按 4 个分组归类，减振模块归入「环境与振动」',
     cards.groups.join(',') === '基础计算,材料与构件,房间声学,环境与振动', cards.groups.join(','));
@@ -460,7 +460,7 @@ try {
              dup: document.querySelectorAll('#vbBook table').length };
   `);
   assert('返回减振视图后仍正常（无重复渲染）', again.active === true && again.dup === 1 && parseFloat(again.eta) > 90, JSON.stringify(again));
-  assert('导航项未被重复初始化', again.navs === 9, 'navs=' + again.navs);
+  assert('导航项未被重复初始化', again.navs === 10, 'navs=' + again.navs);
 
   const noData = await evaluate(`
     var html = document.getElementById('view-vibration').innerHTML;

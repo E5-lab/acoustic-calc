@@ -147,21 +147,21 @@ try {
 
   assert('顶栏一级项 5 个（总览 + 4 分组）', struct.topLevel === 5, 'topLevel=' + struct.topLevel);
   assert('总览仍为一级直接链接', struct.homeLink === true);
-  assert('导航链接总数 9（总览 + 8 模块）', struct.allLinks.length === 9, struct.allLinks.join(','));
+  assert('导航链接总数 10（总览 + 9 模块）', struct.allLinks.length === 10, struct.allLinks.join(','));
   assert('分组名依次为 基础计算 / 材料与构件 / 房间声学 / 环境与振动',
     struct.groups.map((g) => g.label).join(',') === '基础计算,材料与构件,房间声学,环境与振动',
     struct.groups.map((g) => g.label).join(','));
-  assert('每个分组各含 2 个二级模块', struct.groups.every((g) => g.items.length === 2),
+  assert('每个分组模块数正确（2/3/2/2）', JSON.stringify(struct.groups.map((g) => g.items.length)) === '[2,3,2,2]',
     struct.groups.map((g) => g.label + ':' + g.items.length).join(' '));
   assert('每个分组都有下拉容器', struct.groups.every((g) => g.hasMenu));
   assert('每个分组标题带展开箭头', struct.caret === 4, 'caret=' + struct.caret);
   assert('默认 aria-expanded 均为 false', struct.groups.every((g) => g.expanded === 'false'));
-  assert('二级模块覆盖全部 8 个路由且不重复',
-    new Set(struct.groups.flatMap((g) => g.items.map((i) => i.route))).size === 8);
+  assert('二级模块覆盖全部 9 个路由且不重复',
+    new Set(struct.groups.flatMap((g) => g.items.map((i) => i.route))).size === 9);
   assert('二级菜单条目均含名称与说明',
     struct.groups.every((g) => g.items.every((i) => i.name && i.desc)),
     JSON.stringify(struct.groups[0].items));
-  assert('首页模块卡 8 张', struct.cards.length === 8, struct.cards.join(','));
+  assert('首页模块卡 9 张', struct.cards.length === 9, struct.cards.join(','));
   assert('首页分组标签与导航一致',
     struct.labels.join(',') === '基础计算,材料与构件,房间声学,环境与振动', struct.labels.join(','));
   assert('首页卡片路由与二级菜单一致',
@@ -277,8 +277,8 @@ try {
   `);
   assert('总览：无分组高亮、无展开菜单', home.groups === 0 && home.open === 0);
   assert('总览：一级「总览」高亮', home.homeActive === 'home', home.homeActive);
-  assert('总览：面包屑只随模块页出现（8 个）', home.crumb === 8, 'crumb=' + home.crumb);
-  assert('总览：模块卡 8 张', home.count === 8);
+  assert('总览：面包屑只随模块页出现（9 个）', home.crumb === 9, 'crumb=' + home.crumb);
+  assert('总览：模块卡 9 张', home.count === 9);
 
   // ---------- D. 移动端（窄视口）布局 ----------
   console.log('D. 窄视口下的菜单');
@@ -317,9 +317,9 @@ try {
       router: typeof window.AppRouter
     };
   `);
-  assert('导航链接未重复初始化（9）', reg.navs === 9, 'navs=' + reg.navs);
+  assert('导航链接未重复初始化（10）', reg.navs === 10, 'navs=' + reg.navs);
   assert('分组未重复初始化（4）', reg.groups === 4, 'groups=' + reg.groups);
-  assert('面包屑未重复插入', reg.crumbs === 8, 'crumbs=' + reg.crumbs);
+  assert('面包屑未重复插入', reg.crumbs === 9, 'crumbs=' + reg.crumbs);
   assert('原有模块 DOM 正常', reg.levels === true);
   assert('AppNav / AppRouter 均可用', reg.appNav === 'object' && reg.router === 'object');
   assert('无控制台异常', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));

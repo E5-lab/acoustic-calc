@@ -4,30 +4,37 @@
    ========================================================================== */
 
 :root {
-  --bg: #f4f6fb;
-  --bg-grad: radial-gradient(1200px 500px at 50% -180px, #e6edff 0%, rgba(230, 237, 255, 0) 70%);
+  /* 版面底色：略降饱和度、加深一档，让白卡片浮起来 */
+  --bg: #eef1f7;
+  --bg-grad: radial-gradient(1200px 520px at 50% -180px, #dde6fb 0%, rgba(221, 230, 251, 0) 72%);
   --card: #ffffff;
-  --card-soft: #f8fafc;
-  --border: #e4e8f0;
-  --border-strong: #d3dae6;
-  --text: #16202f;
-  --text-soft: #374151;
-  --muted: #6b7280;
-  --faint: #94a3b8;
-  --primary: #2563eb;
-  --primary-d: #1d4ed8;
-  --primary-soft: #eff4ff;
-  --accent: #f97316;
-  --ok: #059669;
-  --ok-soft: #ecfdf5;
-  --warn: #d97706;
-  --warn-soft: #fffbeb;
-  --danger: #dc2626;
-  --danger-soft: #fef2f2;
+  --card-soft: #f6f8fc;
+  --border: #dde3ed;
+  --border-strong: #c3cddc;
+
+  /* 文字：正文对比度 ≥ 14:1，次级 ≥ 8:1，任何一级都不低于 4.5:1（WCAG AA） */
+  --text: #0f1a2a;
+  --text-soft: #2b3a4d;
+  --muted: #4d5b6e;
+  --faint: #5b6a80;
+
+  --primary: #1d4ed8;
+  --primary-d: #1a3fc0;
+  --primary-soft: #e8f0ff;
+  --accent: #c2410c;
+  --ok: #047857;
+  --ok-soft: #e7f7f0;
+  --warn: #b45309;
+  --warn-soft: #fdf5e4;
+  --danger: #c62828;
+  --danger-soft: #fdeeec;
+
+  --field-bg: #ffffff;
+  --track: #e6ebf4;
   --radius: 14px;
   --radius-sm: 10px;
-  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px -8px rgba(16, 24, 40, 0.12);
-  --shadow-lift: 0 2px 4px rgba(16, 24, 40, 0.05), 0 12px 28px -12px rgba(16, 24, 40, 0.18);
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 4px 14px -8px rgba(16, 24, 40, 0.16);
+  --shadow-lift: 0 2px 4px rgba(16, 24, 40, 0.06), 0 14px 30px -14px rgba(16, 24, 40, 0.24);
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
@@ -35,19 +42,19 @@
    规则优先级：data-theme="light" > 系统偏好 > 默认浅色；data-theme="dark" 强制暗色。 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1117;
-    --bg-grad: radial-gradient(1200px 500px at 50% -180px, #16233c 0%, rgba(22, 35, 60, 0) 70%);
-    --card: #151b24;
-    --card-soft: #1a212b;
-    --border: #263140;
-    --border-strong: #334153;
-    --text: #e6edf5;
-    --text-soft: #cbd5e1;
-    --muted: #94a3b8;
-    --faint: #7c8899;
-    --primary: #5b8cff;
-    --primary-d: #7aa2ff;
-    --primary-soft: #1b2740;
+    --bg: #0b1017;
+    --bg-grad: radial-gradient(1200px 520px at 50% -180px, #14223a 0%, rgba(20, 34, 58, 0) 72%);
+    --card: #161d28;
+    --card-soft: #1c2431;
+    --border: #2b3646;
+    --border-strong: #3d4a5c;
+    --text: #eef3fa;
+    --text-soft: #d3dcea;
+    --muted: #aab7c8;
+    --faint: #8b98ab;
+    --primary: #6f9bff;
+    --primary-d: #8db0ff;
+    --primary-soft: #1e2c49;
     --accent: #fb923c;
     --ok: #34d399;
     --ok-soft: #10281f;
@@ -55,31 +62,33 @@
     --warn-soft: #2a2110;
     --danger: #f87171;
     --danger-soft: #2c1416;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px -8px rgba(0, 0, 0, 0.6);
-    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45), 0 12px 28px -12px rgba(0, 0, 0, 0.7);
+    --field-bg: #1c2431;
+    --track: #2b3646;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 16px -8px rgba(0, 0, 0, 0.65);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 14px 32px -14px rgba(0, 0, 0, 0.75);
     color-scheme: dark;
   }
   :root:not([data-theme="light"]) .band-cell input,
   :root:not([data-theme="light"]) #roomSelect,
   :root:not([data-theme="light"]) select.btn,
-  :root:not([data-theme="light"]) .btn,
-  :root:not([data-theme="light"]) .mode-btn { background-color: var(--card-soft); }
-  :root:not([data-theme="light"]) .nav-menu { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55); }
+  :root:not([data-theme="light"]) .btn:not(.primary),
+  :root:not([data-theme="light"]) .mode-btn { background-color: var(--field-bg); }
+  :root:not([data-theme="light"]) .nav-menu { box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6); }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1117;
-  --bg-grad: radial-gradient(1200px 500px at 50% -180px, #16233c 0%, rgba(22, 35, 60, 0) 70%);
-  --card: #151b24;
-  --card-soft: #1a212b;
-  --border: #263140;
-  --border-strong: #334153;
-  --text: #e6edf5;
-  --text-soft: #cbd5e1;
-  --muted: #94a3b8;
-  --faint: #7c8899;
-  --primary: #5b8cff;
-  --primary-d: #7aa2ff;
-  --primary-soft: #1b2740;
+  --bg: #0b1017;
+  --bg-grad: radial-gradient(1200px 520px at 50% -180px, #14223a 0%, rgba(20, 34, 58, 0) 72%);
+  --card: #161d28;
+  --card-soft: #1c2431;
+  --border: #2b3646;
+  --border-strong: #3d4a5c;
+  --text: #eef3fa;
+  --text-soft: #d3dcea;
+  --muted: #aab7c8;
+  --faint: #8b98ab;
+  --primary: #6f9bff;
+  --primary-d: #8db0ff;
+  --primary-soft: #1e2c49;
   --accent: #fb923c;
   --ok: #34d399;
   --ok-soft: #10281f;
@@ -87,16 +96,23 @@
   --warn-soft: #2a2110;
   --danger: #f87171;
   --danger-soft: #2c1416;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px -8px rgba(0, 0, 0, 0.6);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45), 0 12px 28px -12px rgba(0, 0, 0, 0.7);
+  --field-bg: #1c2431;
+  --track: #2b3646;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 16px -8px rgba(0, 0, 0, 0.65);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 14px 32px -14px rgba(0, 0, 0, 0.75);
   color-scheme: dark;
 }
 :root[data-theme="dark"] .band-cell input,
 :root[data-theme="dark"] #roomSelect,
 :root[data-theme="dark"] select.btn,
-:root[data-theme="dark"] .btn,
-:root[data-theme="dark"] .mode-btn { background-color: var(--card-soft); }
-:root[data-theme="dark"] .nav-menu { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55); }
+:root[data-theme="dark"] .btn:not(.primary),
+:root[data-theme="dark"] .mode-btn { background-color: var(--field-bg); }
+:root[data-theme="dark"] .nav-menu { box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6); }
+/* 暗色下主按钮为亮蓝底，白字对比不足，改用深色文字 */
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary { color: #0a1424; }
+:root[data-theme="dark"] .btn.primary:hover,
+:root:not([data-theme="light"]) .btn.primary:hover { color: #0a1424; }
 
 * { box-sizing: border-box; }
 
@@ -109,8 +125,11 @@ body {
   background-image: var(--bg-grad);
   background-repeat: no-repeat;
   color: var(--text);
-  line-height: 1.55;
+  line-height: 1.62;
+  letter-spacing: 0.005em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 a { color: var(--primary); text-decoration: none; }
@@ -1414,3 +1433,108 @@ select.btn {
 /* 键值结果中的整行项与占比条布局 */
 .kv-result .kv.kv-wide { grid-column: 1 / -1; }
 .cell-share { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; width: 100%; }
+
+/* ==========================================================================
+   可读性增强（v2.1）：控件边界 / 表格密度 / 数值强调 / 卡片层次
+   目标：日间主题下所有文字 ≥ WCAG AA(4.5:1)，表单边界清晰、表格易读
+   ========================================================================== */
+
+/* --- 表单控件：明确的可点击边界 + 一致的焦点环 --- */
+.field input,
+.field select,
+.mat-row input,
+.mat-row select,
+.src-row input,
+select.btn,
+#roomSelect,
+.card textarea,
+.band-cell input {
+  background: var(--field-bg);
+  border-color: var(--border-strong);
+}
+.field input:hover,
+.field select:hover,
+.mat-row input:hover,
+.mat-row select:hover,
+.src-row input:hover,
+select.btn:hover,
+.card textarea:hover { border-color: color-mix(in srgb, var(--primary) 40%, var(--border-strong)); }
+
+.field input:focus,
+.field select:focus,
+.mat-row input:focus,
+.mat-row select:focus,
+.src-row input:focus,
+select.btn:focus,
+#roomSelect:focus,
+.card textarea:focus,
+.band-cell input:focus,
+.btn:focus-visible,
+.mode-btn:focus-visible,
+.nav-parent:focus-visible,
+.mainnav a:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
+}
+.btn { border-color: var(--border-strong); font-weight: 500; }
+.btn.small { font-weight: 500; }
+.mode-btn { border-color: var(--border-strong); color: var(--text-soft); font-weight: 500; }
+.mode-btn:hover { border-color: color-mix(in srgb, var(--primary) 40%, var(--border-strong)); }
+
+/* --- 表头：加底色与分隔，扫行不易串行 --- */
+.detail-table th {
+  color: var(--text-soft);
+  font-weight: 650;
+  background: var(--card-soft);
+}
+.detail-table.wide thead th {
+  border-bottom: 1.5px solid var(--border-strong);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 12px;
+}
+.detail-table.wide tbody tr:nth-child(odd) { background: color-mix(in srgb, var(--card-soft) 70%, var(--card)); }
+.detail-table.wide tbody tr:hover { background: var(--primary-soft); }
+.detail-table.wide td { color: var(--text-soft); }
+.detail-table.wide td:first-child { color: var(--text); font-weight: 600; }
+.detail-table td.over { color: var(--danger); font-weight: 700; }
+.detail-table.wide td.ok { color: var(--ok); font-weight: 600; }
+.detail-table.wide td.warn { color: var(--warn); font-weight: 600; }
+.detail-table.wide td.muted-cell { color: var(--faint); font-weight: 400; }
+
+/* --- 卡片标题与说明的层次 --- */
+.card h2, .card h3 { color: var(--text); }
+.page-head h2 { color: var(--text); }
+.hint { color: var(--muted); font-weight: 400; }
+.notes ul { color: var(--text-soft); }
+.notes code, code { font-weight: 600; }
+
+/* --- 结果数值：等宽 + 明确色阶 --- */
+.hero-rate, .stat .s-value, .target-item .t-value, .kv .v { color: var(--text); }
+.stat .s-label { color: var(--muted); font-weight: 500; }
+.kv .k { color: var(--muted); font-weight: 500; }
+.mini, .stat .s-sub, .hero-box .hb-sub { color: var(--faint); }
+.sub { color: var(--muted); }
+
+/* --- 标题字号微调，长页面更易定位 --- */
+.page-head h2 { font-size: 23px; letter-spacing: 0.002em; }
+.hero-title { letter-spacing: -0.01em; }
+
+/* --- 输入网格：数字对齐、字号统一 --- */
+.band-cell input,
+.src-row input,
+.mat-row input { font-variant-numeric: tabular-nums; }
+.band-cell label { color: var(--text-soft); font-weight: 500; }
+
+/* --- 说明块 / 提示条：底色更明确，文字不用浅色 --- */
+.callout { color: var(--text-soft); }
+.callout.warn { color: color-mix(in srgb, var(--warn) 82%, var(--text)); }
+.callout.ok { color: color-mix(in srgb, var(--ok) 88%, var(--text)); }
+.aux-hint, .mode-note, .target-note { color: var(--muted); }
+.src-head, .mat-head, .range-legend { color: var(--faint); font-weight: 500; }
+
+/* --- 页脚：不再用最浅一级 --- */
+.site-footer { color: var(--muted); }
+.site-footer .footer-note { color: var(--faint); }
