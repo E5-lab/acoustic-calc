@@ -536,6 +536,80 @@
     return out;
   }
 
+  // ------------------------------ 厂家计算书复核 ------------------------------
+  // 独立按厂家常用的标准公式（图片方法）从 inputs 重算 δ / fn / η，
+  // 再与厂家声称（claimed）的输出逐项比对，给出一致 / 偏差判定。
+  // 用于复核减振器厂商提供的计算书是否自洽、与标准公式是否吻合。
+  //   复核判定容差（超过容差即判为偏差）：
+  //     δ：±0.5 mm 或 ±3%；fn：±1 cpm 或 ±1%；η：±0.5%
+  function verifySheet(o) {
+    o = o || {};
+    var Wa = num(o.deviceWeight);
+    var safety = num(o.safety);
+    if (safety == null || safety <= 0) safety = 1;
+    var n = num(o.count);
+    if (n == null || n < 1) n = 1;
+    var rpm = num(o.rpm);
+    var K = num(o.stiffness);
+    var unit = STIFFNESS_UNITS[o.stiffnessUnit] ? o.stiffnessUnit : 'kg/mm';
+
+    if (Wa == null || Wa <= 0) return { ok: false, error: '请输入设备（含电机）自重 Wa，单位 kg' };
+    if (K == null || K <= 0) return { ok: false, error: '请输入单只减振器的竖向刚度 K' };
+
+    var k = toKgPerMm(K, unit);
+
+    // ——— 厂家标准公式（图片方法，钢弹簧 d = 1、无阻尼）———
+    var Wd = Wa * safety;                 // 运行重量
+    var W = Wd / n;                       // 每只承载
+    var delta = W / k;                    // 静态压缩量 mm
+    var fnCpm = 947 * Math.sqrt(1 / delta); // 固有频率 cpm
+    var fdCpm = (rpm != null && rpm > 0) ? rpm : null; // 扰动频率 = 转速 cpm
+    var z = (fdCpm != null && fdCpm > 0) ? fdCpm / fnCpm : null;
+    var T = (z != null) ? 1 / Math.abs(1 - z * z) : null; // 无阻尼传递率
+    var eff = (T != null) ? (1 - T) * 100 : null;          // 隔振效率 %
+
+    // 本工具精算（analyze, d=1, D=0）交叉印证：应与标准公式重算一致
+    var internal = (z != null) ? analyze({
+      deviceWeight: Wa, baseWeight: 0, safety: safety, count: n, rpm: rpm,
+      stiffness: K, stiffnessUnit: unit, dynamicFactor: 1, damping: 0
+    }) : null;
+
+    var tol = { deltaAbs: 0.5, deltaRel: 0.03, fnAbs: 1, fnRel: 0.01, effAbs: 0.5 };
+
+    function check(recomputed, claimed, absTol, relTol) {
+      if (claimed == null) return { provided: false, recomputed: recomputed, claimed: null, diff: null, rel: null, status: 'na' };
+      var diff = recomputed - claimed;
+      var rel = claimed !== 0 ? diff / claimed : 0;
+      var ok = Math.abs(diff) <= absTol || (relTol != null && Math.abs(rel) <= relTol);
+      var status = ok ? 'ok' : (Math.abs(diff) <= absTol * 3 ? 'warn' : 'danger');
+      return { provided: true, recomputed: recomputed, claimed: claimed, diff: diff, rel: rel, status: status };
+    }
+
+    var rows = [
+      { key: 'delta', label: '静态压缩量 δ', unit: 'mm', check: check(delta, num(o.claimedDeflection), tol.deltaAbs, tol.deltaRel) },
+      { key: 'fn', label: '系统固有频率 fn', unit: 'cpm', check: check(fnCpm, num(o.claimedFnCpm), tol.fnAbs, tol.fnRel) },
+      { key: 'eff', label: '隔振效率 η', unit: '%', check: check(eff, num(o.claimedEfficiency), tol.effAbs, null) }
+    ];
+
+    var providedRows = rows.filter(function (r) { return r.check.provided; });
+    var mismatch = providedRows.filter(function (r) { return r.check.status !== 'ok'; });
+    var allConsistent = providedRows.length > 0 && mismatch.length === 0;
+
+    return {
+      ok: true,
+      inputs: { Wa: Wa, safety: safety, n: n, rpm: rpm, K: K, unit: unit, kKgPerMm: k },
+      Wd: Wd, W: W, delta: delta, fnCpm: fnCpm, fdCpm: fdCpm, z: z, T: T, efficiency: eff,
+      internalDelta: internal ? internal.deflection : null,
+      internalFnHz: internal ? internal.f0 : null,
+      internalEff: internal ? internal.efficiencyUndamped : null,
+      rows: rows,
+      tolerances: tol,
+      providedCount: providedRows.length,
+      mismatchCount: mismatch.length,
+      allConsistent: allConsistent
+    };
+  }
+
   // ------------------------------ 曲线 ------------------------------
   // 传递率曲线（含无阻尼与含阻尼两条，供绘图）
   function curve(zMax, damping, samples) {
@@ -585,6 +659,7 @@
     requiredRatio: requiredRatio,
     reverse: reverse,
     efficiencyTable: efficiencyTable,
+    verifySheet: verifySheet,
     curve: curve,
     round: round
   };

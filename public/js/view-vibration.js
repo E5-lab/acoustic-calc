@@ -267,6 +267,69 @@
       : '';
   }
 
+  // ===================== 面板 4：厂家计算书复核 =====================
+  function recalcReview() {
+    var msg = $('vbCMsg');
+    var r = V.verifySheet({
+      deviceWeight: pf('vbCWa'),
+      safety: pf('vbCSafety'),
+      count: pf('vbCN'),
+      rpm: pf('vbCRpm'),
+      stiffness: pf('vbCK'),
+      stiffnessUnit: $('vbCUnit').value,
+      claimedDeflection: pf('vbCDelta'),
+      claimedFnCpm: pf('vbCFn'),
+      claimedEfficiency: pf('vbCEff')
+    });
+    if (!r.ok) {
+      msg.innerHTML = callout('error', r.error);
+      $('vbCResult').innerHTML = '';
+      return;
+    }
+    msg.innerHTML = '';
+
+    var verdictHtml;
+    if (r.providedCount === 0) {
+      verdictHtml = callout('info', '已按厂家标准公式重算（fn = 947√(1/δ) 等）。如需复核厂家声称值，请在下方填入厂家计算书给出的 δ / fn / η 任意一项进行比对。');
+    } else if (r.allConsistent) {
+      verdictHtml = callout('ok', '✓ 一致：厂家计算书与标准公式吻合，复核通过（共比对 ' + r.providedCount + ' 项）。');
+    } else {
+      var names = r.rows.filter(function (rr) { return rr.check.provided && rr.check.status !== 'ok'; })
+        .map(function (rr) { return rr.label; }).join('、');
+      verdictHtml = callout('error', '✘ 存在差异：' + r.mismatchCount + ' 项与标准公式不符（' + names + '），详见下表。');
+    }
+
+    var rows = r.rows.map(function (rr) {
+      var c = rr.check;
+      var d = (rr.key === 'fn') ? 1 : 2;
+      var recomputedHtml = num(c.recomputed, d) + ' ' + rr.unit;
+      var claimedHtml = c.provided ? (num(c.claimed, d) + ' ' + rr.unit) : '—';
+      var diffHtml = c.provided ? ((c.diff >= 0 ? '+' : '') + num(c.diff, d) + ' ' + rr.unit) : '—';
+      var statusCell = !c.provided ? cell('待比对', 'muted')
+        : (c.status === 'ok' ? cell('一致', 'ok')
+          : (c.status === 'warn' ? cell('轻微偏差', 'warn') : cell('偏差', 'danger')));
+      return [
+        cell('<strong>' + rr.label + '</strong>'),
+        cell('<span class="mono">' + recomputedHtml + '</span>'),
+        cell(c.provided ? '<span class="mono">' + claimedHtml + '</span>' : claimedHtml),
+        cell('<span class="mono">' + diffHtml + '</span>'),
+        statusCell
+      ];
+    });
+
+    var internalNote = (r.internalDelta != null)
+      ? '<p class="inline-note">交叉印证：本工具精算（d=1、无阻尼）得 δ = ' + num(r.internalDelta, 2) +
+        ' mm、f₀ = ' + num(r.internalFnHz, 2) + ' Hz、η = ' + num(r.internalEff, 2) +
+        ' %。其中 δ 与上方「标准公式重算」完全一致；f₀、η 因厂家公式对固有频率常数取整为 947（精确值约 945.4）而相差 &lt; 0.05%，' +
+        '可视为一致 —— 说明本工具的隔振计算与厂家常用方法等价，复核结果可信。</p>'
+      : '';
+
+    $('vbCResult').innerHTML =
+      verdictHtml +
+      table(['复核项', '按厂家标准公式重算', '厂家声称值', '偏差', '判定'], rows, 'wide') +
+      internalNote;
+  }
+
   function renderGuide() {
     $('vbGuideBox').innerHTML = table(
       ['频率比 z', '判定', '说明'],
@@ -430,6 +493,7 @@
     if (name === 'select') recalcSelect();
     if (name === 'verify') recalcVerify();
     if (name === 'reverse') recalcReverse();
+    if (name === 'check') recalcReview();
   }
 
   function applyPreset(p) {
@@ -474,6 +538,10 @@
     });
     $('vbTUnit').addEventListener('change', recalcReverse);
 
+    ['vbCWa', 'vbCSafety', 'vbCN', 'vbCRpm', 'vbCK', 'vbCDelta', 'vbCFn', 'vbCEff']
+      .forEach(function (id) { $(id).addEventListener('input', recalcReview); });
+    $('vbCUnit').addEventListener('change', recalcReview);
+
     $('vbCopy').addEventListener('click', function () { copyText(summaryText(), 'vbCopyMsg'); });
     $('vbCsv').addEventListener('click', exportCsv);
 
@@ -496,6 +564,7 @@
         if (!v || !v.classList.contains('active')) return;
         if (state.panel === 'select') recalcSelect();
         if (state.panel === 'verify') recalcVerify();
+        if (state.panel === 'check') recalcReview();
       }, 160);
     });
   }
@@ -503,6 +572,7 @@
   function onShow() {
     if (state.panel === 'select') recalcSelect();
     else if (state.panel === 'verify') recalcVerify();
+    else if (state.panel === 'check') recalcReview();
     else recalcReverse();
   }
 

@@ -1190,7 +1190,7 @@
   <section class="view" id="view-vibration" data-view="vibration">
     <div class="page-head">
       <h2>弹簧减振器隔振效率计算</h2>
-      <p class="hint">两种方法并行校核：静变形法（选型计算书）与频率比法（含阻尼传递率验算），附目标效率反算与传递率曲线</p>
+      <p class="hint">静变形法（选型计算书）与频率比法（含阻尼传递率验算）并行校核，附目标效率反算、传递率曲线，以及「厂家计算书复核」面板（按厂家常用标准公式独立重算并逐条比对 δ / fn / η）</p>
     </div>
 
     <div class="mode-row">
@@ -1198,6 +1198,7 @@
       <button class="mode-btn active" data-vb-panel="select" type="button">静变形法 · 计算书</button>
       <button class="mode-btn" data-vb-panel="verify" type="button">频率比法 · 验算</button>
       <button class="mode-btn" data-vb-panel="reverse" type="button">反算与对照</button>
+      <button class="mode-btn" data-vb-panel="check" type="button">厂家计算书复核</button>
     </div>
 
     <!-- -------------------- 面板 1：静变形法（选型计算书） -------------------- -->
@@ -1452,6 +1453,83 @@
           <li><strong>选型要点</strong>：每只减振器的实际荷载宜为样本额定荷载的 50% ~ 100%（最佳荷载略大于实际承载），既保证刚度假定成立，又避免长期低荷载导致疲劳；设备重心与减振器刚度中心应在同一铅垂线上，重量分布不均时按实际支点反力分配。</li>
           <li><strong>注意</strong>：本模块按单频稳态简谐激励、线性弹簧-质量系统计算；回转型设备除旋转频率 f = n/60 外还可能存在 2f 等谐波（不平衡、对中不良），必要时应按最高谐波校核。冲击、瞬态激励与多层隔振体系需另行分析。</li>
         </ul>
+      </section>
+    </div>
+
+    <!-- --------------------- 面板 4：厂家计算书复核 --------------------- -->
+    <div class="vb-panel" data-panel="check" hidden>
+      <div class="page-head">
+        <h3>厂家计算书复核 <span class="hint">(把厂家给的数据贴进来，自动比对是否一致)</span></h3>
+        <p class="hint">左栏填厂家的「已知条件」（设备、安全系数、只数、刚度、转速）；右栏填厂家计算书上「声称的输出值」δ / fn / η（任意一项即可）。程序按厂家常用的标准公式（fn = 947√(1/δ)、T = 1/|1−z²|）独立重算并逐条比对，超出容差即标红。</p>
+      </div>
+
+      <div class="split">
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">1</span> 厂家已知条件 <span class="hint">(你从计算书上抄的输入)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbCWa">设备自重 Wa <span class="unit-tag">kg</span></label>
+                <input id="vbCWa" type="number" step="1" min="0" value="234" />
+              </div>
+              <div class="field">
+                <label for="vbCSafety">安全系数 K</label>
+                <input id="vbCSafety" type="number" step="0.05" min="1" value="1.3" />
+              </div>
+              <div class="field">
+                <label for="vbCN">减振器数量 N <span class="unit-tag">只</span></label>
+                <input id="vbCN" type="number" step="1" min="1" value="4" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbCK">单只竖向刚度 K</label>
+                <input id="vbCK" type="number" step="0.1" min="0" value="3" />
+              </div>
+              <div class="field">
+                <label for="vbCUnit">刚度单位</label>
+                <select id="vbCUnit">
+                  <option value="kg/mm" selected>kg/mm（样本常用）</option>
+                  <option value="kg/cm">kg/cm</option>
+                  <option value="N/mm">N/mm</option>
+                  <option value="kN/mm">kN/mm</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="vbCRpm">设备转速 n <span class="unit-tag">r/min</span></label>
+                <input id="vbCRpm" type="number" step="10" min="0" value="1450" />
+              </div>
+            </div>
+            <p class="inline-note">这些就是厂家计算书的「输入项」；程序据此用标准公式独立重算 δ、fn、η，作为比对基准。</p>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">2</span> 厂家声称的输出值 <span class="hint">(计算书上打印的结果，可选填)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbCDelta">静态压缩量 δ <span class="unit-tag">mm</span></label>
+                <input id="vbCDelta" type="number" step="0.1" min="0" placeholder="厂家给出则填" />
+              </div>
+              <div class="field">
+                <label for="vbCFn">固有频率 fn <span class="unit-tag">cpm</span></label>
+                <input id="vbCFn" type="number" step="0.1" min="0" placeholder="厂家给出则填" />
+              </div>
+              <div class="field">
+                <label for="vbCEff">隔振效率 η <span class="unit-tag">%</span></label>
+                <input id="vbCEff" type="number" step="0.1" min="0" max="100" placeholder="厂家给出则填" />
+              </div>
+            </div>
+            <p class="inline-note">留空表示「仅重算、不比对该项」。容差：δ ±0.5 mm（或 3%）、fn ±1 cpm（或 1%）、η ±0.5%。</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="card">
+        <h3>复核结果</h3>
+        <div id="vbCMsg" class="callout-row"></div>
+        <div id="vbCResult" class="table-wrap"></div>
       </section>
     </div>
   </section>

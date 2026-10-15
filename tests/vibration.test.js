@@ -263,5 +263,28 @@ assert('round 保留指定小数', V.round(3.12924, 2) === 3.13 && V.round(null)
 assert('阻尼 > 0.12 仍可计算（仅提示）', V.byRatio({ freq: 25, f0: 5, damping: 0.3 }).ok === true);
 assert('极大刚度不产生 NaN', isFinite(V.analyze({ deviceWeight: 10, count: 1, rpm: 3000, stiffness: 5000 }).f0));
 
+console.log('厂家计算书复核 (verifySheet)');
+var a = V.analyze({ deviceWeight: 234, baseWeight: 0, safety: 1.3, count: 4, rpm: 1450, stiffness: 3, stiffnessUnit: 'kg/mm', dynamicFactor: 1, damping: 0 });
+var rv = V.verifySheet({ deviceWeight: 234, safety: 1.3, count: 4, rpm: 1450, stiffness: 3, stiffnessUnit: 'kg/mm' });
+approx('复核：Wd = 234×1.3 = 304.2', rv.Wd, 304.2, 1e-9);
+approx('复核：W = 304.2/4 = 76.05', rv.W, 76.05, 1e-9);
+approx('复核：δ = 76.05/3 = 25.35 mm', rv.delta, 25.35, 0.001);
+approx('复核：fn = 947√(1/δ) = ' + rv.fnCpm.toFixed(2) + ' cpm', rv.fnCpm, 947 * Math.sqrt(1 / 25.35), 1e-9);
+approx('复核：z = 1450/fn ≈ ' + rv.z.toFixed(3), rv.z, 1450 / rv.fnCpm, 1e-9);
+approx('复核：η ≈ ' + rv.efficiency.toFixed(2) + ' %', rv.efficiency, (1 - 1 / Math.abs(1 - rv.z * rv.z)) * 100, 1e-9);
+assert('复核：未提供声称值时全部为待比对 (provided=false)', rv.rows.every(function (r) { return r.check.provided === false; }));
+assert('复核：本工具精算的 δ 与标准公式重算完全一致（不涉及频率常数）', Math.abs(rv.internalDelta - rv.delta) < 1e-6);
+assert('复核：本工具精算 η 与标准公式重算相差 < 0.05%（仅因 947 取整常数）', Math.abs(rv.internalEff - rv.efficiency) < 0.05);
+// 厂家声称值与实际重算一致 → 应判 一致
+var rv2 = V.verifySheet({ deviceWeight: 234, safety: 1.3, count: 4, rpm: 1450, stiffness: 3, claimedDeflection: 25.35, claimedFnCpm: rv.fnCpm, claimedEfficiency: rv.efficiency });
+assert('复核：声称值与重算一致 → allConsistent=true', rv2.allConsistent === true && rv2.mismatchCount === 0);
+// 厂家声称值明显错误 → 应判 偏差 (danger)
+var rv3 = V.verifySheet({ deviceWeight: 234, safety: 1.3, count: 4, rpm: 1450, stiffness: 3, claimedEfficiency: 50 });
+assert('复核：声称 η=50% 与重算不符 → mismatchCount=1、状态 danger', rv3.mismatchCount === 1 && rv3.rows[2].check.status === 'danger');
+// 轻微偏差 → warn
+var rv4 = V.verifySheet({ deviceWeight: 234, safety: 1.3, count: 4, rpm: 1450, stiffness: 3, claimedDeflection: 25.5 });
+assert('复核：δ 偏差 0.15mm (<0.5) → 判一致 ok', rv4.rows[0].check.status === 'ok');
+assert('复核：缺输入报错', V.verifySheet({}).ok === false);
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);
