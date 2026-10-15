@@ -610,6 +610,127 @@
     };
   }
 
+  // ------------------------------ 环新式「隔振降噪工程计算书」复核 ------------------------------
+  // 青浦环新等国产厂家常用的计算书格式（含阻尼、隔声系数），公式体系：
+  //   f  = n/60                                    设备干扰频率 Hz
+  //   δ  = (W/N)/K 或样本给定                       静态压缩量 mm
+  //   f₀ = (1/2π)·√(g/δ)，g = 9800 mm/s²            固有频率 Hz（与精算式 4.9823√(10/δ) 同源）
+  //   λ  = f/f₀                                    频率比
+  //   η  = √{[1+(2Dλ)²]/[(1−λ²)²+(2Dλ)²]}          传递率（含阻尼，D 为阻尼比）
+  //   T  = (1−η)×100%                              隔振效率 %
+  //   N  = 12.5·lg(1/η) dB                          隔声系数（振动级衰减量）
+  // 注：厂家格式里 η 指传递率、T 指隔振效率，与本工具其余面板的符号习惯相反，界面已注明。
+  // 复核容差：δ ±0.5mm/3%；f₀ ±0.05Hz/1%；λ ±0.2/1%；η ±0.002/5%（相对）；T ±0.5%；N ±1dB
+  function hxSheet(o) {
+    o = o || {};
+    var Wa = num(o.deviceWeight);
+    var ped = num(o.pedestalWeight);
+    if (ped == null || ped < 0) ped = 0;
+    var safetyPct = num(o.safetyPercent);
+    if (safetyPct == null) safetyPct = 20;
+    var safety = 1 + safetyPct / 100;
+    var n = num(o.count);
+    if (n == null || n < 1) n = 1;
+    var rpm = num(o.rpm);
+    var D = num(o.damping);
+    if (D == null || D < 0) D = 0.065;
+    var K = num(o.stiffness);
+    var unit = STIFFNESS_UNITS[o.stiffnessUnit] ? o.stiffnessUnit : 'kg/mm';
+
+    if (Wa == null || Wa <= 0) return { ok: false, error: '请输入隔振设备重量（kg）' };
+    if (rpm == null || rpm <= 0) return { ok: false, error: '请输入隔振设备转速 n（r/min）' };
+
+    var G_SHEET = 9800;                       // 该厂家计算书采用的重力加速度 mm/s²
+    var Wd = (Wa + ped) * safety;             // 减振体系总重量
+    var W = Wd / n;                           // 单只载荷 kg
+    var f = rpm / 60;                         // 干扰频率 Hz
+    var k = (K != null && K > 0) ? toKgPerMm(K, unit) : null;
+
+    // 静态压缩量：给了刚度就按 δ=W/K 重算，否则采用样本/计算书给定的 δ
+    var delta = null, deltaFromK = false;
+    if (k != null) {
+      delta = W / k;
+      deltaFromK = true;
+    } else {
+      delta = num(o.deflection);
+      if (delta == null || delta <= 0) {
+        return { ok: false, error: '请输入静态压缩量 δ（mm，来自减振器样本），或填写单只刚度 K 由程序反算' };
+      }
+    }
+
+    var f0 = Math.sqrt(G_SHEET / delta) / (2 * Math.PI);  // (1/2π)√(g/δ) Hz
+    var lambda = f / f0;
+    var eta = transmissibility(lambda, D);                // 传递率（含阻尼）
+    var T = (1 - eta) * 100;                              // 隔振效率 %
+    var N = 12.5 * Math.log10(1 / eta);                   // 隔声系数 dB
+
+    // 与本工具精算内核交叉印证（f₀ 系数 9806.65 vs 9800，差异 < 0.04%）
+    var internal = analyze({
+      deviceWeight: Wa, baseWeight: ped, safety: safety, count: n, rpm: rpm,
+      stiffness: (k != null) ? K : round(W / delta, 4), stiffnessUnit: 'kg/mm',
+      dynamicFactor: 1, damping: D
+    });
+
+    var tol = {
+      deltaAbs: 0.5, deltaRel: 0.03,
+      f0Abs: 0.05, f0Rel: 0.01,
+      lambdaAbs: 0.2, lambdaRel: 0.01,
+      etaAbs: 0.002, etaRel: 0.05,
+      tAbs: 0.5,
+      nAbs: 1
+    };
+
+    function check(recomputed, claimed, absTol, relTol) {
+      if (claimed == null) return { provided: false, recomputed: recomputed, claimed: null, diff: null, rel: null, status: 'na' };
+      var diff = recomputed - claimed;
+      var rel = claimed !== 0 ? diff / claimed : 0;
+      var ok = Math.abs(diff) <= absTol || (relTol != null && Math.abs(rel) <= relTol);
+      var status = ok ? 'ok' : (Math.abs(diff) <= absTol * 3 ? 'warn' : 'danger');
+      return { provided: true, recomputed: recomputed, claimed: claimed, diff: diff, rel: rel, status: status };
+    }
+
+    var rows = [
+      { key: 'delta', label: '静态压缩量 δ', unit: 'mm', note: deltaFromK ? '' : '样本给定，作为计算输入', check: check(delta, num(o.claimedDeflection), tol.deltaAbs, tol.deltaRel) },
+      { key: 'f0', label: '固有频率 f₀', unit: 'Hz', note: '', check: check(f0, num(o.claimedF0), tol.f0Abs, tol.f0Rel) },
+      { key: 'lambda', label: '频率比 λ = f/f₀', unit: '', note: '', check: check(lambda, num(o.claimedLambda), tol.lambdaAbs, tol.lambdaRel) },
+      { key: 'eta', label: '传递率 η（含阻尼）', unit: '', note: '', check: check(eta, num(o.claimedEta), tol.etaAbs, tol.etaRel) },
+      { key: 't', label: '隔振效率 T = (1−η)×100%', unit: '%', note: '', check: check(T, num(o.claimedT), tol.tAbs, null) },
+      { key: 'n', label: '隔声系数 N = 12.5lg(1/η)', unit: 'dB', note: '', check: check(N, num(o.claimedN), tol.nAbs, null) }
+    ];
+
+    var providedRows = rows.filter(function (r) { return r.check.provided; });
+    var mismatch = providedRows.filter(function (r) { return r.check.status !== 'ok'; });
+    var allConsistent = providedRows.length > 0 && mismatch.length === 0;
+
+    // 计算书步骤（对应该厂家计算书第九 ~ 十四节）
+    var steps = [
+      { no: '九', title: '设备干扰频率', formula: 'f = n/60', subst: 'n = ' + round(rpm, 0) + ' 转/分', value: round(f, 1), unit: 'Hz' },
+      { no: '十-1', title: '减振器静态压缩量 δ', formula: deltaFromK ? 'δ = (W/N)/K' : 'δ（减振器样本给定）', subst: deltaFromK ? ('W/N = ' + round(W, 0) + ' kg, K = ' + round(K, 2) + ' ' + unit) : ('δ = ' + round(delta, 1) + ' mm'), value: round(delta, 1), unit: 'mm' },
+      { no: '十-2', title: '减振器固有频率 f₀', formula: 'f₀ = (1/2π)·√(9800/δ)', subst: '(1/2π)·√(9800/' + round(delta, 1) + ')', value: round(f0, 2), unit: 'Hz' },
+      { no: '十一', title: '频率比 λ', formula: 'λ = f/f₀', subst: round(f, 1) + '/' + round(f0, 2), value: round(lambda, 1), unit: '' },
+      { no: '十二-1', title: '传递率 η（含阻尼，D = ' + round(D, 3) + '）', formula: 'η = √{[1+(2Dλ)²]/[(1−λ²)²+(2Dλ)²]}', subst: 'λ = ' + round(lambda, 1) + ', D = ' + round(D, 3), value: round(eta, 4), unit: '' },
+      { no: '十二-2', title: '隔振效率 T', formula: 'T = (1−η)×100%', subst: '(1−' + round(eta, 4) + ')×100%', value: round(T, 1), unit: '%' },
+      { no: '十三', title: '隔声系数（衰减量）N', formula: 'N = 12.5·lg(1/η)', subst: '12.5·lg(1/' + round(eta, 4) + ')', value: round(N, 1), unit: 'dB' },
+      { no: '十四', title: '结论', formula: '隔振效率 ≥ 80% 即 λ = f/f₀ ≥ 2.5', subst: 'λ = ' + round(lambda, 1) + (lambda >= 2.5 ? ' ≥ 2.5' : ' < 2.5（不满足）'), value: lambda >= 2.5 ? 1 : 0, unit: lambda >= 2.5 ? '达标' : '不达标' }
+    ];
+
+    return {
+      ok: true,
+      standard: 'hx',
+      inputs: { Wa: Wa, pedestal: ped, safetyPercent: safetyPct, safety: safety, n: n, rpm: rpm, D: D, K: K, unit: unit, kKgPerMm: k },
+      Wd: Wd, W: W, f: f, delta: delta, deltaFromK: deltaFromK,
+      f0: f0, lambda: lambda, eta: eta, T: T, N: N,
+      steps: steps,
+      internalF0: internal ? internal.f0 : null,
+      internalEta: internal ? internal.efficiency : null,
+      rows: rows,
+      tolerances: tol,
+      providedCount: providedRows.length,
+      mismatchCount: mismatch.length,
+      allConsistent: allConsistent
+    };
+  }
+
   // ------------------------------ 曲线 ------------------------------
   // 传递率曲线（含无阻尼与含阻尼两条，供绘图）
   function curve(zMax, damping, samples) {
@@ -660,6 +781,7 @@
     reverse: reverse,
     efficiencyTable: efficiencyTable,
     verifySheet: verifySheet,
+    hxSheet: hxSheet,
     curve: curve,
     round: round
   };

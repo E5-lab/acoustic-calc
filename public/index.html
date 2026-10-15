@@ -42,6 +42,7 @@
         <div class="nav-menu">
           <a href="#/perforation" data-route="perforation"><span class="nm-t">穿孔率计算</span><small class="nm-d">四种阵列形制 · 反算中心距 · 微穿孔板共振</small></a>
           <a href="#/absorber" data-route="absorber"><span class="nm-t">吸声材料阻抗</span><small class="nm-d">Delany–Bazley 模型 · 吸声系数 · NRC</small></a>
+          <a href="#/muffler" data-route="muffler"><span class="nm-t">消声器计算</span><small class="nm-d">阻性 / 抗性 / 阻抗复合 · A 计权插入损失</small></a>
         </div>
       </div>
 
@@ -214,6 +215,20 @@
             <span class="mc-desc">静变形法选型计算书（运行重量→每只承载→静压缩量→固有频率→频率比→传递率→隔振效率）与频率比法含阻尼验算双路并行，附目标效率反算与传递率曲线。</span>
           </span>
         </a>
+
+        <a class="module-card" href="#/muffler">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="6" y="18" width="12" height="12" rx="2" />
+              <path d="M18 20h8l6-6v20l-6-6h-8z" />
+              <path d="M36 16v16M40 20v8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">消声器计算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">阻性消声器（GB/T 50087-2013 式 6.3.1，附别洛夫式对照、高频失效折减、流速与压力损失校核）、抗性消声器（扩张室与共振腔）与阻抗复合验算（逐频带相加 → A 计权插入损失）。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -221,7 +236,7 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动</strong> 四个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障、<code>#/muffler</code> 消声器、<code>#/vibration</code> 减振计算。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 570+ 条断言）。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
@@ -1199,6 +1214,7 @@
       <button class="mode-btn" data-vb-panel="verify" type="button">频率比法 · 验算</button>
       <button class="mode-btn" data-vb-panel="reverse" type="button">反算与对照</button>
       <button class="mode-btn" data-vb-panel="check" type="button">厂家计算书复核</button>
+      <button class="mode-btn" data-vb-panel="hx" type="button">环新式计算书复核</button>
     </div>
 
     <!-- -------------------- 面板 1：静变形法（选型计算书） -------------------- -->
@@ -1532,12 +1548,389 @@
         <div id="vbCResult" class="table-wrap"></div>
       </section>
     </div>
+
+    <div class="vb-panel" data-panel="hx" hidden>
+      <div class="page-head">
+        <h3>环新式「隔振降噪工程计算书」复核 <span class="hint">(青浦环新等国产厂家常用格式)</span></h3>
+        <p class="hint">公式体系：f = n/60；f₀ = (1/2π)√(9800/δ)；λ = f/f₀；传递率 η = √{[1+(2Dλ)²]/[(1−λ²)²+(2Dλ)²]}（含阻尼比 D）；隔振效率 T = (1−η)×100%；隔声系数 N = 12.5lg(1/η) dB。注意该格式 <strong>η 指传递率、T 指隔振效率</strong>。左栏填计算书已知条件，右栏填厂家声称的输出值（可选项比对）。</p>
+      </div>
+
+      <div class="split">
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">1</span> 计算书已知条件 <span class="hint">(第一 ~ 八节)</span>
+              <button id="vbHLoadExample" class="btn ghost mini" type="button" style="float:right">载入例题（冷冻机组）</button></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHProject">（一）工程项目</label>
+                <input id="vbHProject" type="text" placeholder="选填" />
+              </div>
+              <div class="field">
+                <label for="vbHDevice">（二）设备名称</label>
+                <input id="vbHDevice" type="text" placeholder="如：冷冻机组" />
+              </div>
+              <div class="field">
+                <label for="vbHModel">（三）设备型号</label>
+                <input id="vbHModel" type="text" placeholder="选填" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHRpm">（四）转速 n <span class="unit-tag">r/min</span></label>
+                <input id="vbHRpm" type="number" step="10" min="0" value="2900" />
+              </div>
+              <div class="field">
+                <label for="vbHWa">（五）设备重量 <span class="unit-tag">kg</span></label>
+                <input id="vbHWa" type="number" step="10" min="0" value="10000" />
+              </div>
+              <div class="field">
+                <label for="vbHPed">（六）台座重量 <span class="unit-tag">kg</span></label>
+                <input id="vbHPed" type="number" step="10" min="0" placeholder="无则留空" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHSafety">（七）安全系数 <span class="unit-tag">%</span></label>
+                <input id="vbHSafety" type="number" step="5" min="0" value="20" />
+              </div>
+              <div class="field">
+                <label for="vbHCount">减振器数量 N <span class="unit-tag">只</span></label>
+                <input id="vbHCount" type="number" step="1" min="1" value="8" />
+              </div>
+              <div class="field">
+                <label for="vbHD">阻尼比 D</label>
+                <input id="vbHD" type="number" step="0.005" min="0" value="0.065" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHK">单只刚度 K <span class="hint mini">(填了则按 δ=W/K 重算)</span></label>
+                <input id="vbHK" type="number" step="0.1" min="0" placeholder="样本给定则填" />
+              </div>
+              <div class="field">
+                <label for="vbHUnit">刚度单位</label>
+                <select id="vbHUnit">
+                  <option value="kg/mm" selected>kg/mm</option>
+                  <option value="kg/cm">kg/cm</option>
+                  <option value="N/mm">N/mm</option>
+                  <option value="kN/mm">kN/mm</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="vbHDelta">静态压缩量 δ <span class="unit-tag">mm</span> <span class="hint mini">(K 留空时作为输入)</span></label>
+                <input id="vbHDelta" type="number" step="1" min="0" value="50" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="vbHIsolModel">减振器型号</label>
+              <input id="vbHIsolModel" type="text" placeholder="如：弹簧减振器 BT3-1500" />
+            </div>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">2</span> 厂家声称的输出值 <span class="hint">(第九 ~ 十三节结果，可选填)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHCF0">固有频率 f₀ <span class="unit-tag">Hz</span></label>
+                <input id="vbHCF0" type="number" step="0.01" min="0" placeholder="如 2.23" />
+              </div>
+              <div class="field">
+                <label for="vbHCLambda">频率比 λ</label>
+                <input id="vbHCLambda" type="number" step="0.1" min="0" placeholder="如 21.7" />
+              </div>
+              <div class="field">
+                <label for="vbHCEta">传递率 η <span class="hint mini">(含阻尼)</span></label>
+                <input id="vbHCEta" type="number" step="0.001" min="0" placeholder="如 0.01" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="vbHCT">隔振效率 T <span class="unit-tag">%</span></label>
+                <input id="vbHCT" type="number" step="0.5" min="0" max="100" placeholder="如 99" />
+              </div>
+              <div class="field">
+                <label for="vbHCN">隔声系数 N <span class="unit-tag">dB</span></label>
+                <input id="vbHCN" type="number" step="0.5" min="0" placeholder="如 25" />
+              </div>
+            </div>
+            <p class="inline-note">留空表示「仅重算、不比对该项」。容差：δ ±0.5 mm（或 3%）、f₀ ±0.05 Hz（或 1%）、λ ±0.2（或 1%）、η ±0.002（或 5%）、T ±0.5%、N ±1 dB。</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="card">
+        <h3>复核结果</h3>
+        <div id="vbHMsg" class="callout-row"></div>
+        <div id="vbHStats" class="stat-grid"></div>
+        <div id="vbHResult" class="table-wrap"></div>
+      </section>
+
+      <section class="card">
+        <h3>隔振降噪工程计算书 <span class="hint">(按该厂家格式自动生成，第九 ~ 十四节)</span></h3>
+        <div id="vbHBook" class="table-wrap"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="view" id="view-muffler" data-view="muffler">
+    <div class="page-head">
+      <h2>消声器计算</h2>
+      <p class="hint">阻性（GB/T 50087-2013 式 6.3.1，附别洛夫式对照与高频失效折减）、抗性（扩张室一维平面波解、共振腔 Helmholtz）与阻抗复合验算（逐频带相加 → A 计权插入损失），含流速、压力损失与结构选型校核</p>
+    </div>
+
+    <div class="mode-row">
+      <button class="mode-btn active" data-mf-panel="res" type="button">阻性消声器</button>
+      <button class="mode-btn" data-mf-panel="react" type="button">抗性（扩张室 / 共振腔）</button>
+      <button class="mode-btn" data-mf-panel="combo" type="button">组合验算 · A 计权</button>
+    </div>
+
+    <div class="mf-panel" data-panel="res">
+      <section class="card">
+        <h3><span class="step">1</span> 结构形式与通道几何</h3>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfForm">结构形式</label>
+            <select id="mfForm">
+              <option value="round">圆形直管式（内壁衬里）</option>
+              <option value="rect">矩形风管内衬（四壁衬里）</option>
+              <option value="splitter" selected>片式消声器（片间通道）</option>
+              <option value="baffle">折板式消声器</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="mfLength">有效长度 l <span class="unit-tag">m</span></label>
+            <input id="mfLength" type="number" step="0.1" min="0" value="1.5" />
+          </div>
+          <div class="field">
+            <label for="mfC">声速 c <span class="unit-tag">m/s</span> <span class="hint mini">(留空 = 343)</span></label>
+            <input id="mfC" type="number" step="1" min="0" placeholder="343" />
+          </div>
+        </div>
+        <div class="field-row compact" id="mfGeomRound" hidden>
+          <div class="field">
+            <label for="mfD">管道内径 d <span class="unit-tag">m</span></label>
+            <input id="mfD" type="number" step="0.05" min="0" value="0.3" />
+          </div>
+        </div>
+        <div class="field-row compact" id="mfGeomRect" hidden>
+          <div class="field">
+            <label for="mfA">净宽 a <span class="unit-tag">m</span></label>
+            <input id="mfA" type="number" step="0.05" min="0" value="0.5" />
+          </div>
+          <div class="field">
+            <label for="mfB">净高 b <span class="unit-tag">m</span></label>
+            <input id="mfB" type="number" step="0.05" min="0" value="0.4" />
+          </div>
+        </div>
+        <div class="field-row compact" id="mfGeomSplitter">
+          <div class="field">
+            <label for="mfBlades">消声片数量 <span class="unit-tag">片</span></label>
+            <input id="mfBlades" type="number" step="1" min="1" value="3" />
+          </div>
+          <div class="field">
+            <label for="mfGap">片间净通道宽 <span class="unit-tag">m</span></label>
+            <input id="mfGap" type="number" step="0.01" min="0" value="0.15" />
+          </div>
+          <div class="field">
+            <label for="mfHeight">消声片高度 <span class="unit-tag">m</span></label>
+            <input id="mfHeight" type="number" step="0.1" min="0" value="1.0" />
+          </div>
+        </div>
+        <div class="field-row compact">
+          <div class="field" id="mfLinedEndsRow">
+            <label class="check-line"><input id="mfLinedEnds" type="checkbox" /> 通道上下壁亦衬吸声材料</label>
+          </div>
+          <div class="field" id="mfUnfoldRow" hidden>
+            <label for="mfUnfold">折板展开系数 <span class="unit-tag">1~2</span></label>
+            <input id="mfUnfold" type="number" step="0.1" min="1" max="2" value="1.3" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3><span class="step">2</span> 吸声材料与工况</h3>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfMaterial">吸声材料（正入射 α₀ 预设）</label>
+            <select id="mfMaterial"></select>
+          </div>
+          <div class="field">
+            <label for="mfFormula">消声系数取法</label>
+            <select id="mfFormula">
+              <option value="gb" selected>GB/T 50087-2013 表 6.3.1 φ(α₀)</option>
+              <option value="perov">别洛夫理论式 φ = 4.34(1−√(1−α₀))/(1+√(1−α₀))</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="mfFlow">风量 Q <span class="unit-tag">m³/h</span> <span class="hint mini">(选填，用于流速/压损)</span></label>
+            <input id="mfFlow" type="number" step="500" min="0" value="9000" />
+          </div>
+        </div>
+        <div class="field-row compact" id="mfAlphaCustom" hidden>
+          <div class="field">
+            <label for="mfAlpha0">α₀ @63 <span class="unit-tag">—</span></label>
+            <input id="mfAlpha0" type="number" step="0.05" min="0" max="1" value="0.2" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha1">α₀ @125</label>
+            <input id="mfAlpha1" type="number" step="0.05" min="0" max="1" value="0.35" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha2">α₀ @250</label>
+            <input id="mfAlpha2" type="number" step="0.05" min="0" max="1" value="0.65" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha3">α₀ @500</label>
+            <input id="mfAlpha3" type="number" step="0.05" min="0" max="1" value="0.85" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha4">α₀ @1k</label>
+            <input id="mfAlpha4" type="number" step="0.05" min="0" max="1" value="0.9" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha5">α₀ @2k</label>
+            <input id="mfAlpha5" type="number" step="0.05" min="0" max="1" value="0.9" />
+          </div>
+          <div class="field">
+            <label for="mfAlpha6">α₀ @4k</label>
+            <input id="mfAlpha6" type="number" step="0.05" min="0" max="1" value="0.9" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>计算结果</h3>
+        <div id="mfResMsg" class="callout-row"></div>
+        <div id="mfResStats" class="stat-grid"></div>
+        <div id="mfResTable" class="table-wrap"></div>
+        <div id="mfResExtra"></div>
+      </section>
+    </div>
+
+    <div class="mf-panel" data-panel="react" hidden>
+      <div class="split">
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">A</span> 扩张室消声器 <span class="hint">(一维平面波解)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="mfEd1">主管内径 d₁ <span class="unit-tag">m</span></label>
+                <input id="mfEd1" type="number" step="0.02" min="0" value="0.2" />
+              </div>
+              <div class="field">
+                <label for="mfEd2">扩张室内径 d₂ <span class="unit-tag">m</span></label>
+                <input id="mfEd2" type="number" step="0.05" min="0" value="0.4" />
+              </div>
+              <div class="field">
+                <label for="mfEm">扩张比 m <span class="hint mini">(留空按 d₂/d₁ 换算)</span></label>
+                <input id="mfEm" type="number" step="0.5" min="0" placeholder="自动" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="mfEl">扩张室长度 l <span class="unit-tag">m</span></label>
+                <input id="mfEl" type="number" step="0.05" min="0" value="0.5" />
+              </div>
+              <div class="field">
+                <label for="mfEStages">串联节数</label>
+                <input id="mfEStages" type="number" step="1" min="1" value="1" />
+              </div>
+              <div class="field">
+                <label for="mfEc">声速 c <span class="unit-tag">m/s</span> <span class="hint mini">(留空 = 343)</span></label>
+                <input id="mfEc" type="number" step="1" min="0" placeholder="343" />
+              </div>
+            </div>
+            <div id="mfExpMsg" class="callout-row"></div>
+            <div id="mfExpStats" class="stat-grid"></div>
+            <div id="mfExpTable" class="table-wrap"></div>
+          </section>
+        </div>
+
+        <div class="split-col">
+          <section class="card">
+            <h3><span class="step">B</span> 共振腔消声器 <span class="hint">(Helmholtz 旁支式)</span></h3>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="mfRh">穿孔直径 d <span class="unit-tag">mm→m</span> <span class="hint mini">(以 m 填，如 0.008)</span></label>
+                <input id="mfRh" type="number" step="0.001" min="0" value="0.008" />
+              </div>
+              <div class="field">
+                <label for="mfRt">板厚 / 颈长 t <span class="unit-tag">m</span></label>
+                <input id="mfRt" type="number" step="0.001" min="0" value="0.002" />
+              </div>
+              <div class="field">
+                <label for="mfRn">穿孔数量 <span class="unit-tag">个</span></label>
+                <input id="mfRn" type="number" step="1" min="1" value="50" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="mfRvol">腔容积 V <span class="unit-tag">m³</span> <span class="hint mini">(留空按腔体尺寸算)</span></label>
+                <input id="mfRvol" type="number" step="0.005" min="0" placeholder="自动" />
+              </div>
+              <div class="field">
+                <label for="mfRchD">腔体内径 <span class="unit-tag">m</span></label>
+                <input id="mfRchD" type="number" step="0.05" min="0" value="0.4" />
+              </div>
+              <div class="field">
+                <label for="mfRchL">腔体长度 <span class="unit-tag">m</span></label>
+                <input id="mfRchL" type="number" step="0.05" min="0" value="0.5" />
+              </div>
+            </div>
+            <div class="field-row compact">
+              <div class="field">
+                <label for="mfRpipeD">主管内径 <span class="unit-tag">m</span></label>
+                <input id="mfRpipeD" type="number" step="0.01" min="0" value="0.1" />
+              </div>
+              <div class="field">
+                <label for="mfRcap">消声量上限 <span class="unit-tag">dB</span> <span class="hint mini">(受声阻限制)</span></label>
+                <input id="mfRcap" type="number" step="1" min="1" value="20" />
+              </div>
+            </div>
+            <div id="mfResoMsg" class="callout-row"></div>
+            <div id="mfResoStats" class="stat-grid"></div>
+            <div id="mfResoTable" class="table-wrap"></div>
+            <canvas id="mfResoChart" height="240"></canvas>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="mf-panel" data-panel="combo" hidden>
+      <div class="page-head">
+        <p class="hint">组合验算复用前两个面板已填的参数（阻性几何与材料、扩张室、共振腔），任一未填的结构按「无该结构」处理；声源谱可在下方选择预设或换成自定义场景后重算。</p>
+      </div>
+      <section class="card">
+        <h3><span class="step">1</span> 声源与计权</h3>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfSource">声源谱预设（各倍频带声压级）</label>
+            <select id="mfSource"></select>
+          </div>
+          <div class="field">
+            <label class="check-line"><input id="mfWeighted" type="checkbox" checked /> A 计权（推荐，评价人的主观感受）</label>
+          </div>
+          <div class="field">
+            <button id="mfComboRecalc" class="btn" type="button">重新验算</button>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <h3>组合验算结果</h3>
+        <div id="mfComboMsg" class="callout-row"></div>
+        <div id="mfComboStats" class="stat-grid"></div>
+        <div id="mfComboTable" class="table-wrap"></div>
+        <canvas id="mfComboChart" height="260"></canvas>
+      </section>
+    </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型；计权隔声量 Rw — GB/T 50121-2005；声压级叠加 — 声能量与相干叠加基本公式；隔振计算 — 《噪声与振动控制工程技术导则》第 7.4 节隔振设计。</p>
+  <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型；计权隔声量 Rw — GB/T 50121-2005；声压级叠加 — 声能量与相干叠加基本公式；阻性消声器 — GB/T 50087-2013《工业企业噪声控制设计规范》第 6.3 节；隔振计算 — 《噪声与振动控制工程技术导则》第 7.4 节隔振设计。</p>
   <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
 </footer>
 
@@ -1550,6 +1943,7 @@
 <script src="js/barrier.js"></script>
 <script src="js/levels.js"></script>
 <script src="js/vibration.js"></script>
+<script src="js/muffler.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -1558,6 +1952,7 @@
 <script src="js/view-barrier.js"></script>
 <script src="js/view-levels.js"></script>
 <script src="js/view-vibration.js"></script>
+<script src="js/view-muffler.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/router.js"></script>
 </body>

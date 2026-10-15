@@ -2,10 +2,12 @@
  * view-vibration.js — 弹簧减振器隔振效率计算书视图
  * 依赖：window.Vibration（内核）、window.MiniChart（绘图）
  *
- * 三个面板：
+ * 三个基础面板 + 两个厂家复核面板：
  *   select  静变形法：选型正算 → 12 步计算书（含公式与代入过程）
  *   verify  频率比法：由 f、f₀（或 δ）、D 直接验算，两种公式对比
  *   reverse 反算与对照：目标效率 → 所需频率比/固有频率/静变形/最大刚度
+ *   check   厂家计算书复核（fn=947√(1/δ) 标准无阻尼体系）
+ *   hx      环新式「隔振降噪工程计算书」复核（含阻尼 η、隔声系数 N）
  */
 (function () {
   'use strict';
@@ -330,6 +332,127 @@
       internalNote;
   }
 
+  // ================ 面板 5：环新式「隔振降噪工程计算书」复核 ================
+  // 青浦环新等国产厂家常用格式：f₀=(1/2π)√(9800/δ)、含阻尼传递率 η、
+  // T=(1−η)×100%、隔声系数 N=12.5lg(1/η)。注意该格式 η=传递率、T=隔振效率。
+  var HX_PRESET = {
+    name: '环新计算书例题：冷冻机组 10000 kg / 2900 r/min / 8 只 / δ=50 mm / D=0.065',
+    v: {
+      project: '', device: '冷冻机组', model: '', isolModel: '弹簧减振器 BT3-1500',
+      rpm: 2900, wa: 10000, ped: null, safety: 20, count: 8, k: '', unit: 'kg/mm',
+      delta: 50, damping: 0.065,
+      cf0: 2.23, clambda: 21.7, ceta: 0.01, ct: 99, cn: 25
+    }
+  };
+
+  function readHx() {
+    return {
+      project: ($('vbHProject') || {}).value || '',
+      deviceName: ($('vbHDevice') || {}).value || '',
+      deviceModel: ($('vbHModel') || {}).value || '',
+      isolatorModel: ($('vbHIsolModel') || {}).value || '',
+      rpm: pf('vbHRpm'),
+      deviceWeight: pf('vbHWa'),
+      pedestalWeight: pf('vbHPed'),
+      safetyPercent: pf('vbHSafety'),
+      count: pf('vbHCount'),
+      stiffness: pf('vbHK'),
+      stiffnessUnit: $('vbHUnit') ? $('vbHUnit').value : 'kg/mm',
+      deflection: pf('vbHDelta'),
+      damping: pf('vbHD'),
+      claimedF0: pf('vbHCF0'),
+      claimedLambda: pf('vbHCLambda'),
+      claimedEta: pf('vbHCEta'),
+      claimedT: pf('vbHCT'),
+      claimedN: pf('vbHCN')
+    };
+  }
+
+  function recalcHx() {
+    var msg = $('vbHMsg');
+    var r = V.hxSheet(readHx());
+    if (!r.ok) {
+      msg.innerHTML = callout('error', r.error);
+      $('vbHStats').innerHTML = '';
+      $('vbHResult').innerHTML = '';
+      $('vbHBook').innerHTML = '';
+      return;
+    }
+    msg.innerHTML = '';
+
+    $('vbHStats').innerHTML =
+      stat('干扰频率 f', num(r.f, 1), 'Hz') +
+      stat('静态压缩量 δ', num(r.delta, 1), 'mm') +
+      stat('固有频率 f₀', num(r.f0, 2), 'Hz') +
+      stat('频率比 λ', num(r.lambda, 1), '') +
+      stat('传递率 η', num(r.eta, 4), '', '含阻尼 D = ' + num(r.inputs.D, 3)) +
+      stat('隔振效率 T', num(r.T, 1), '%') +
+      stat('隔声系数 N', num(r.N, 1), 'dB');
+
+    // 复核比对表
+    var verdictHtml;
+    if (r.providedCount === 0) {
+      verdictHtml = callout('info', '已按该厂家公式体系（f₀=(1/2π)√(9800/δ)、含阻尼 η、N=12.5lg(1/η)）重算。如需复核，请填入厂家计算书声称的 f₀ / λ / η / T / N 任意几项。');
+    } else if (r.allConsistent) {
+      verdictHtml = callout('ok', '✓ 一致：厂家计算书与该公式体系吻合，复核通过（共比对 ' + r.providedCount + ' 项）。');
+    } else {
+      var names = r.rows.filter(function (rr) { return rr.check.provided && rr.check.status !== 'ok'; })
+        .map(function (rr) { return rr.label; }).join('、');
+      verdictHtml = callout('error', '✘ 存在差异：' + r.mismatchCount + ' 项与公式重算值不符（' + names + '），详见下表。');
+    }
+
+    var rows = r.rows.map(function (rr) {
+      var c = rr.check;
+      var d = (rr.key === 'eta') ? 4 : 2;
+      var recomputedHtml = num(c.recomputed, d) + (rr.unit ? ' ' + rr.unit : '');
+      var claimedHtml = c.provided ? (num(c.claimed, d) + (rr.unit ? ' ' + rr.unit : '')) : '—';
+      var diffHtml = c.provided ? ((c.diff >= 0 ? '+' : '') + num(c.diff, d) + (rr.unit ? ' ' + rr.unit : '')) : '—';
+      var statusCell = !c.provided ? cell('待比对', 'muted')
+        : (c.status === 'ok' ? cell('一致', 'ok')
+          : (c.status === 'warn' ? cell('轻微偏差', 'warn') : cell('偏差', 'danger')));
+      return [
+        cell('<strong>' + rr.label + '</strong>' + (rr.note ? '<div class="hint mini">' + esc(rr.note) + '</div>' : '')),
+        cell('<span class="mono">' + recomputedHtml + '</span>'),
+        cell(c.provided ? '<span class="mono">' + claimedHtml + '</span>' : claimedHtml),
+        cell('<span class="mono">' + diffHtml + '</span>'),
+        statusCell
+      ];
+    });
+
+    var crossNote = (r.internalF0 != null)
+      ? '<p class="inline-note">交叉印证：本工具精算内核（g = 9806.65 mm/s² 精确值）得 f₀ = ' + num(r.internalF0, 3) +
+        ' Hz、隔振效率 = ' + num(r.internalEta, 2) + ' %，与上方按厂家常数（g = 9800）的重算值差异 &lt; 0.04%，两套算法同源等价。</p>' +
+        '<p class="inline-note">符号说明：该厂家格式中 <strong>η 指传递率</strong>（数值越小越好）、<strong>T 指隔振效率</strong>，与本站其他面板的 η/T 含义相反，复核时请以本表为准。</p>'
+      : '';
+
+    $('vbHResult').innerHTML = verdictHtml +
+      table(['复核项', '按公式重算', '厂家声称值', '偏差', '判定'], rows, 'wide') + crossNote;
+
+    // 计算书（第九 ~ 十四节）
+    var bookRows = r.steps.map(function (s) {
+      return [
+        cell('<strong>' + esc(s.no) + '</strong>'),
+        cell('<strong>' + esc(s.title) + '</strong>'),
+        cell('<span class="mono">' + esc(s.formula) + '</span>'),
+        cell('<span class="mono">' + esc(s.subst) + '</span>'),
+        cell('<span class="mono"><strong>' + num(s.value, s.value < 0.01 ? 4 : 2) + '</strong>' +
+          (s.unit ? ' ' + esc(s.unit) : '') + '</span>')
+      ];
+    });
+    $('vbHBook').innerHTML =
+      '<p class="inline-note"><strong>（一）工程项目：</strong>' + esc(readHx().project || '／') + '</p>' +
+      '<div class="kv-result">' +
+      kv('（二）隔振设备名称', esc(readHx().deviceName || '／')) +
+      kv('（三）设备型号', esc(readHx().deviceModel || '／')) +
+      kv('（四）设备转速 n', num(r.inputs.rpm, 0) + ' <small>转/分</small>') +
+      kv('（五）设备重量', num(r.inputs.Wa, 0) + ' <small>kg</small>') +
+      kv('（六）台座重量', r.inputs.pedestal > 0 ? num(r.inputs.pedestal, 0) + ' <small>kg</small>' : '／') +
+      kv('（七）减振体系总重 W', num(r.Wd, 0) + ' <small>kg（含 ' + num(r.inputs.safetyPercent, 0) + '% 安全系数）</small>') +
+      kv('（八）减振器', r.inputs.n + ' 只 · 单只载荷 W/N = ' + num(r.W, 0) + ' kg' + (readHx().isolatorModel ? ' · ' + esc(readHx().isolatorModel) : '')) +
+      '</div>' +
+      table(['节', '项目', '公式', '代入', '结果'], bookRows, 'wide');
+  }
+
   function renderGuide() {
     $('vbGuideBox').innerHTML = table(
       ['频率比 z', '判定', '说明'],
@@ -494,6 +617,7 @@
     if (name === 'verify') recalcVerify();
     if (name === 'reverse') recalcReverse();
     if (name === 'check') recalcReview();
+    if (name === 'hx') recalcHx();
   }
 
   function applyPreset(p) {
@@ -542,6 +666,27 @@
       .forEach(function (id) { $(id).addEventListener('input', recalcReview); });
     $('vbCUnit').addEventListener('change', recalcReview);
 
+    ['vbHRpm', 'vbHWa', 'vbHPed', 'vbHSafety', 'vbHCount', 'vbHK', 'vbHDelta', 'vbHD',
+     'vbHCF0', 'vbHCLambda', 'vbHCEta', 'vbHCT', 'vbHCN']
+      .forEach(function (id) { $(id).addEventListener('input', recalcHx); });
+    $('vbHUnit').addEventListener('change', recalcHx);
+    var hxBtn = $('vbHLoadExample');
+    if (hxBtn) {
+      hxBtn.addEventListener('click', function () {
+        var v = HX_PRESET.v;
+        $('vbHProject').value = v.project; $('vbHDevice').value = v.device;
+        $('vbHModel').value = v.model; $('vbHIsolModel').value = v.isolModel;
+        $('vbHRpm').value = v.rpm; $('vbHWa').value = v.wa;
+        $('vbHPed').value = v.ped == null ? '' : v.ped; $('vbHSafety').value = v.safety;
+        $('vbHCount').value = v.count; $('vbHK').value = v.k;
+        $('vbHUnit').value = v.unit; $('vbHDelta').value = v.delta;
+        $('vbHD').value = v.damping;
+        $('vbHCF0').value = v.cf0; $('vbHCLambda').value = v.clambda;
+        $('vbHCEta').value = v.ceta; $('vbHCT').value = v.ct; $('vbHCN').value = v.cn;
+        recalcHx();
+      });
+    }
+
     $('vbCopy').addEventListener('click', function () { copyText(summaryText(), 'vbCopyMsg'); });
     $('vbCsv').addEventListener('click', exportCsv);
 
@@ -565,6 +710,7 @@
         if (state.panel === 'select') recalcSelect();
         if (state.panel === 'verify') recalcVerify();
         if (state.panel === 'check') recalcReview();
+        if (state.panel === 'hx') recalcHx();
       }, 160);
     });
   }
@@ -573,6 +719,7 @@
     if (state.panel === 'select') recalcSelect();
     else if (state.panel === 'verify') recalcVerify();
     else if (state.panel === 'check') recalcReview();
+    else if (state.panel === 'hx') recalcHx();
     else recalcReverse();
   }
 

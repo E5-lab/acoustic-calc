@@ -635,6 +635,22 @@ select.btn {
 }
 .mini { margin-top: 3px; font-size: 11.5px; color: var(--faint); }
 .sub.ok { color: var(--ok); }
+.check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  padding-top: 22px;
+}
+.check-line input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer; }
+.sub-head {
+  margin: 16px 0 10px;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 600;
+}
 
 /* ------------------------------- 折叠区 ------------------------------- */
 .aux {
@@ -814,6 +830,8 @@ select.btn {
   gap: 12px;
 }
 .field-row.compact { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 4px; }
+.field-row[hidden] { display: none; }
+.mf-panel[hidden], .vb-panel[hidden] { display: none; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 12.5px; color: var(--muted); }
 .field input,

@@ -286,5 +286,34 @@ var rv4 = V.verifySheet({ deviceWeight: 234, safety: 1.3, count: 4, rpm: 1450, s
 assert('复核：δ 偏差 0.15mm (<0.5) → 判一致 ok', rv4.rows[0].check.status === 'ok');
 assert('复核：缺输入报错', V.verifySheet({}).ok === false);
 
+console.log('环新式隔振降噪计算书复核 (hxSheet)');
+// 例题对齐厂家计算书：冷冻机组 10000 kg / 2900 r/min / 8 只 / δ=50mm / D=0.065
+var hx = V.hxSheet({ deviceWeight: 10000, pedestalWeight: 0, safetyPercent: 20, count: 8, rpm: 2900, deflection: 50, damping: 0.065 });
+approx('环新：Wd = 10000×1.2 = 12000 kg', hx.Wd, 12000, 1e-9);
+approx('环新：W = 12000/8 = 1500 kg/只', hx.W, 1500, 1e-9);
+approx('环新：f = 2900/60 = 48.33 Hz', hx.f, 2900 / 60, 1e-9);
+approx('环新：f₀ = (1/2π)√(9800/50) ≈ 2.23 Hz', hx.f0, Math.sqrt(9800 / 50) / (2 * Math.PI), 1e-9);
+approx('环新：λ = f/f₀ ≈ 21.7', hx.lambda, (2900 / 60) / (Math.sqrt(9800 / 50) / (2 * Math.PI)), 1e-9);
+approx('环新：η（含阻尼 D=0.065）≈ ' + hx.eta.toFixed(4), hx.eta, V.transmissibility(hx.lambda, 0.065), 1e-12);
+assert('环新：η 在 0.005 ~ 0.01 之间（厂家取整为 0.01 偏保守）', hx.eta > 0.005 && hx.eta < 0.01);
+approx('环新：T = (1−η)×100% ≈ 99.4 %', hx.T, (1 - hx.eta) * 100, 1e-9);
+approx('环新：N = 12.5lg(1/η) ≈ ' + hx.N.toFixed(1) + ' dB', hx.N, 12.5 * Math.log10(1 / hx.eta), 1e-9);
+assert('环新：λ ≥ 2.5 → 结论达标', hx.steps[hx.steps.length - 1].value === 1);
+assert('环新：精算 f₀ 与厂家常数差异 < 0.04%', Math.abs(hx.internalF0 - hx.f0) / hx.f0 < 0.0004);
+// δ 由刚度反算的路径
+var hx2 = V.hxSheet({ deviceWeight: 10000, count: 8, rpm: 2900, stiffness: 30, stiffnessUnit: 'kg/mm', damping: 0.065 });
+approx('环新：δ = 1500/30 = 50 mm（由 K 反算）', hx2.delta, 50, 1e-9);
+assert('环新：deltaFromK=true', hx2.deltaFromK === true);
+// 声称值比对：厂家 η=0.01、N=25dB 与精确重算不符 → 应标偏差
+var hx3 = V.hxSheet({ deviceWeight: 10000, count: 8, rpm: 2900, deflection: 50, damping: 0.065, claimedF0: 2.23, claimedLambda: 21.7, claimedEta: 0.01, claimedT: 99, claimedN: 25 });
+assert('环新：声称 f₀=2.23 → 一致', hx3.rows[1].check.status === 'ok');
+assert('环新：声称 η=0.01（精确值 ' + hx.eta.toFixed(4) + '）→ 偏差', hx3.rows[3].check.status !== 'ok');
+assert('环新：声称 T=99%（精确 ' + hx.T.toFixed(2) + '%，差 < 0.5）→ 一致', hx3.rows[4].check.status === 'ok');
+assert('环新：声称 N=25dB（精确 ' + hx.N.toFixed(1) + 'dB）→ 偏差', hx3.rows[5].check.status !== 'ok');
+assert('环新：mismatchCount = 2', hx3.mismatchCount === 2 && hx3.allConsistent === false);
+assert('环新：缺 δ 且缺 K 报错', V.hxSheet({ deviceWeight: 10000, count: 8, rpm: 2900 }).ok === false);
+assert('环新：缺转速报错', V.hxSheet({ deviceWeight: 10000, count: 8 }).ok === false);
+assert('环新：计算书步骤完整（8 步，对应第九 ~ 十四节）', hx.steps.length === 8);
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);
