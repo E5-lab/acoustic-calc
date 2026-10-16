@@ -36,6 +36,7 @@
           <a href="#/levels" data-route="levels"><span class="nm-t">声压级叠加</span><small class="nm-d">多声源合成 · 相干叠加 · 背景噪声修正</small></a>
           <a href="#/noise" data-route="noise"><span class="nm-t">背景噪声评价</span><small class="nm-d">A 声级 · NC / NR / RC Mark II</small></a>
           <a href="#/db" data-route="db"><span class="nm-t">单位与换算</span><small class="nm-d">声压级加减 · 声压/声强/声功率 · 距离衰减</small></a>
+          <a href="#/wave" data-route="wave"><span class="nm-t">波动与乐音计算</span><small class="nm-d">声速/波长 · 声阻抗 · 音名音分 · 多普勒</small></a>
         </div>
       </div>
 
@@ -190,7 +191,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、26 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、27 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -229,6 +230,19 @@
           <span class="mc-body">
             <span class="mc-title">单位与换算 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">声压级加减（含相干与非相干合成、背景噪声修正）、声压／声强／声功率级换算、距离衰减与指向性、A/B/C 计权网络换算。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/wave">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 24c4-10 8-10 12 0s8 10 12 0 8-10 12 0" stroke-linecap="round" />
+              <path d="M4 34c4-6 8-6 12 0s8 6 12 0 8-6 12 0" stroke-linecap="round" opacity="0.5" />
+              <path d="M24 8v6M24 40v-4" stroke-linecap="round" opacity="0.7" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">波动与乐音计算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">声速（含温湿度的混合气体模型 / 纯水 UNESCO 式 / 18 种介质库）、波长↔频率↔周期↔波数与倍频带波长速查、自由场声强 I = Q·P/(4πr²) 与平方反比衰减、特性声阻抗 Z = ρc 与界面反射透射（含斜入射折射与全反射临界角）、功率比/场量比 ↔ 分贝双向换算、十二平均律频率↔音名↔音分与拍频音程、开管/闭管与弦的共振基频及谐波列、声学多普勒效应（含马赫数与激波判定）。</span>
           </span>
         </a>
       </div>
@@ -561,9 +575,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 28 个文件 / 1480+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 29 个文件 / 1580+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -749,6 +763,148 @@
         <thead><tr><th>频率 (Hz)</th><th>A</th><th>C</th><th>Z</th></tr></thead>
         <tbody id="dbWeightBody"></tbody>
       </table>
+    </section>
+  </section>
+
+  <section class="view" id="view-wave" data-view="wave" hidden>
+    <div class="page-head">
+      <h2>波动与乐音计算</h2>
+      <p class="hint">声学最底层的那批量：声速、波长、声强、声阻抗、分贝比值，以及乐音与共振。8 个计算场景，全部可离线复核。</p>
+    </div>
+
+    <section class="card">
+      <h3>声速</h3>
+      <p class="hint">简化式 c = 331.4 + 0.6·T；开方式 c = 331.3·√(T<sub>K</sub>/273.15)；含湿式按干空气／水蒸气混合物的 γ 与摩尔质量求解。纯水采用 UNESCO / Marczak 多项式（0~40 ℃）。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvTemp">温度 (℃)</label><input id="wvTemp" type="number" step="1" value="20" /></div>
+        <div class="field"><label for="wvRh">相对湿度 (%)</label><input id="wvRh" type="number" step="5" value="50" /></div>
+        <div class="field"><label for="wvPres">大气压 (Pa)</label><input id="wvPres" type="number" step="100" value="101325" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnSpd" class="btn primary" type="button">计算声速</button></div>
+      </div>
+      <div id="wvOutSpd" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>波长 ↔ 频率</h3>
+      <p class="hint">λ = c/f。同时给出周期、波数、λ/2 与 λ/4（房间轴向模态与 1/4 波长吸声结构的起效尺度），以及常用倍频带的波长速查表。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvC">声速 c (m/s)</label><input id="wvC" type="number" step="1" value="343" /></div>
+        <div class="field"><label for="wvF">频率 f (Hz)</label><input id="wvF" type="number" step="10" value="1000" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnWl" class="btn primary" type="button">由频率算波长</button></div>
+      </div>
+      <div id="wvOutWl" class="result-line" hidden></div>
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="wvLambda">波长 λ (m，反算频率)</label><input id="wvLambda" type="number" step="0.01" value="0.343" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnWl2" class="btn" type="button">由波长算频率</button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>自由场声强与平方反比</h3>
+      <p class="hint">点声源自由场 I = Q·P/(4πr²)，声强级 L<sub>I</sub> = 10·lg(I/I₀)，I₀ = 10⁻¹² W/m²；每倍距离衰减 6 dB。可填声功率 W 或声功率级 L<sub>W</sub>。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvP">声功率 P (W)</label><input id="wvP" type="number" step="any" value="0.001" /></div>
+        <div class="field"><label for="wvLw">或 声功率级 L<sub>W</sub> (dB)</label><input id="wvLw" type="number" step="1" /></div>
+        <div class="field"><label for="wvR">距离 r (m)</label><input id="wvR" type="number" step="0.5" value="10" /></div>
+        <div class="field"><label for="wvQ">指向性因子 Q</label><input id="wvQ" type="number" step="0.5" value="1" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnI" class="btn primary" type="button">计算声强</button></div>
+      </div>
+      <div id="wvOutI" class="result-line" hidden></div>
+      <canvas id="wvIChart" height="240"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>特性声阻抗与界面反射</h3>
+      <p class="hint">Z = ρc。垂直入射 R<sub>p</sub> = (Z₂−Z₁)/(Z₂+Z₁)、τ = 4Z₁Z₂/(Z₁+Z₂)²；斜入射按法向声阻抗 Z/cosθ，折射角由 Snell 定律求，超过临界角即全反射。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvM1">介质 1（入射侧）</label><select id="wvM1"></select></div>
+        <div class="field"><label for="wvRho1">密度 ρ₁ (kg/m³)</label><input id="wvRho1" type="number" step="any" /></div>
+        <div class="field"><label for="wvC1">声速 c₁ (m/s)</label><input id="wvC1" type="number" step="1" /></div>
+        <div class="field"><label for="wvM2">介质 2（透射侧）</label><select id="wvM2"></select></div>
+        <div class="field"><label for="wvRho2">密度 ρ₂ (kg/m³)</label><input id="wvRho2" type="number" step="any" /></div>
+        <div class="field"><label for="wvC2">声速 c₂ (m/s)</label><input id="wvC2" type="number" step="1" /></div>
+        <div class="field"><label for="wvAng">入射角 (°)，0 为垂直</label><input id="wvAng" type="number" step="5" value="0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnZ" class="btn primary" type="button">计算界面</button></div>
+      </div>
+      <div id="wvOutZ" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>比值 ↔ 分贝</h3>
+      <p class="hint">功率量（声功率 / 声强）用 10·lg，场量（声压 / 电压）用 20·lg。两个方向都可算，3 dB 与 6 dB、「10 倍」与「20 dB」不再记混。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvMode">量纲</label>
+          <select id="wvMode">
+            <option value="power">功率量（10·lg）</option>
+            <option value="field">场量（20·lg）</option>
+          </select>
+        </div>
+        <div class="field"><label for="wvRto">比值</label><input id="wvRto" type="number" step="any" value="2" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnR2D" class="btn primary" type="button">比值 → dB</button></div>
+        <div class="field"><label for="wvDbv">分贝 (dB)</label><input id="wvDbv" type="number" step="0.5" value="6" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnD2R" class="btn" type="button">dB → 比值</button></div>
+      </div>
+      <div id="wvOutR" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>乐音：频率 ↔ 音名 ↔ 音分</h3>
+      <p class="hint">十二平均律，A4 = 440 Hz。f = 440·2^((n−69)/12)，音分 = 1200·log₂(f/f₀)。拍频 = |f₁ − f₂|，20 Hz 以内可听为抖动。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvNoteF">频率 (Hz)</label><input id="wvNoteF" type="number" step="0.1" value="440" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnF2N" class="btn primary" type="button">频率 → 音名</button></div>
+        <div class="field"><label for="wvNoteName">音名（如 A4 / C#4 / Bb3）</label><input id="wvNoteName" type="text" value="C4" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnN2F" class="btn" type="button">音名 → 频率</button></div>
+      </div>
+      <div id="wvOutN" class="result-line" hidden></div>
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="wvB1">频率 f₁ (Hz)</label><input id="wvB1" type="number" step="0.1" value="440" /></div>
+        <div class="field"><label for="wvB2">频率 f₂ (Hz)</label><input id="wvB2" type="number" step="0.1" value="442" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnBeat" class="btn" type="button">音程与拍频</button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>管与弦共振</h3>
+      <p class="hint">开管 fₙ = n·c/(2L<sub>eff</sub>)（含全部谐波）；闭管 fₙ = (2n−1)·c/(4L<sub>eff</sub>)（仅奇次）；弦 fₙ = n/(2L)·√(T/μ)。管口修正按每端 0.6r 计。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvPipeKind">管型</label>
+          <select id="wvPipeKind">
+            <option value="open">开管（两端开口）</option>
+            <option value="closed">闭管（一端闭口）</option>
+          </select>
+        </div>
+        <div class="field"><label for="wvPipeL">管长 L (m)</label><input id="wvPipeL" type="number" step="0.01" value="1" /></div>
+        <div class="field"><label for="wvPipeD">内径 (m，0 忽略管口修正)</label><input id="wvPipeD" type="number" step="0.01" value="0.05" /></div>
+        <div class="field"><label for="wvPipeC">声速 (m/s)</label><input id="wvPipeC" type="number" step="1" value="343" /></div>
+        <div class="field"><label for="wvPipeN">谐波个数</label><input id="wvPipeN" type="number" step="1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnPipe" class="btn primary" type="button">算管共振</button></div>
+      </div>
+      <div id="wvOutPipe" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="wvStrL">弦长 L (m)</label><input id="wvStrL" type="number" step="0.01" value="0.65" /></div>
+        <div class="field"><label for="wvStrT">张力 T (N)</label><input id="wvStrT" type="number" step="1" value="100" /></div>
+        <div class="field"><label for="wvStrMu">线密度 μ (kg/m)</label><input id="wvStrMu" type="number" step="any" value="0.0004" /></div>
+        <div class="field"><label for="wvStrRho">或 材料密度 (kg/m³)</label><input id="wvStrRho" type="number" step="10" value="7850" /></div>
+        <div class="field"><label for="wvStrD">直径 (m)</label><input id="wvStrD" type="number" step="any" value="0.0005" /></div>
+        <div class="field"><label for="wvStrN">谐波个数</label><input id="wvStrN" type="number" step="1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnStr" class="btn" type="button">算弦共振</button></div>
+      </div>
+      <div id="wvOutStr" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>多普勒效应</h3>
+      <p class="hint">f′ = f·(c + v<sub>o</sub>)/(c − v<sub>s</sub>)。声源向观察者运动取 v<sub>s</sub> &gt; 0，观察者向声源运动取 v<sub>o</sub> &gt; 0；v<sub>s</sub> ≥ c 时形成激波。</p>
+      <div class="field-row">
+        <div class="field"><label for="wvDopF">源频率 (Hz)</label><input id="wvDopF" type="number" step="10" value="1000" /></div>
+        <div class="field"><label for="wvDopC">声速 (m/s)</label><input id="wvDopC" type="number" step="1" value="343" /></div>
+        <div class="field"><label for="wvDopVs">声源速度 v<sub>s</sub> (m/s，靠近为正)</label><input id="wvDopVs" type="number" step="1" value="30" /></div>
+        <div class="field"><label for="wvDopVo">观察者速度 v<sub>o</sub> (m/s，靠近为正)</label><input id="wvDopVo" type="number" step="1" value="0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="wvBtnDop" class="btn primary" type="button">计算频移</button></div>
+      </div>
+      <div id="wvOutDop" class="result-line" hidden></div>
     </section>
   </section>
 
@@ -3836,6 +3992,7 @@
 <script src="js/speakerbox.js"></script>
 <script src="js/crossover.js"></script>
 <script src="js/linearray.js"></script>
+<script src="js/wave.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
@@ -3867,6 +4024,7 @@
 <script src="js/view-speakerbox.js"></script>
 <script src="js/view-crossover.js"></script>
 <script src="js/view-linearray.js"></script>
+<script src="js/view-wave.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
