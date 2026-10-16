@@ -209,18 +209,11 @@ kbd {
   flex: none;
 }
 .brand-name {
-  display: flex;
-  flex-direction: column;
+  display: block;
   font-size: 15px;
   line-height: 1.15;
   letter-spacing: 0.02em;
-}
-.brand-name small {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--faint);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  white-space: nowrap;
 }
 .mainnav {
   display: flex;
