@@ -1,7 +1,9 @@
 /*
- * view-sim.js — 室内音质模拟 视图（#/sim）
- * 版式参考 Odeon / CATT 的分布图：左侧三维房间模型（轴测 + 声场彩图 + 粒子动画），
- * 右侧为指标色标标杆（色带 + 数值刻度 + 接收点模拟值标记）。
+ * view-sim.js — 室内音质模拟彩图 视图（#/sim）
+ * 版式参考 Odeon / Raynoise / CATT：左侧三维轴测房间模型（地面铺声场彩图），
+ * 右侧为该指标的色标标杆（色带 + 整齐刻度 + 接收点模拟值标记）。
+ * 指标支持六个倍频带（125 Hz ~ 4 kHz）与中频均值，含 EDT / T30 混响时间分布。
+ * 可导出 PNG 图片。
  * 依赖 window.RoomSim（内核）、window.MiniChart（曲线）、window.Room（材料库，可选）。
  */
 (function () {
@@ -24,21 +26,29 @@
   }
 
   var METRIC_INFO = {
-    L: { name: 'L 相对声压级', unit: 'dB', short: 'L', text: '相对声压级（dB，场内最高为 0 dB；越暖越强）', digits: 1, invert: false },
-    C50: { name: 'C50 清晰度', unit: 'dB', short: 'C50', text: '清晰度 C50（dB，越高语音越清晰；越暖越高）', digits: 1, invert: false },
-    D50: { name: 'D50 定义度', unit: '', short: 'D50', text: '定义度 D50（0–1，越高越清晰；越暖越高）', digits: 2, invert: false },
-    Ts: { name: 'Ts 中心时间', unit: 'ms', short: 'Ts', text: '中心时间 Ts（ms，越小越清晰；越冷越清晰）', digits: 0, invert: true }
+    L: { name: '相对声压级 L', unit: 'dB', short: 'L', text: '相对声压级（dB，场内最高为 0 dB；越暖越强）', digits: 1, invert: false },
+    C50: { name: '清晰度 C50', unit: 'dB', short: 'C50', text: '语言清晰度 C50（dB，越高越清晰；越暖越高）', digits: 1, invert: false },
+    C80: { name: '音乐明晰度 C80', unit: 'dB', short: 'C80', text: '音乐明晰度 C80（dB，越高越明晰；越暖越高）', digits: 1, invert: false },
+    D50: { name: '定义度 D50', unit: '', short: 'D50', text: '定义度 D50（0–1，越高越清晰；越暖越高）', digits: 2, invert: false },
+    Ts: { name: '中心时间 Ts', unit: 'ms', short: 'Ts', text: '中心时间 Ts（ms，越小越清晰；越冷越清晰）', digits: 0, invert: true },
+    EDT: { name: '早期衰减时间 EDT', unit: 's', short: 'EDT', text: '早期衰减时间 EDT（s，由前 10 dB 衰减外推；越暖越长）', digits: 2, invert: false },
+    T30: { name: '混响时间 T30', unit: 's', short: 'T30', text: '混响时间 T30（s，由 −5 ~ −35 dB 衰减外推；越暖越长）', digits: 2, invert: false }
   };
 
-  var EAR_Z = 0.9;          // 声线/接收点所在高度（人耳高度，m）
-  var LEG = 138;            // 右侧色标区宽度（px）
+  /* 频段选择：0..5 为倍频带，6 为中频（500 Hz + 1 kHz）均值 */
+  var BAND_LABELS = ['125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz', '中频均值'];
+  function bandIdx(sel) { var i = parseInt(sel, 10); return (i >= 0 && i <= 5) ? i : -1; }
 
-  var cv, ctx, off, octx, W = 900, H = 420, dpr = 1;
+  var EAR_Z = 1.2;          // 声源 / 接收点默认高度（人耳高度，m）
+  var LEG = 148;            // 右侧色标区宽度（px）
+
+  var cv, ctx, off, octx, W = 900, H = 440, dpr = 1;
   var viewEl;
   var st = {
-    model: null, trace: null, gm: null, range: null, metric: 'L', yaw: 35,
-    cam: null, t: 0, running: true, showPath: false, maxT: 1, last: 0,
-    rcv: null, src: null, resp: null, iso: null, rcvVal: null
+    model: null, trace: null, grid: null, gm: null, range: null,
+    metric: 'T30', band: -1, yaw: 35,
+    cam: null, showPath: false,
+    rcv: null, src: null, resp: null, rcvVal: null
   };
   var inited = false;
 
@@ -46,7 +56,7 @@
     if (!cv) return;
     var wrap = cv.parentNode;
     var w = Math.max(320, Math.round(wrap.clientWidth || 900));
-    H = Number(cv.getAttribute('height')) || 420;
+    H = Number(cv.getAttribute('height')) || 440;
     dpr = window.devicePixelRatio || 1;
     cv.width = Math.round(w * dpr); cv.height = Math.round(H * dpr);
     cv.style.height = H + 'px';
@@ -59,7 +69,7 @@
 
   /* 左侧模型区视口（右侧留出色标栏） */
   function viewRect() {
-    return { x: 10, y: 10, w: Math.max(160, W - LEG - 20), h: Math.max(120, H - 20) };
+    return { x: 10, y: 22, w: Math.max(160, W - LEG - 20), h: Math.max(120, H - 34) };
   }
 
   function setupView() {
@@ -74,43 +84,50 @@
   function readForm() {
     var L = clamp($('simLen').value, 0.5, 200), Wd = clamp($('simWid').value, 0.5, 200);
     var h = clamp($('simHgt').value, 1.5, 30), a = clamp($('simAlpha').value, 0.005, 0.98);
+    var sc = clamp($('simScatter').value, 0, 1);
     var innerWalls = [];
     if ($('simInner') && $('simInner').checked) {
       var ix = clamp($('simInnerX').value, 0, L);
-      innerWalls.push({ x1: ix, y1: clamp($('simInnerY1').value, 0, Wd), x2: ix, y2: clamp($('simInnerY2').value, 0, Wd), alpha: a });
+      innerWalls.push({
+        x1: ix, y1: clamp($('simInnerY1').value, 0, Wd),
+        x2: ix, y2: clamp($('simInnerY2').value, 0, Wd), alpha: a
+      });
     }
-    return { L: L, Wd: Wd, h: h, a: a, innerWalls: innerWalls };
+    return { L: L, Wd: Wd, h: h, a: a, sc: sc, innerWalls: innerWalls };
   }
 
   function refreshRange() {
-    st.range = st.gm ? S.metricRange(st.gm, st.metric, { minE: st.gm.maxE * 0.01 }) : null;
-    st.rcvVal = (st.gm && st.rcv) ? S.metricAtCell(st.gm, st.model, st.rcv, st.metric) : null;
+    st.range = st.gm ? S.metricRange(st.gm, st.metric, { band: st.band }) : null;
+    st.rcvVal = (st.gm && st.rcv) ? S.metricAtCell(st.gm, st.model, st.rcv, st.metric, st.band) : null;
   }
 
   function run() {
     var f = readForm();
     var model = S.buildRoom({ width: f.L, depth: f.Wd, height: f.h, alpha: f.a, innerWalls: f.innerWalls });
-    if (!model.ok) { $('simLegend').textContent = model.error; return; }
+    if (!model.ok) { if ($('simLegend')) $('simLegend').textContent = model.error; return; }
     st.model = model;
-    var src = { x: clamp($('simSrcX').value, 0, f.L), y: clamp($('simSrcY').value, 0, f.Wd) };
-    var rcv = { x: clamp($('simRcvX').value, 0, f.L), y: clamp($('simRcvY').value, 0, f.Wd) };
+    var src = {
+      x: clamp($('simSrcX').value, 0, f.L), y: clamp($('simSrcY').value, 0, f.Wd),
+      z: clamp($('simSrcZ').value, 0.1, f.h)
+    };
+    var rcv = {
+      x: clamp($('simRcvX').value, 0, f.L), y: clamp($('simRcvY').value, 0, f.Wd),
+      z: clamp($('simRcvZ').value, 0.1, f.h)
+    };
     st.rcv = rcv; st.src = src;
 
-    var nRays = Math.round(clamp($('simRays').value, 48, 2000));
-    var mb = Math.round(clamp($('simBounces').value, 5, 200));
-    var tv = S.traceRoom(model, { source: src, nRays: nRays, maxBounces: mb, minEnergy: 0.02, maxLength: 500 });
+    var nRays = Math.round(clamp($('simRays').value, 48, 6000));
+    var tv = S.traceBox(model, { source: src, nRays: nRays, scatter: f.sc });
     st.trace = tv;
     var gxs = Math.round(clamp($('simGrid').value, 12, 120));
     var gys = Math.max(6, Math.round(gxs * f.Wd / f.L));
     st.grid = S.sampleGrid(model, tv.rays, { gx: gxs, gy: gys });
     st.gm = S.gridMetrics(st.grid);
-    st.resp = S.receiverResponse(tv.rays, rcv, { radius: 0.7, binMs: 20, maxMs: 600 });
-    st.iso = S.isoFromEchogram(st.resp);
-    st.maxT = Math.max(1, tv.maxLength);
-    st.t = 0; st.running = true;
-    if ($('simPlay')) $('simPlay').textContent = '暂停';
+    st.resp = S.receiverBands(tv.rays, rcv, { radius: 0.8, model: model });
 
     st.metric = $('simMetric').value;
+    var bsel = $('simBand');
+    st.band = bsel ? bandIdx(bsel.value) : -1;
     if ($('simYaw')) st.yaw = clamp($('simYaw').value, 0, 360);
     refreshRange();
     fit(); setupView(); repaintStatic(); render(); updateMets(); drawEcho(); updateLegend();
@@ -144,23 +161,34 @@
     var thin = css('--border', '#d3dae6');
     var muted = css('--muted', '#4d5b6e');
 
+    // 图头（导出 PNG 时带出关键信息）
+    octx.textAlign = 'left';
+    octx.fillStyle = muted;
+    octx.font = '11px system-ui, sans-serif';
+    octx.fillText(bw.toFixed(1) + ' × ' + bd.toFixed(1) + ' × ' + h.toFixed(1) + ' m　α=' +
+      model.meanAlpha.toFixed(2) + '　' + BAND_LABELS[st.band < 0 ? 6 : st.band] +
+      '　' + (METRIC_INFO[st.metric] || METRIC_INFO.L).name, 12, 15);
+
     // 地面底板
     poly([P3(0, 0, 0), P3(bw, 0, 0), P3(bw, bd, 0), P3(0, bd, 0)], css('--card', '#ffffff'), null);
 
     // 地面声场彩图（逐格四边形；u、v 对 x、y 线性，用增量避免逐点三角函数）
     if (st.gm && st.range) {
-      var gm = st.gm, rng = st.range, thresh = gm.maxE * 0.01;
+      var gm = st.gm, rng = st.range;
+      var thresh = (S.bandValue(gm.maxE, st.band) || 0) * 0.01;
       var cw = gm.cw, ch = gm.ch;
       var root = P3(0, 0, 0);
       var ax = { u: P3(cw, 0, 0).u - root.u, v: P3(cw, 0, 0).v - root.v };
       var ay = { u: P3(0, ch, 0).u - root.u, v: P3(0, ch, 0).v - root.v };
-      var invert = !!METRIC_INFO[st.metric].invert;
+      var invert = !!(METRIC_INFO[st.metric] || METRIC_INFO.L).invert;
       octx.globalAlpha = 0.9;
       for (var iy = 0; iy < gm.gy; iy++) {
         for (var ix = 0; ix < gm.gx; ix++) {
           var m = gm.metrics[iy * gm.gx + ix];
-          if (!m || m.E < thresh || m[st.metric] == null) continue;
-          var val = m[st.metric];
+          if (!m || !m[st.metric]) continue;
+          var ev = S.bandValue(m.E, st.band);
+          var val = S.bandValue(m[st.metric], st.band);
+          if (!(ev >= thresh) || val == null || !isFinite(val)) continue;
           var frac = (rng[1] - rng[0]) > 0
             ? (invert ? (rng[1] - val) / (rng[1] - rng[0]) : (val - rng[0]) / (rng[1] - rng[0]))
             : 0.5;
@@ -184,17 +212,17 @@
       for (var gy = 0; gy <= bd + 1e-6; gy += sy) line3(P3(0, gy, 0), P3(bw, gy, 0), thin, 1, 0.5);
     }
 
-    // 内隔墙：竖向平面 + 条纹（对应 Odeon 中的分段墙面观感）
+    // 内隔墙：竖向平面 + 条纹
     model.innerWalls.forEach(function (s) {
       var b0 = P3(s.x1, s.y1, 0), b1 = P3(s.x2, s.y2, 0);
       var t1 = P3(s.x2, s.y2, h), t0 = P3(s.x1, s.y1, h);
       poly([b0, b1, t1, t0], css('--text-soft', '#2b3a4d'), edge, 1.6, 0.22);
       var N = 16;
       for (var i = 1; i < N; i++) {
-        var f = i / N;
+        var fr = i / N;
         line3(
-          { u: b0.u + (b1.u - b0.u) * f, v: b0.v + (b1.v - b0.v) * f },
-          { u: t0.u + (t1.u - t0.u) * f, v: t0.v + (t1.v - t0.v) * f },
+          { u: b0.u + (b1.u - b0.u) * fr, v: b0.v + (b1.v - b0.v) * fr },
+          { u: t0.u + (t1.u - t0.u) * fr, v: t0.v + (t1.v - t0.v) * fr },
           edge, 1, 0.35
         );
       }
@@ -202,12 +230,12 @@
       line3(t0, t1, edge, 2.2, 0.9);
     });
 
-    // 天花网格 + 竖向格栅（形成 Odeon 式的线框笼架）
+    // 天花网格 + 竖向格栅（线框笼架）
     var divX = Math.max(4, Math.min(30, Math.round(bw * 1.4)));
     var divY = Math.max(4, Math.min(30, Math.round(bd * 1.4)));
     var gstepX = bw / divX, gstepY = bd / divY;
-    for (var i = 0; i <= divX; i++) line3(P3(i * gstepX, 0, h), P3(i * gstepX, bd, h), edge, 1, 0.4);
-    for (var j = 0; j <= divY; j++) line3(P3(0, j * gstepY, h), P3(bw, j * gstepY, h), edge, 1, 0.4);
+    for (var i2 = 0; i2 <= divX; i2++) line3(P3(i2 * gstepX, 0, h), P3(i2 * gstepX, bd, h), edge, 1, 0.4);
+    for (var j2 = 0; j2 <= divY; j2++) line3(P3(0, j2 * gstepY, h), P3(bw, j2 * gstepY, h), edge, 1, 0.4);
     for (var p = 0; p <= divY; p++) {
       var yv = p * gstepY;
       line3(P3(0, yv, 0), P3(0, yv, h), muted, 1, 0.28);
@@ -234,17 +262,14 @@
 
     // 光路（可选）
     if (st.showPath && st.trace) {
-      octx.globalAlpha = 0.2;
+      octx.globalAlpha = 0.18;
       octx.strokeStyle = muted; octx.lineWidth = 1;
       st.trace.rays.forEach(function (ray) {
         var pts = ray.pts;
         octx.beginPath();
-        var s0 = P3(pts[0].x, pts[0].y, EAR_Z);
+        var s0 = P3(pts[0].x, pts[0].y, pts[0].z);
         octx.moveTo(s0.u, s0.v);
-        for (var k = 1; k < pts.length; k++) {
-          var s1 = P3(pts[k].x, pts[k].y, EAR_Z);
-          octx.lineTo(s1.u, s1.v);
-        }
+        for (var k = 1; k < pts.length; k++) octx.lineTo(P3(pts[k].x, pts[k].y, pts[k].z).u, P3(pts[k].x, pts[k].y, pts[k].z).v);
         octx.stroke();
       });
       octx.globalAlpha = 1;
@@ -252,7 +277,7 @@
 
     // 声源与接收点（带落地引线，指示水平位置）
     if (st.src) {
-      var sp = P3(st.src.x, st.src.y, EAR_Z), spf = P3(st.src.x, st.src.y, 0);
+      var sp = P3(st.src.x, st.src.y, st.src.z), spf = P3(st.src.x, st.src.y, 0);
       line3(sp, spf, css('--accent', '#c2410c'), 1.4, 0.55);
       octx.fillStyle = css('--accent', '#c2410c');
       octx.beginPath(); octx.arc(sp.u, sp.v, 5.5, 0, 6.2832); octx.fill();
@@ -261,7 +286,7 @@
       octx.fillText('声源', sp.u + 9, sp.v + 4);
     }
     if (st.rcv) {
-      var rp = P3(st.rcv.x, st.rcv.y, EAR_Z), rpf = P3(st.rcv.x, st.rcv.y, 0);
+      var rp = P3(st.rcv.x, st.rcv.y, st.rcv.z), rpf = P3(st.rcv.x, st.rcv.y, 0);
       line3(rp, rpf, css('--primary', '#1d4ed8'), 1.4, 0.55);
       octx.fillStyle = css('--primary', '#1d4ed8');
       octx.fillRect(rp.u - 4.5, rp.v - 4.5, 9, 9);
@@ -281,21 +306,21 @@
   function drawScaleBar() {
     if (!octx) return;
     var info = METRIC_INFO[st.metric] || METRIC_INFO.L;
-    var x0 = Math.max(24, W - LEG + 10), barW = 24;
-    var top = 52, bot = Math.max(top + 60, H - 26), barH = bot - top;
+    var x0 = Math.max(24, W - LEG + 16), barW = 24;
+    var top = 60, bot = Math.max(top + 60, H - 30), barH = bot - top;
 
     octx.textAlign = 'left';
     octx.fillStyle = css('--text', '#0f1a2a');
     octx.font = 'bold 13px system-ui, sans-serif';
-    octx.fillText(info.name + (info.unit ? ' (' + info.unit + ')' : ''), x0 - 6, 24);
+    octx.fillText(info.name + (info.unit ? ' (' + info.unit + ')' : ''), x0 - 8, 32);
     octx.fillStyle = css('--muted', '#4d5b6e');
     octx.font = '10px system-ui, sans-serif';
-    octx.fillText('模拟分布 · 平面切片', x0 - 6, 40);
+    octx.fillText('模拟分布 · ' + BAND_LABELS[st.band < 0 ? 6 : st.band] + ' · 地面切片', x0 - 8, 48);
 
     if (!st.range) {
       octx.fillStyle = css('--muted', '#4d5b6e');
       octx.font = '12px system-ui, sans-serif';
-      octx.fillText('—', x0 + barW + 8, top + barH / 2);
+      octx.fillText('点击「开始模拟」', x0 + barW + 8, top + barH / 2);
       return;
     }
 
@@ -315,20 +340,19 @@
     // 刻度与数值
     octx.font = '11px ui-monospace, Menlo, Consolas, monospace';
     ticks.forEach(function (t) {
-      var y = top + (1 - t.frac) * barH;
+      var yv = top + (1 - t.frac) * barH;
       octx.strokeStyle = css('--border', '#d3dae6');
-      octx.beginPath(); octx.moveTo(x0 + barW, y); octx.lineTo(x0 + barW + 5, y); octx.stroke();
-      var txt = (t.edge === 'hi' ? '≥ ' : (t.edge === 'lo' ? '≤ ' : '')) +
-        Number(t.value).toFixed(info.digits);
+      octx.beginPath(); octx.moveTo(x0 + barW, yv); octx.lineTo(x0 + barW + 5, yv); octx.stroke();
+      var txt = (t.edge === 'hi' ? '≥ ' : (t.edge === 'lo' ? '≤ ' : '')) + Number(t.value).toFixed(info.digits);
       octx.fillStyle = css('--text', '#0f1a2a');
-      octx.fillText(txt, x0 + barW + 8, y + 4);
+      octx.fillText(txt, x0 + barW + 8, yv + 4);
     });
 
     // 接收点模拟值在色标上的位置标记
     if (st.rcvVal != null && isFinite(st.rcvVal)) {
-      var f = (st.rcvVal - lo) / (hi - lo);
-      if (f >= -0.02 && f <= 1.02) {
-        var my = top + (1 - Math.min(1, Math.max(0, f))) * barH;
+      var fr2 = (st.rcvVal - lo) / (hi - lo);
+      if (fr2 >= -0.02 && fr2 <= 1.02) {
+        var my = top + (1 - Math.min(1, Math.max(0, fr2))) * barH;
         octx.fillStyle = css('--primary', '#1d4ed8');
         octx.beginPath();
         octx.moveTo(x0 - 3, my); octx.lineTo(x0 - 11, my - 5); octx.lineTo(x0 - 11, my + 5);
@@ -338,57 +362,15 @@
 
     octx.fillStyle = css('--muted', '#4d5b6e');
     octx.font = '10px system-ui, sans-serif';
-    octx.fillText('几何声学估算', x0 - 6, bot + 15);
-  }
-
-  /* ---------- 动态层：粒子沿声线往复传播、逐次被吸收 ---------- */
-  function posAt(ray, dist) {
-    var p = ray && ray.pts;
-    if (!p || p.length < 2) return null;
-    if (dist < 0 || dist > ray.length) return null;
-    var lo = 0, hi = p.length - 1;
-    while (lo < hi - 1) { var mid = (lo + hi) >> 1; if (p[mid].t <= dist) lo = mid; else hi = mid; }
-    if (lo > p.length - 2) lo = p.length - 2;
-    var A = p[lo], B = p[lo + 1], seg = (B.t - A.t) || 1, fr = (dist - A.t) / seg;
-    return { x: A.x + (B.x - A.x) * fr, y: A.y + (B.y - A.y) * fr, e: A.e };
+    octx.fillText('几何声学估算', x0 - 8, bot + 16);
   }
 
   function render() {
-    if (!ctx || !st.model) return;
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.drawImage(off, 0, 0); ctx.restore();
-    if (!st.trace) return;
-    var fill = css('--text', '#0f1a2a'), stroke = css('--card', '#ffffff');
-    st.trace.rays.forEach(function (ray) {
-      var pos = posAt(ray, st.t);
-      if (!pos) return;
-      var p = P3(pos.x, pos.y, EAR_Z);
-      var r = 1.4 + 2.2 * Math.min(1, pos.e), al = 0.28 + 0.72 * Math.min(1, pos.e * 1.4);
-      ctx.globalAlpha = al;
-      ctx.beginPath(); ctx.arc(p.u, p.v, r, 0, 6.2832); ctx.fillStyle = fill; ctx.fill();
-      ctx.lineWidth = 0.6; ctx.strokeStyle = stroke; ctx.stroke();
-    });
-    ctx.globalAlpha = 1;
-    if (st.src) {
-      var sp = P3(st.src.x, st.src.y, EAR_Z);
-      ctx.fillStyle = css('--accent', '#c2410c');
-      ctx.beginPath(); ctx.arc(sp.u, sp.v, 5.5, 0, 6.2832); ctx.fill();
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4; ctx.stroke();
-    }
-    if (st.rcv) {
-      var rp = P3(st.rcv.x, st.rcv.y, EAR_Z);
-      ctx.fillStyle = css('--primary', '#1d4ed8');
-      ctx.fillRect(rp.u - 4.5, rp.v - 4.5, 9, 9);
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4; ctx.strokeRect(rp.u - 4.5, rp.v - 4.5, 9, 9);
-    }
-  }
-
-  function loop(now) {
-    if (!st.last) st.last = now;
-    var dt = Math.min(0.05, (now - st.last) / 1000); st.last = now;
-    if (!viewEl || !viewEl.classList.contains('active') || !st.model) { requestAnimationFrame(loop); return; }
-    if (st.running) { st.t += dt * 46; if (st.t > st.maxT + 3) st.t = 0; }
-    render();
-    requestAnimationFrame(loop);
+    if (!ctx || !cv) return;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    if (off) ctx.drawImage(off, 0, 0);
+    ctx.restore();
   }
 
   function card(label, val) {
@@ -396,42 +378,96 @@
       '<div style="font-size:12px;color:var(--muted)">' + label + '</div>' +
       '<div style="font-size:18px;color:var(--text);margin-top:3px">' + val + '</div></div>';
   }
+
   function updateMets() {
     var el = $('simMets'); if (!el) return;
-    var m = st.model, iso = st.iso, tr = st.trace;
+    var m = st.model, tr = st.trace, gm = st.gm;
+    if (!m) { el.innerHTML = '<span class="hint">点击「开始模拟」查看结果</span>'; return; }
+    var bi = st.band, bl = BAND_LABELS[bi < 0 ? 6 : bi];
+    var sab = S.bandValue(m.bands.map(function (b) { return b.sabine; }), bi);
+    var eyr = S.bandValue(m.bands.map(function (b) { return b.eyringAir; }), bi);
+    var t30m = gm ? S.metricMean(gm, 'T30', { band: bi }) : null;
+    var edtm = gm ? S.metricMean(gm, 'EDT', { band: bi }) : null;
+    var iso = st.resp ? S.isoFromEchogram(st.resp, bi >= 0 ? bi : 3) : null;
+    var iso2 = (bi < 0 && st.resp) ? S.isoFromEchogram(st.resp, 2) : null;
+    function av(k) {
+      if (!iso) return null;
+      if (bi >= 0 || !iso2) return iso[k];
+      if (iso[k] == null || iso2[k] == null) return null;
+      return (iso[k] + iso2[k]) / 2;
+    }
     var html = '';
-    if (m) {
-      html += card('Sabine RT60 估算', fmt(m.rt60) + ' s');
-      html += card('平均自由程', fmt(m.meanFreePath) + ' m');
-      html += card('平均反射次数', fmt(tr && tr.hits, 1));
-      html += card('能量吸收率', tr ? Math.round(tr.absorbed * 100) + '%' : '—');
+    html += card('Sabine RT60（' + bl + '）', fmt(sab) + ' s');
+    html += card('Eyring + 空气吸收', fmt(eyr) + ' s');
+    html += card('模拟 T30 空间均值', fmt(t30m) + ' s');
+    html += card('模拟 EDT 空间均值', fmt(edtm) + ' s');
+    html += card('平均反射次数', fmt(tr && tr.hits, 1));
+    html += card('平均自由程', fmt(m.meanFreePath) + ' m');
+    if (iso) {
+      html += card('接收点 EDT', fmt(av('edt')) + ' s');
+      html += card('接收点 T30', fmt(av('t30')) + ' s');
+      html += card('接收点 C50', fmt(av('c50'), 1) + ' dB');
+      html += card('接收点 C80', fmt(av('c80'), 1) + ' dB');
+      html += card('接收点 D50', fmt((av('d50') != null ? av('d50') * 100 : null), 0) + ' %');
+      html += card('接收点 Ts', fmt(av('ts'), 0) + ' ms');
     }
-    if (iso && iso.ok) {
-      html += card('接收点 EDT', fmt(iso.edt) + ' s');
-      html += card('接收点 T30', fmt(iso.t30) + ' s');
-      html += card('清晰度 C50', fmt(iso.c50) + ' dB');
-      html += card('定义度 D50', fmt(iso.d50 ? iso.d50 * 100 : null, 0) + ' %');
+    el.innerHTML = html;
+    renderBandTable();
+  }
+
+  /* 分频带结果表：直接回答"混响时间随频率怎么变" */
+  function renderBandTable() {
+    var el = $('simBandTable'); if (!el || !st.model || !st.resp) { if (el) el.innerHTML = ''; return; }
+    var m = st.model, gm = st.gm;
+    var rows = '';
+    for (var b = 0; b < S.NB; b++) {
+      var iso = S.isoFromEchogram(st.resp, b);
+      var t30 = gm ? S.metricMean(gm, 'T30', { band: b }) : null;
+      var edt = gm ? S.metricMean(gm, 'EDT', { band: b }) : null;
+      rows += '<tr' + (b === st.band ? ' style="background:var(--card-soft)"' : '') + '>' +
+        '<td><strong>' + S.BANDS[b] + '</strong></td>' +
+        '<td>' + fmt(m.bands[b].sabine) + '</td>' +
+        '<td>' + fmt(m.bands[b].eyringAir) + '</td>' +
+        '<td>' + fmt(t30) + '</td>' +
+        '<td>' + fmt(edt) + '</td>' +
+        '<td>' + fmt(iso.t30) + '</td>' +
+        '<td>' + fmt(iso.edt) + '</td>' +
+        '<td>' + fmt(iso.c50, 1) + '</td>' +
+        '<td>' + fmt(iso.d50 != null ? iso.d50 * 100 : null, 0) + '</td>' +
+        '<td>' + fmt(iso.ts, 0) + '</td>' +
+        '</tr>';
     }
-    el.innerHTML = html || '<span class="hint">点击「开始模拟」查看结果</span>';
+    el.innerHTML = '<div class="table-wrap"><table class="detail-table wide"><thead><tr>' +
+      '<th>倍频带 (Hz)</th><th>Sabine (s)</th><th>Eyring+空气 (s)</th>' +
+      '<th>模拟 T30 全场均值 (s)</th><th>模拟 EDT 全场均值 (s)</th>' +
+      '<th>接收点 T30 (s)</th><th>接收点 EDT (s)</th>' +
+      '<th>C50 (dB)</th><th>D50 (%)</th><th>Ts (ms)</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
   function drawEcho() {
-    var ec = $('simEcho'); if (!ec || !st.resp) return;
-    var bins = Array.prototype.slice.call(st.resp.bins), binMs = st.resp.binMs;
-    var xs = bins.map(function (_, i) { return i * binMs; });
+    var ec = $('simEcho'); if (!ec || !st.resp || !MC) return;
+    var band = st.band >= 0 ? st.band : 3;
+    var bins = Array.prototype.slice.call(st.resp.bins.subarray(band * st.resp.nb, (band + 1) * st.resp.nb));
+    var binMs = st.resp.binMs;
+    var mx = 0;
+    bins.forEach(function (v) { if (v > mx) mx = v; });
+    var db = bins.map(function (v) { return (v > 0 && mx > 0) ? 10 * Math.log10(v / mx) : -80; });
+    var xs = db.map(function (_, i) { return i * binMs; });
     MC.draw(ec, {
-      x: xs, yMin: 0, yDigits: 4,
-      xLabelFmt: function (v) { return v + ''; },
-      series: [{ values: bins, color: css('--primary', '#1d4ed8'), points: false, width: 2 }]
+      x: xs, yMin: -70, yDigits: 0,
+      xLabelFmt: function (v) { return Math.round(v) + ''; },
+      series: [{ values: db, color: css('--primary', '#1d4ed8'), points: false, width: 2 }]
     });
   }
 
   function updateLegend() {
     var info = METRIC_INFO[st.metric] || METRIC_INFO.L;
-    var r = st.range;
-    var rng = r ? ('（色标区间 ' + Number(r[0]).toFixed(info.digits) + ' ~ ' + Number(r[1]).toFixed(info.digits) +
-      (info.unit ? ' ' + info.unit : '') + '）') : '';
-    $('simLegend').textContent = info.text + rng +
+    var r = st.range, rng = '';
+    if (r) rng = '（色标区间 ' + Number(r[0]).toFixed(info.digits) + ' ~ ' + Number(r[1]).toFixed(info.digits) +
+      (info.unit ? ' ' + info.unit : '') + '）';
+    var el = $('simLegend'); if (!el) return;
+    el.textContent = info.text + rng + '　·　频段 ' + BAND_LABELS[st.band < 0 ? 6 : st.band] +
       '　·　左侧为轴测模型（可拖「视角方位」旋转），右侧色标给出该指标的模拟分布与接收点读数；几何声学估算，非验收级。';
   }
 
@@ -439,7 +475,7 @@
     if (!cv) return;
     var a = document.createElement('a');
     a.href = cv.toDataURL('image/png');
-    a.download = 'room-sim-' + st.metric + '.png';
+    a.download = 'room-map-' + st.metric + '-' + (st.band < 0 ? 'mid' : S.BANDS[st.band]) + '.png';
     a.click();
   }
 
@@ -459,26 +495,25 @@
     cv = $('simCanvas'); viewEl = document.getElementById('view-sim');
     fillMaterials();
     $('simRun').addEventListener('click', run);
-    $('simPlay').addEventListener('click', function () { st.running = !st.running; this.textContent = st.running ? '暂停' : '播放'; });
-    $('simPath').addEventListener('click', function () { st.showPath = !st.showPath; repaintStatic(); render(); });
     $('simPng').addEventListener('click', exportPng);
+    $('simPath').addEventListener('click', function () { st.showPath = !st.showPath; repaintStatic(); render(); });
     $('simMetric').addEventListener('change', function () {
-      st.metric = this.value;
-      refreshRange();
-      repaintStatic(); render(); updateLegend();
+      st.metric = this.value; refreshRange(); repaintStatic(); render(); updateMets(); updateLegend(); drawEcho();
+    });
+    var bs = $('simBand');
+    if (bs) bs.addEventListener('change', function () {
+      st.band = bandIdx(this.value); refreshRange(); repaintStatic(); render(); updateMets(); updateLegend(); drawEcho();
     });
     var yaw = $('simYaw');
     if (yaw) yaw.addEventListener('input', function () {
       var v = clamp(this.value, 0, 360);
       if ($('simYawVal')) $('simYawVal').textContent = Math.round(v);
       if (!st.model) return;
-      st.yaw = v;
-      setupView(); repaintStatic(); render();
+      st.yaw = v; setupView(); repaintStatic(); render();
     });
     window.addEventListener('resize', function () {
       if (!st.model) return; fit(); setupView(); repaintStatic(); render();
     });
-    requestAnimationFrame(loop);
   }
 
   function onShow() {

@@ -60,7 +60,18 @@
           <a href="#/rt60" data-route="rt60"><span class="nm-t">混响时间 RT60</span><small class="nm-d">Sabine / Eyring · 材料吸声库 · 用途推荐值</small></a>
           <a href="#/stc" data-route="stc"><span class="nm-t">墙体隔声量 Rw / STC</span><small class="nm-d">GB/T 50121 计权隔声量 · ASTM E413</small></a>
           <a href="#/roomq" data-route="roomq"><span class="nm-t">厅堂与扩声音质</span><small class="nm-d">RT60/EDT · C50/C80 · D50 · G · 扩声预测</small></a>
-          <a href="#/sim" data-route="sim"><span class="nm-t">室内音质模拟</span><small class="nm-d">三维轴测模型 · 声场彩图 · 指标色标 · 粒子动画</small></a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true">
+          模拟与可听化
+          <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <div class="nav-menu">
+          <a href="#/sim" data-route="sim"><span class="nm-t">室内音质模拟彩图</span><small class="nm-d">三维模型 · 声场彩图 · 指标色标 · 导出 PNG</small></a>
+          <a href="#/simfx" data-route="simfx"><span class="nm-t">声场粒子动画</span><small class="nm-d">2D / 3D 可选 · 导出 GIF 或 MP4</small></a>
+          <a href="#/aural" data-route="aural"><span class="nm-t">声学可听化</span><small class="nm-d">混响 A/B 试听对比 · 隔声前后试听</small></a>
         </div>
       </div>
 
@@ -123,7 +134,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 5 个分组、15 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、17 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -237,19 +248,6 @@
             <span class="mc-desc">由衰减曲线求 RT60／EDT，清晰度 C50／C80、明晰度 D50、中心时间 Ts、强度因子 G，以及房间常数、临界距离与直达+混响扩声级预测。</span>
           </span>
         </a>
-        <a class="module-card" href="#/sim">
-          <span class="mc-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="6" y="8" width="36" height="32" rx="3" />
-              <circle cx="16" cy="24" r="3" />
-              <path d="M16 24l16-10M16 24l18 8M34 14l-4 12M34 14l6 10" stroke-linecap="round" />
-            </svg>
-          </span>
-          <span class="mc-body">
-            <span class="mc-title">室内音质模拟（几何声学） <span class="mc-tag live">可用</span></span>
-            <span class="mc-desc">Odeon 式分布图版式：左侧三维轴测房间里铺声场彩图并跑声线粒子动画（往复反射、逐次被吸收），右侧为指标色标标杆（色带＋数值刻度＋接收点读数），附接收点 EDT／T30／C50／D50 与 Sabine RT60 估算。</span>
-          </span>
-        </a>
       </div>
     </div>
 
@@ -342,13 +340,58 @@
       </div>
     </div>
 
+    <div class="module-group">
+      <div class="group-label">模拟与可听化</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/sim">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="6" y="8" width="36" height="32" rx="3" />
+              <circle cx="16" cy="24" r="3" />
+              <path d="M16 24l16-10M16 24l18 8M34 14l-4 12M34 14l6 10" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">室内音质模拟彩图 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">Odeon 式分布图版式：左侧三维轴测房间里铺声场彩图，右侧为指标色标标杆（色带＋数值刻度＋接收点读数）。指标含六个倍频带的相对声压级、C50、C80、D50、Ts 与 <strong>混响时间 EDT / T30 分布</strong>，可导出 PNG。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/simfx">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="24" cy="24" r="5" />
+              <circle cx="24" cy="24" r="12" stroke-dasharray="3 4" />
+              <circle cx="24" cy="24" r="19" stroke-dasharray="2 5" />
+              <path d="M24 5v3M24 40v3M5 24h3M40 24h3" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声场粒子动画 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">把声线当作声粒子：从声源出发在房间内往复反射、逐次被界面吸收（亮度随剩余能量衰减）。<strong>2D 平面 / 3D 轴测</strong>随时切换，可调声速与拖尾，并能导出 <strong>GIF 或 MP4/WebM</strong> 动画。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/aural">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 20v8M16 14v20M22 8v32M28 16v16M34 22v4" stroke-linecap="round" />
+              <path d="M6 24h4" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声学可听化 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">①<strong>混响 A/B 对比</strong>：同一干信号（拍手／合成音节／粉噪／上传音频）分别卷积两个房间脉冲响应，直接试听不同混响时间下的音质差异；②<strong>隔声试听</strong>：噪声经不同隔声量构件阻隔前后的声音大小对比，给出 A 计权降低量与 Rw 参考。</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
     <section class="card notes">
       <h2>使用说明</h2>
       <ul>
-        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质</strong> 五个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/sim</code> 室内音质模拟、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 910+ 条断言）。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 18 个文件 / 1110 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -891,21 +934,22 @@
 
   <section class="view" id="view-sim" data-view="sim" hidden>
     <div class="page-head">
-      <h2>室内音质模拟（几何声学）</h2>
-      <p class="hint">矩形房间光线追踪：左侧为三维轴测模型（声场彩图 + 声线粒子往复传播并逐次被吸收），右侧为指标色标标杆（色带 + 数值刻度 + 接收点模拟值），并给出接收点 ISO 3382 评价参数。几何声学估算，非验收级。</p>
+      <h2>室内音质模拟彩图</h2>
+      <p class="hint">矩形房间几何声学光线追踪，输出 Odeon / CATT 版式的声场彩图：左侧三维轴测模型（地面铺指标分布），右侧指标色标标杆（色带 + 刻度 + 接收点读数）。支持<strong>六个倍频带 + 中频均值</strong>，指标含<strong>混响时间 EDT / T30</strong>，彩图可导出 PNG。</p>
     </div>
 
     <section class="card">
       <h3>房间与吸声</h3>
-      <p class="hint">输入房间长（x 向）与宽（y 向，米），四面墙、地面与天花板统一取吸声系数 α；可另加一道竖向内隔墙。</p>
+      <p class="hint">输入房间长（x 向）、宽（y 向）与层高（米）；六个界面统一取吸声系数 α（可按材料取中频值）；可另加一道竖向内隔墙。</p>
       <div class="field-row">
         <div class="field"><label for="simLen">房间长 L (m)</label><input id="simLen" type="number" step="0.1" value="12" /></div>
         <div class="field"><label for="simWid">房间宽 W (m)</label><input id="simWid" type="number" step="0.1" value="8" /></div>
-        <div class="field"><label for="simHgt">层高 (m)</label><input id="simHgt" type="number" step="0.1" value="3" /></div>
+        <div class="field"><label for="simHgt">层高 (m)</label><input id="simHgt" type="number" step="0.1" value="3.2" /></div>
         <div class="field"><label for="simAlpha">吸声系数 α</label><input id="simAlpha" type="number" step="0.01" min="0.01" max="0.95" value="0.2" /></div>
         <div class="field"><label for="simMat">按材料取值（中频）</label>
           <select id="simMat"><option value="">— 手动输入 —</option></select>
         </div>
+        <div class="field"><label for="simScatter">散射系数 s</label><input id="simScatter" type="number" step="0.05" min="0" max="1" value="0.35" /></div>
       </div>
       <div class="field-row">
         <div class="field"><label for="simInner"><input id="simInner" type="checkbox" /> 启用竖向内隔墙</label></div>
@@ -920,21 +964,41 @@
       <div class="field-row">
         <div class="field"><label for="simSrcX">声源 x (m)</label><input id="simSrcX" type="number" step="0.1" value="2" /></div>
         <div class="field"><label for="simSrcY">声源 y (m)</label><input id="simSrcY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="simSrcZ">声源高 z (m)</label><input id="simSrcZ" type="number" step="0.1" value="1.5" /></div>
         <div class="field"><label for="simRcvX">接收点 x (m)</label><input id="simRcvX" type="number" step="0.1" value="10" /></div>
         <div class="field"><label for="simRcvY">接收点 y (m)</label><input id="simRcvY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="simRcvZ">接收点高 z (m)</label><input id="simRcvZ" type="number" step="0.1" value="1.2" /></div>
       </div>
       <div class="field-row">
-        <div class="field"><label for="simRays">光线数</label><input id="simRays" type="number" step="50" value="600" /></div>
-        <div class="field"><label for="simBounces">最大反射次数</label><input id="simBounces" type="number" step="5" value="60" /></div>
+        <div class="field"><label for="simRays">声线数</label><input id="simRays" type="number" step="100" value="1200" /></div>
         <div class="field"><label for="simGrid">网格分辨率</label>
-          <select id="simGrid"><option value="36">粗（36 列）</option><option value="56" selected>中（56 列）</option><option value="84">细（84 列）</option></select>
+          <select id="simGrid">
+            <option value="28">粗（28 列）</option>
+            <option value="44" selected>中（44 列）</option>
+            <option value="64">细（64 列）</option>
+            <option value="88">很细（88 列）</option>
+          </select>
         </div>
         <div class="field"><label for="simMetric">彩图指标</label>
           <select id="simMetric">
-            <option value="L">相对声压级 (dB)</option>
-            <option value="C50">清晰度 C50 (dB)</option>
+            <option value="T30">混响时间 T30 (s)</option>
+            <option value="EDT">早期衰减时间 EDT (s)</option>
+            <option value="L">相对声压级 L (dB)</option>
+            <option value="C50">语言清晰度 C50 (dB)</option>
+            <option value="C80">音乐明晰度 C80 (dB)</option>
             <option value="D50">定义度 D50</option>
             <option value="Ts">中心时间 Ts (ms)</option>
+          </select>
+        </div>
+        <div class="field"><label for="simBand">倍频带</label>
+          <select id="simBand">
+            <option value="0">125 Hz</option>
+            <option value="1">250 Hz</option>
+            <option value="2">500 Hz</option>
+            <option value="3">1 kHz</option>
+            <option value="4">2 kHz</option>
+            <option value="5">4 kHz</option>
+            <option value="mid" selected>中频均值（500 Hz + 1 kHz）</option>
           </select>
         </div>
         <div class="field"><label for="simYaw">视角方位 (°)：<span id="simYawVal">35</span></label>
@@ -943,37 +1007,258 @@
       </div>
       <div class="btn-row toolbar">
         <button id="simRun" class="btn primary" type="button">开始模拟</button>
-        <button id="simPlay" class="btn" type="button">暂停</button>
-        <button id="simPath" class="btn" type="button">显示 / 隐藏光路</button>
-        <button id="simPng" class="btn" type="button">导出 PNG</button>
+        <button id="simPath" class="btn" type="button">显示 / 隐藏声线</button>
+        <button id="simPng" class="btn" type="button">导出彩图 PNG</button>
       </div>
     </section>
 
     <section class="card">
-      <h3>声场彩图与粒子动画 <span class="hint">（左：三维模型 · 右：指标色标）</span></h3>
+      <h3>声场彩图 <span class="hint">（左：三维模型 · 右：指标色标标杆）</span></h3>
       <div class="canvas-wrap"><canvas id="simCanvas" height="440" style="display:block;width:100%"></canvas></div>
-      <p class="hint" id="simLegend">点击「开始模拟」后在此显示彩图。</p>
+      <p class="hint" id="simLegend">点击「开始模拟」后在此显示彩图与色标。</p>
     </section>
 
     <section class="card">
-      <h3>评价参数（接收点，ISO 3382 估算）</h3>
-      <p class="hint">由模拟能量时程经 Schroeder 反向积分得到，受光线数与模型简化影响，仅供方案比选。</p>
+      <h3>评价参数（当前倍频带）</h3>
+      <p class="hint">由模拟能量时程经 Schroeder 反向积分得到（含 Lundeby 截断补偿），与 Sabine / Eyring 公式估算相互印证；受声线数与模型简化影响，仅供方案比选。</p>
       <div id="simMets" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px"></div>
       <div class="canvas-wrap" style="margin-top:14px"><canvas id="simEcho" height="240" style="display:block;width:100%"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h3>全倍频带结果</h3>
+      <div id="simBandTable"></div>
     </section>
 
     <section class="card notes">
       <h2>方法说明与限制</h2>
       <ul>
-        <li>本模块基于<strong>几何声学</strong>（镜像声源法 + 二维光线追踪，方法源自 Allen &amp; Berkley、Kuttruff 等公开文献），与 Odeon / CATT / Raynoise 属同一类方法体系，为自研实现。</li>
-        <li>结果为<strong>平面切片估算</strong>：声源按线声源处理、忽略层高竖向反射与边缘衍射，低频与强扩散房间偏差较大，<strong>不可替代授权软件做正式验收</strong>。</li>
-        <li>彩图版式：<strong>左侧</strong>为房间轴测模型（地面铺该指标的模拟分布彩图，黄色/红色为高值、蓝色为低值，「视角方位」可旋转观察）；<strong>右侧</strong>为指标色标标杆，色带旁标注整齐刻度数值（首末以 ≥ / ≤ 表示截断），蓝色三角指示<strong>接收点</strong>的模拟读数。</li>
-        <li>彩图指标：相对声压级、C50、D50、Ts；颜色按分位区间归一化（剔除极少数离群格），因此<strong>颜色差 ≠ 等量 dB 差</strong>，请以右侧色标的实际数值为准。</li>
-        <li>「Sabine RT60 估算」由房间体积、总表面积与平均吸声系数按 <code>RT60 = 0.161V / A</code> 计算；接收点的 EDT/T30/C50/D50 则由模拟回波经 Schroeder 反向积分得到，二者可相互印证。</li>
+        <li>本模块基于<strong>几何声学</strong>（镜像声源 Allen &amp; Berkley + 光线/声锥追踪 Kuttruff 一类公开方法），与 Odeon / CATT / Raynoise 同属一类方法体系，为自研实现，非任何商业软件的复刻。</li>
+        <li>声线终止采用<strong>俄罗斯轮盘赌</strong>（无偏蒙特卡洛），反射按散射系数 s 在镜面反射与<strong>朗伯漫射</strong>之间随机选择——纯镜面反射的矩形房间是<strong>非遍历</strong>的，无法形成扩散声场，必须引入漫射才能得到合理的混响衰减。</li>
+        <li>结果为<strong>方案比选级估算</strong>：忽略边缘衍射、家具散射细节与低频波动效应，<strong>不可替代授权软件做正式验收</strong>。</li>
+        <li>彩图版式：<strong>左侧</strong>房间轴测模型（地面铺该指标分布彩图，蓝→青→绿→黄→红 由低到高）；<strong>右侧</strong>指标色标标杆，色带旁标注整齐刻度数值（首末以 ≥ / ≤ 表示截断），蓝色三角指示<strong>接收点</strong>读数。</li>
+        <li>颜色按分位区间归一化（剔除极少数离群格），因此<strong>颜色差 ≠ 等量数值差</strong>，务必以右侧色标实际数值为准。Ts 为反向色标（越小越清晰，显示为越冷）。</li>
+        <li>T30 由 −5 ~ −35 dB 段外推、EDT 由前 10 dB 外推；当衰减不足 35 dB 时自动降级为 −5 ~ −25 dB / −1 ~ −15 dB 并标注。</li>
       </ul>
     </section>
   </section>
 
+  <section class="view" id="view-simfx" data-view="simfx" hidden>
+    <div class="page-head">
+      <h2>声场粒子动画</h2>
+      <p class="hint">把光线追踪得到的声线当作<strong>声粒子</strong>：从声源出发、在房间内往复反射并逐次被界面吸收（亮度与半径随剩余能量衰减）。可切换 <strong>2D 平面 / 3D 轴测</strong>两种表现，并可导出为 <strong>GIF</strong> 或 <strong>MP4 / WebM</strong> 视频。</p>
+    </div>
+
+    <section class="card">
+      <h3>房间与吸声</h3>
+      <div class="field-row">
+        <div class="field"><label for="sfxLen">房间长 L (m)</label><input id="sfxLen" type="number" step="0.1" value="12" /></div>
+        <div class="field"><label for="sfxWid">房间宽 W (m)</label><input id="sfxWid" type="number" step="0.1" value="8" /></div>
+        <div class="field"><label for="sfxHgt">层高 (m)</label><input id="sfxHgt" type="number" step="0.1" value="3.2" /></div>
+        <div class="field"><label for="sfxAlpha">吸声系数 α</label><input id="sfxAlpha" type="number" step="0.01" min="0.01" max="0.95" value="0.2" /></div>
+        <div class="field"><label for="sfxMat">按材料取值（中频）</label>
+          <select id="sfxMat"><option value="">— 手动输入 —</option></select>
+        </div>
+        <div class="field"><label for="sfxScatter">散射系数 s</label><input id="sfxScatter" type="number" step="0.05" min="0" max="1" value="0.35" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="sfxInner"><input id="sfxInner" type="checkbox" /> 启用竖向内隔墙</label></div>
+        <div class="field"><label for="sfxInnerX">隔墙位置 x (m)</label><input id="sfxInnerX" type="number" step="0.1" value="6" /></div>
+        <div class="field"><label for="sfxInnerY1">起 y (m)</label><input id="sfxInnerY1" type="number" step="0.1" value="2.4" /></div>
+        <div class="field"><label for="sfxInnerY2">止 y (m)</label><input id="sfxInnerY2" type="number" step="0.1" value="5.6" /></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>声源、接收点与动画参数</h3>
+      <div class="field-row">
+        <div class="field"><label for="sfxSrcX">声源 x (m)</label><input id="sfxSrcX" type="number" step="0.1" value="2" /></div>
+        <div class="field"><label for="sfxSrcY">声源 y (m)</label><input id="sfxSrcY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="sfxSrcZ">声源高 z (m)</label><input id="sfxSrcZ" type="number" step="0.1" value="1.5" /></div>
+        <div class="field"><label for="sfxRcvX">接收点 x (m)</label><input id="sfxRcvX" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="sfxRcvY">接收点 y (m)</label><input id="sfxRcvY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="sfxRcvZ">接收点高 z (m)</label><input id="sfxRcvZ" type="number" step="0.1" value="1.2" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="sfxRays">声线数</label><input id="sfxRays" type="number" step="50" value="600" /></div>
+        <div class="field"><label for="sfxParticles">显示粒子数</label><input id="sfxParticles" type="number" step="20" value="240" /></div>
+        <div class="field"><label for="sfxMode">视图模式</label>
+          <select id="sfxMode">
+            <option value="3d" selected>3D 轴测</option>
+            <option value="2d">2D 平面</option>
+          </select>
+        </div>
+        <div class="field" id="sfxYawRow"><label for="sfxYaw">视角方位 (°)：<span id="sfxYawVal">35</span></label>
+          <input id="sfxYaw" type="range" min="0" max="360" step="5" value="35" />
+        </div>
+        <div class="field"><label for="sfxSpeed">传播速度 (m/s)：<span id="sfxSpeedVal">90</span></label>
+          <input id="sfxSpeed" type="range" min="5" max="600" step="5" value="90" />
+        </div>
+        <div class="field"><label for="sfxTrail">拖尾长度：<span id="sfxTrailVal">6</span></label>
+          <input id="sfxTrail" type="range" min="0" max="40" step="1" value="6" />
+        </div>
+      </div>
+      <div class="btn-row toolbar">
+        <button id="sfxRun" class="btn primary" type="button">生成声场</button>
+        <button id="sfxPlay" class="btn" type="button">播放</button>
+        <button id="sfxReset" class="btn" type="button">回到起点</button>
+        <button id="sfxPath" class="btn" type="button">显示 / 隐藏完整光路</button>
+      </div>
+      <p class="hint" id="sfxStatus">点击「生成声场」开始。</p>
+    </section>
+
+    <section class="card">
+      <h3>粒子传播动画</h3>
+      <div class="canvas-wrap"><canvas id="sfxCanvas" height="420" style="display:block;width:100%"></canvas></div>
+      <p class="hint">粒子亮度与半径代表剩余声能（中频 500 Hz + 1 kHz 平均）：越亮越大表示刚发出或反射次数少；越暗越小表示已被界面多次吸收。底部标注当前时刻（ms）与已走声程。</p>
+    </section>
+
+    <section class="card">
+      <h3>导出动画</h3>
+      <div class="field-row">
+        <div class="field"><label for="sfxGifFrames">GIF 帧数（8–120）</label><input id="sfxGifFrames" type="number" step="4" value="48" /></div>
+        <div class="field"><label for="sfxGifDelay">GIF 每帧延时 (ms)</label><input id="sfxGifDelay" type="number" step="10" value="80" /></div>
+        <div class="field"><label for="sfxVideoSecs">视频时长 (s)</label><input id="sfxVideoSecs" type="number" step="1" value="8" /></div>
+        <div class="field"><label for="sfxVideoFps">视频帧率 (fps)</label><input id="sfxVideoFps" type="number" step="1" value="24" /></div>
+      </div>
+      <div class="btn-row toolbar">
+        <button id="sfxGif" class="btn" type="button">导出 GIF</button>
+        <button id="sfxVideo" class="btn" type="button">导出 MP4 / WebM</button>
+      </div>
+      <p class="hint">GIF 为逐帧离屏渲染后编码（自研 GIF89a 编码器，零依赖），帧数越多越流畅但文件越大；视频走浏览器 MediaRecorder，Chrome / Edge 一般输出 MP4，Firefox 输出 WebM。</p>
+    </section>
+
+    <section class="card notes">
+      <h2>方法说明与限制</h2>
+      <ul>
+        <li>动画中的每条粒子轨迹就是一次<strong>真实的声线追踪路径</strong>（与彩图模块同一套内核），只是把"能量"映射到亮度与半径上做可视化，<strong>不是物理波动场</strong>。</li>
+        <li>动画时间轴按设定的"传播速度"缩放：真实声速约 343 m/s，放慢后才看得清反射过程；标注的毫秒数是<strong>物理时间</strong>，与播放速度无关。</li>
+        <li>2D 平面模式为俯视投影（忽略高度差），适合看平面反射路径；3D 轴测模式保留高度，适合看地面 / 墙面 / 天花板的往复反射。</li>
+        <li>本动画用于<strong>教学演示与方案沟通</strong>（如向业主说明吸声处理前后声能衰减快慢），不作为量化依据；量化请看「室内音质模拟彩图」的数值结果。</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="view" id="view-aural" data-view="aural" hidden>
+    <div class="page-head">
+      <h2>声学可听化</h2>
+      <p class="hint">把计算结果变成<strong>能听见的声音</strong>：A. <strong>混响可听化 A/B</strong>——同一干信号分别与方案 A / 方案 B 的房间脉冲响应卷积，直接试听不同混响时间下的音质差异；B. <strong>隔声试听</strong>——噪声经不同隔声量 R 的构件阻隔前后的响度对比。请戴耳机或把音量调到适中。</p>
+    </div>
+
+    <section class="card">
+      <h3>干信号与音量</h3>
+      <div class="field-row">
+        <div class="field"><label for="auDry">激励信号</label>
+          <select id="auDry">
+            <option value="syl" selected>合成语音音节（推荐，最易听出清晰度差异）</option>
+            <option value="clap">拍手脉冲（最易听出混响尾巴长短）</option>
+            <option value="pink">粉噪猝发</option>
+            <option value="file">上传音频文件（wav / mp3 等）</option>
+          </select>
+        </div>
+        <div class="field" id="auFileRow" style="display:none"><label for="auFile">选择音频文件（取前 8 s，单声道）</label>
+          <input id="auFile" type="file" accept="audio/*" />
+        </div>
+        <div class="field"><label for="auVol">播放音量：<span id="auVolVal">0.9</span></label>
+          <input id="auVol" type="range" min="0" max="1" step="0.05" value="0.9" />
+        </div>
+      </div>
+      <p class="hint" id="auStatus">浏览器要求用户手势后才能播放，点击任意播放按钮即可激活音频。</p>
+    </section>
+
+    <section class="card">
+      <h3>A. 混响可听化对比（方案 A / 方案 B）</h3>
+      <div class="field-row">
+        <div class="field"><label for="auMode">脉冲响应来源</label>
+          <select id="auMode">
+            <option value="rt" selected>直接指定各倍频带混响时间</option>
+            <option value="room">按房间几何模拟（光线追踪）</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row" id="auRtRow">
+        <div class="field"><label for="auRtA">方案 A：1 kHz 混响时间 (s)</label><input id="auRtA" type="number" step="0.05" value="1.8" /></div>
+        <div class="field"><label for="auRtB">方案 B：1 kHz 混响时间 (s)</label><input id="auRtB" type="number" step="0.05" value="0.6" /></div>
+      </div>
+      <div class="field-row" id="auTiltRow">
+        <div class="field"><label for="auRtTilt">低频倍率偏移 (%)</label><input id="auRtTilt" type="number" step="5" value="0" /></div>
+      </div>
+      <div class="field-row" id="auRoomRow" style="display:none">
+        <div class="field"><label for="auLen">房间长 L (m)</label><input id="auLen" type="number" step="0.1" value="12" /></div>
+        <div class="field"><label for="auWid">房间宽 W (m)</label><input id="auWid" type="number" step="0.1" value="8" /></div>
+        <div class="field"><label for="auHgt">层高 (m)</label><input id="auHgt" type="number" step="0.1" value="3.2" /></div>
+        <div class="field"><label for="auAlphaA">方案 A 吸声系数 α</label><input id="auAlphaA" type="number" step="0.01" value="0.05" /></div>
+        <div class="field"><label for="auAlphaB">方案 B 吸声系数 α</label><input id="auAlphaB" type="number" step="0.01" value="0.35" /></div>
+      </div>
+      <div class="field-row" id="auSrcRow" style="display:none">
+        <div class="field"><label for="auSrcX">声源 x (m)</label><input id="auSrcX" type="number" step="0.1" value="2" /></div>
+        <div class="field"><label for="auSrcY">声源 y (m)</label><input id="auSrcY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="auSrcZ">声源高 z (m)</label><input id="auSrcZ" type="number" step="0.1" value="1.5" /></div>
+        <div class="field"><label for="auRcvX">接收点 x (m)</label><input id="auRcvX" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="auRcvY">接收点 y (m)</label><input id="auRcvY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="auRcvZ">接收点高 z (m)</label><input id="auRcvZ" type="number" step="0.1" value="1.2" /></div>
+      </div>
+      <div class="field-row" id="auRaysRow" style="display:none">
+        <div class="field"><label for="auRays">声线数</label><input id="auRays" type="number" step="100" value="800" /></div>
+      </div>
+      <div class="btn-row toolbar">
+        <button id="auGen" class="btn primary" type="button">生成混响 A / B</button>
+        <button id="auPlayDry" class="btn" type="button">试听干信号</button>
+        <button id="auPlayA" class="btn" type="button">试听方案 A</button>
+        <button id="auPlayB" class="btn" type="button">试听方案 B</button>
+        <button id="auPlayAB" class="btn" type="button">A → B 轮流对比播放</button>
+        <button id="auStop" class="btn" type="button">停止</button>
+        <button id="auWavA" class="btn" type="button">下载 A (WAV)</button>
+        <button id="auWavB" class="btn" type="button">下载 B (WAV)</button>
+      </div>
+      <div id="auRevOut" style="margin-top:14px"></div>
+      <div class="canvas-wrap" style="margin-top:14px"><canvas id="auDecay" height="260" style="display:block;width:100%"></canvas></div>
+      <p class="hint">上图为 A / B 两条脉冲响应的 Schroeder 衰减曲线（dB），斜率即混响衰减快慢，可直观看出两个方案的差异。</p>
+    </section>
+
+    <section class="card">
+      <h3>B. 隔声试听（构件阻隔前后）</h3>
+      <div class="field-row">
+        <div class="field"><label for="auNoise">噪声源</label>
+          <select id="auNoise"></select>
+        </div>
+        <div class="field"><label for="auInsDur">时长 (s)</label><input id="auInsDur" type="number" step="0.5" value="3" /></div>
+        <div class="field"><label for="auInsPreset">构件隔声量预设</label>
+          <select id="auInsPreset"></select>
+        </div>
+      </div>
+      <div class="field-row" id="auRRow">
+        <div class="field"><label for="auR0">125 Hz R (dB)</label><input id="auR0" type="number" step="1" value="30" /></div>
+        <div class="field"><label for="auR1">250 Hz R (dB)</label><input id="auR1" type="number" step="1" value="33" /></div>
+        <div class="field"><label for="auR2">500 Hz R (dB)</label><input id="auR2" type="number" step="1" value="36" /></div>
+        <div class="field"><label for="auR3">1 kHz R (dB)</label><input id="auR3" type="number" step="1" value="40" /></div>
+        <div class="field"><label for="auR4">2 kHz R (dB)</label><input id="auR4" type="number" step="1" value="44" /></div>
+        <div class="field"><label for="auR5">4 kHz R (dB)</label><input id="auR5" type="number" step="1" value="46" /></div>
+      </div>
+      <div class="btn-row toolbar">
+        <button id="auInsGen" class="btn primary" type="button">生成阻隔前 / 后声音</button>
+        <button id="auInsBefore" class="btn" type="button">试听阻隔前</button>
+        <button id="auInsAfter" class="btn" type="button">试听阻隔后</button>
+        <button id="auInsAB" class="btn" type="button">前 → 后 轮流对比播放</button>
+        <button id="auInsStop" class="btn" type="button">停止</button>
+        <button id="auWavIns0" class="btn" type="button">下载前 (WAV)</button>
+        <button id="auWavIns1" class="btn" type="button">下载后 (WAV)</button>
+      </div>
+      <div id="auInsOut" style="margin-top:14px"></div>
+      <div class="canvas-wrap" style="margin-top:14px"><canvas id="auInsBars" height="260" style="display:block;width:100%"></canvas></div>
+    </section>
+
+    <section class="card notes">
+      <h2>方法说明与限制</h2>
+      <ul>
+        <li>混响可听化：把干信号与<strong>合成脉冲响应</strong>做 FFT 快速卷积。直接指定 RT 时，各倍频带按 <code>exp(−6.9078·t/RT)</code> 的能量包络合成（60 dB 衰减对应一个 RT）；按房间模拟时，脉冲响应由光线追踪得到的<strong>接收点能量时程</strong>逐带合成，因此保留早期反射的离散结构。</li>
+        <li>隔声试听：按设定的倍频带<strong>频谱整形噪声</strong>作为声源，阻隔后逐带减去 R（dB）得到透射声。给出的 A 计权降噪量按 IEC 61672 A 计权曲线计算，计权隔声量 R<sub>w</sub> 参照 GB/T 50121 参考曲线偏移法估算。</li>
+        <li><strong>响度感知与物理声压级并非线性</strong>：40 dB 的隔声量听感上是"明显变小"而非"变成 1/100 音量"，本模块的输出已按实际 dB 衰减，请以此校准直觉。</li>
+        <li>播放音量受设备与浏览器限制，<strong>请勿在最大音量下突然播放</strong>；本结果用于<strong>方案沟通与教学演示</strong>，不作为验收依据。</li>
+        <li>全部计算在浏览器本地完成，上传的音频<strong>不会上传服务器</strong>。</li>
+      </ul>
+    </section>
+  </section>
   <section class="view" id="view-perforation" data-view="perforation">
     <div class="page-head">
       <h2>穿孔率计算</h2>
@@ -2584,6 +2869,8 @@
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
+<script src="js/gif.js"></script>
+<script src="js/aural.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -2599,6 +2886,8 @@
 <script src="js/view-vibeval.js"></script>
 <script src="js/view-roomq.js"></script>
 <script src="js/view-sim.js"></script>
+<script src="js/view-simfx.js"></script>
+<script src="js/view-aural.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>

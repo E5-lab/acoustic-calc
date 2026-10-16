@@ -36,7 +36,9 @@
     psycho: 'view-psycho',
     vibeval: 'view-vibeval',
     roomq: 'view-roomq',
-    sim: 'view-sim'
+    sim: 'view-sim',
+    simfx: 'view-simfx',
+    aural: 'view-aural'
   };
 
   var TITLES = {
@@ -55,7 +57,9 @@
     psycho: '心理声学/声品质 · 声学计算工具箱',
     vibeval: '振动评价 · 声学计算工具箱',
     roomq: '厅堂与扩声音质 · 声学计算工具箱',
-    sim: '室内音质模拟 · 声学计算工具箱'
+    sim: '室内音质模拟彩图 · 声学计算工具箱',
+    simfx: '声场粒子动画 · 声学计算工具箱',
+    aural: '声学可听化 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -74,7 +78,9 @@
     { route: 'psycho', get: function () { return window.PsyView; } },
     { route: 'vibeval', get: function () { return window.VibEvalView; } },
     { route: 'roomq', get: function () { return window.RoomQView; } },
-    { route: 'sim', get: function () { return window.SimView; } }
+    { route: 'sim', get: function () { return window.SimView; } },
+    { route: 'simfx', get: function () { return window.SimFxView; } },
+    { route: 'aural', get: function () { return window.AuralView; } }
   ];
 
   function parse() {
