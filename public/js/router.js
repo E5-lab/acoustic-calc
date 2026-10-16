@@ -11,6 +11,7 @@
  *   #/barrier       声屏障衰减
  *   #/vibration     弹簧减振器隔振效率
  *   #/muffler       消声器计算
+ *   #/env           环境声学评价
  */
 (function () {
   'use strict';
@@ -26,7 +27,8 @@
     barrier: 'view-barrier',
     vibration: 'view-vibration',
     muffler: 'view-muffler',
-    db: 'view-db'
+    db: 'view-db',
+    env: 'view-env'
   };
 
   var TITLES = {
@@ -40,7 +42,8 @@
     barrier: '声屏障衰减计算 · 声学计算工具箱',
     vibration: '弹簧减振（隔振效率计算书） · 声学计算工具箱',
     muffler: '消声器计算 · 声学计算工具箱',
-    db: '单位与换算 · 声学计算工具箱'
+    db: '单位与换算 · 声学计算工具箱',
+    env: '环境声学评价 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -54,7 +57,8 @@
     { route: 'barrier', get: function () { return window.BarrierView; } },
     { route: 'vibration', get: function () { return window.VibrationView; } },
     { route: 'muffler', get: function () { return window.MufflerView; } },
-    { route: 'db', get: function () { return window.DbCalcView; } }
+    { route: 'db', get: function () { return window.DbCalcView; } },
+    { route: 'env', get: function () { return window.EnvView; } }
   ];
 
   function parse() {

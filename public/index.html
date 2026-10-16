@@ -70,6 +70,7 @@
         <div class="nav-menu">
           <a href="#/barrier" data-route="barrier"><span class="nm-t">声屏障衰减</span><small class="nm-d">菲涅尔数法 · 插入损失 · 所需高度反算</small></a>
           <a href="#/vibration" data-route="vibration"><span class="nm-t">弹簧减振</span><small class="nm-d">隔振效率计算书 · 静变形法 / 频率比法</small></a>
+          <a href="#/env" data-route="env"><span class="nm-t">环境噪声评价</span><small class="nm-d">Leq/L10/L90 · Ldn/Lden · NR · 户外传播 · 交通噪声</small></a>
         </div>
       </div>
     </nav>
@@ -439,6 +440,119 @@
         <thead><tr><th>频率 (Hz)</th><th>A</th><th>C</th><th>Z</th></tr></thead>
         <tbody id="dbWeightBody"></tbody>
       </table>
+    </section>
+  </section>
+
+  <section class="view" id="view-env" data-view="env" hidden>
+    <div class="page-head">
+      <h2>环境声学评价</h2>
+      <p class="hint">等效声级 · 统计声级 · 昼夜声级 Ldn/Lden · 噪声污染级 · 噪声评价数 NR · 户外声传播 · 交通噪声</p>
+    </div>
+
+    <section class="card">
+      <h3>等效声级 Leq 与统计声级</h3>
+      <p class="hint">粘贴等间隔采样声级（空格 / 逗号分隔），求等效连续声级 Leq 与 L5 / L10 / L50 / L90 / L95（L_N 表示被超过 N% 的时间）。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="eqLevels">采样声级列表（dB）</label>
+          <input id="eqLevels" type="text" placeholder="例：65 68 72 70 75 80 78 66 71 74" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button id="eqBtn" class="btn primary" type="button">计算</button>
+        <span id="eqMsg" class="aux-msg"></span>
+      </div>
+      <div id="eqOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>昼夜等效声级 Ldn / 昼夜计权声级 Lden</h3>
+      <p class="hint">Ldn：昼（默认 07–22，15h）无加成，夜（22–07，9h）+10 dB；Lden：昼 12h、傍晚（+5）3h、夜（+10）9h。</p>
+      <div class="field-row">
+        <div class="field"><label for="dnDay">昼 Leq (dB)</label><input id="dnDay" type="number" step="0.1" placeholder="如 65" /></div>
+        <div class="field"><label for="dnNight">夜 Leq (dB)</label><input id="dnNight" type="number" step="0.1" placeholder="如 55" /></div>
+        <div class="field"><label for="dnEve">傍晚 Leq (dB，仅 Lden)</label><input id="dnEve" type="number" step="0.1" placeholder="如 60" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="dnBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="dnOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>噪声污染级 NPL / 交通噪声指数 TNI</h3>
+      <p class="hint">NPL = Leq + (L10 − L90)（或 Leq + 2.56σ）；TNI = 4(L10 − L90) + L90 − 30。</p>
+      <div class="field-row">
+        <div class="field"><label for="npLeq">Leq (dB)</label><input id="npLeq" type="number" step="0.1" placeholder="如 65" /></div>
+        <div class="field"><label for="npL10">L10 (dB)</label><input id="npL10" type="number" step="0.1" placeholder="如 72" /></div>
+        <div class="field"><label for="npL90">L90 (dB)</label><input id="npL90" type="number" step="0.1" placeholder="如 58" /></div>
+        <div class="field"><label for="npSigma">σ（可选，标准差）</label><input id="npSigma" type="number" step="0.1" placeholder="不填则用 L10/L90" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="npBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="npOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>噪声评价数 NR</h3>
+      <p class="hint">输入各倍频带声压级（dB），取「带值 − 该带 NR 偏移」的最大值并取整（NR 数对应 1000 Hz 处曲线值）。</p>
+      <div class="field-row">
+        <div class="field"><label for="nr31">31.5 Hz</label><input id="nr31" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr63">63 Hz</label><input id="nr63" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr125">125 Hz</label><input id="nr125" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr250">250 Hz</label><input id="nr250" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr500">500 Hz</label><input id="nr500" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr1k">1000 Hz</label><input id="nr1k" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr2k">2000 Hz</label><input id="nr2k" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr4k">4000 Hz</label><input id="nr4k" type="number" step="0.1" /></div>
+        <div class="field"><label for="nr8k">8000 Hz</label><input id="nr8k" type="number" step="0.1" /></div>
+      </div>
+      <div class="btn-row"><button id="nrBtn" class="btn primary" type="button">计算 NR</button></div>
+      <div id="nrOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>户外声传播（ISO 9613-2，A 计权）</h3>
+      <p class="hint">输入各倍频带声功率级 L_W（dB），计算自由场接收点 A 声级。含几何发散、ISO 9613-1 大气吸收与（简化）地面效应。</p>
+      <div class="field-row">
+        <div class="field"><label for="o31">31.5 Hz L_W</label><input id="o31" type="number" step="0.1" /></div>
+        <div class="field"><label for="o63">63 Hz L_W</label><input id="o63" type="number" step="0.1" /></div>
+        <div class="field"><label for="o125">125 Hz L_W</label><input id="o125" type="number" step="0.1" /></div>
+        <div class="field"><label for="o250">250 Hz L_W</label><input id="o250" type="number" step="0.1" /></div>
+        <div class="field"><label for="o500">500 Hz L_W</label><input id="o500" type="number" step="0.1" /></div>
+        <div class="field"><label for="o1k">1000 Hz L_W</label><input id="o1k" type="number" step="0.1" /></div>
+        <div class="field"><label for="o2k">2000 Hz L_W</label><input id="o2k" type="number" step="0.1" /></div>
+        <div class="field"><label for="o4k">4000 Hz L_W</label><input id="o4k" type="number" step="0.1" /></div>
+        <div class="field"><label for="o8k">8000 Hz L_W</label><input id="o8k" type="number" step="0.1" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="oR">距离 r (m)</label><input id="oR" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="oHs">声源高 (m)</label><input id="oHs" type="number" step="0.1" value="1.5" /></div>
+        <div class="field"><label for="oHr">接收高 (m)</label><input id="oHr" type="number" step="0.1" value="1.5" /></div>
+        <div class="field"><label for="oGround">地面</label>
+          <select id="oGround"><option value="mixed">混合</option><option value="soft">软（草地/土壤）</option><option value="hard">硬（混凝土）</option></select>
+        </div>
+        <div class="field"><label for="oT">温度 °C</label><input id="oT" type="number" step="0.1" value="20" /></div>
+        <div class="field"><label for="oRH">湿度 %</label><input id="oRH" type="number" step="0.1" value="50" /></div>
+      </div>
+      <div class="btn-row"><button id="oBtn" class="btn primary" type="button">计算声压级</button></div>
+      <div id="oOut" class="result-line" hidden></div>
+      <table class="weight-table" style="margin-top:10px;">
+        <thead><tr><th>倍频带 (Hz)</th><th>L_W</th><th>A_div</th><th>A_atm</th><th>A_gr</th><th>L_p</th><th>L_pA</th></tr></thead>
+        <tbody id="oBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h3>公路交通噪声（线声源近似）</h3>
+      <p class="hint">无限长线声源模型：L_p = L_WL − 10log₁₀(2πr) − 大气吸收 − 地面。车流越大、车速越高、距离越近越吵。</p>
+      <div class="field-row">
+        <div class="field"><label for="tQ">车流量 q (辆/h)</label><input id="tQ" type="number" step="1" value="1000" /></div>
+        <div class="field"><label for="tV">平均车速 v (km/h)</label><input id="tV" type="number" step="1" value="80" /></div>
+        <div class="field"><label for="tR">预测距离 r (m)</label><input id="tR" type="number" step="0.1" value="20" /></div>
+        <div class="field"><label for="tGround">地面</label>
+          <select id="tGround"><option value="mixed">混合</option><option value="soft">软</option><option value="hard">硬</option></select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="tBtn" class="btn primary" type="button">计算 L_pA</button></div>
+      </div>
+      <div id="tOut" class="result-line" hidden></div>
     </section>
   </section>
 
@@ -2047,6 +2161,7 @@
 <script src="js/vibration.js"></script>
 <script src="js/muffler.js"></script>
 <script src="js/dbcalc.js"></script>
+<script src="js/env.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -2057,6 +2172,7 @@
 <script src="js/view-vibration.js"></script>
 <script src="js/view-muffler.js"></script>
 <script src="js/view-dbcalc.js"></script>
+<script src="js/view-env.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
