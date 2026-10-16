@@ -103,6 +103,7 @@
           <a href="#/pasystem" data-route="pasystem"><span class="nm-t">电声与语言清晰度</span><small class="nm-d">覆盖临界距离 · 扩声增益 · STIPA · 扬声器功率</small></a>
           <a href="#/speakerbox" data-route="speakerbox"><span class="nm-t">扬声器箱体设计</span><small class="nm-d">Thiele-Small · 封闭箱/倒相箱 · 导风管 · T/S 参数</small></a>
           <a href="#/crossover" data-route="crossover"><span class="nm-t">分频器设计</span><small class="nm-d">1~4 阶 · LR2/LR4 · Zobel · L-pad 衰减</small></a>
+          <a href="#/linearray" data-route="linearray"><span class="nm-t">线阵列覆盖设计</span><small class="nm-d">覆盖角 · 逐箱张角 · 旁瓣/栅瓣 · 近远场</small></a>
         </div>
       </div>
     </nav>
@@ -189,7 +190,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、25 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、26 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -493,6 +494,21 @@
             <span class="mc-desc">按电压驱动条件推导元件值（1~4 阶）：二阶五种 Q 预设（巴特沃斯 / LR2 / 贝塞尔 / 契比雪夫）、三阶巴特沃斯、四阶 LR4（两级二阶巴特沃斯级联）与四阶巴特沃斯数值解；低通/高通/合成响应曲线与极性判定、Zobel 阻抗补偿、L-pad 恒阻抗衰减、灵敏度匹配与现成元件反算分频点。</span>
           </span>
         </a>
+        <a class="module-card" href="#/linearray">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 6v34" stroke-linecap="round" />
+              <rect x="14" y="8" width="20" height="6" rx="1.6" />
+              <rect x="13" y="18" width="22" height="6" rx="1.6" />
+              <rect x="11" y="28" width="26" height="6" rx="1.6" />
+              <path d="M24 38l-9 6M24 38l9 6" stroke-linecap="round" opacity="0.55" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">线阵列覆盖设计 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">由吊挂高度与近/远端距离反推需要的覆盖角、每节张角与箱体规模；逐箱张角与瞄准角分配（等角 / J 形渐进曲率）；离散阵列因子的垂直指向性、−6 dB 覆盖角、第一旁瓣与幅度锥化、栅瓣频率上限与 λ/2 间距判据；近场—远场过渡距离（L²/2λ 与 L²/λ）、柱面 −3 dB 与球面 −6 dB 衰减曲线、多箱叠加增益；相邻箱体梳状滤波陷波与临界间距。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -545,9 +561,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 27 个文件 / 1400+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 28 个文件 / 1480+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3696,6 +3712,95 @@
     </section>
   </section>
 
+  <section class="view" id="view-linearray" data-view="linearray" hidden>
+    <div class="page-head">
+      <h2>线阵列覆盖设计</h2>
+      <p class="hint">从吊挂几何反推需要的覆盖角与箱体规模，逐箱分配张角与瞄准角，并用离散阵列因子核算垂直指向性、旁瓣、栅瓣与近远场衰减。覆盖 5 个计算场景。</p>
+    </div>
+
+    <section class="card">
+      <h3>覆盖几何与阵列规模</h3>
+      <p class="hint">阵列中心到近端 / 远端的俯角之差就是必须张开的总角度：Σ = atan(h<sub>c</sub>/D<sub>近</sub>) − atan(h<sub>c</sub>/D<sub>远</sub>)；每节张角 = Σ/(N−1)。</p>
+      <div class="field-row">
+        <div class="field"><label for="laCovH">阵列底高（相对人耳，m）</label><input id="laCovH" type="number" step="0.5" value="8" /></div>
+        <div class="field"><label for="laCovN">箱体数 N</label><input id="laCovN" type="number" step="1" value="8" /></div>
+        <div class="field"><label for="laCovBoxH">单箱高 (m)</label><input id="laCovBoxH" type="number" step="0.05" value="0.35" /></div>
+        <div class="field"><label for="laCovNear">最近听众距离 (m)</label><input id="laCovNear" type="number" step="1" value="5" /></div>
+        <div class="field"><label for="laCovFar">最远听众距离 (m)</label><input id="laCovFar" type="number" step="1" value="40" /></div>
+        <div class="field"><label for="laCovBoxAng">单箱垂直覆盖角 (°)</label><input id="laCovBoxAng" type="number" step="1" value="10" /></div>
+        <div class="field"><label for="laCovMaxSplay">单节张角上限 (°)</label><input id="laCovMaxSplay" type="number" step="0.5" value="5" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="laCovBtn" class="btn primary" type="button">计算覆盖</button></div>
+      </div>
+      <div id="laCovOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>逐箱张角与瞄准（J 形曲率）</h3>
+      <p class="hint">把总覆盖角切成 N 个扇区，每只箱体瞄准自己扇区的中心。q = 1 为等角；q &gt; 1 时底部张角变大、顶部变小，即常见的 J 形阵列。</p>
+      <div class="field-row">
+        <div class="field"><label for="laSpN">箱体数 N</label><input id="laSpN" type="number" step="1" value="8" /></div>
+        <div class="field"><label for="laSpFar">远端俯角 (°)</label><input id="laSpFar" type="number" step="0.1" value="14" /></div>
+        <div class="field"><label for="laSpNear">近端俯角 (°)</label><input id="laSpNear" type="number" step="0.1" value="63.4" /></div>
+        <div class="field"><label for="laSpQ">曲率系数 q</label><input id="laSpQ" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="laSpH">阵列底高（相对人耳，m）</label><input id="laSpH" type="number" step="0.5" value="8" /></div>
+        <div class="field"><label for="laSpBoxH">单箱高 (m)</label><input id="laSpBoxH" type="number" step="0.05" value="0.35" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="laSpBtn" class="btn primary" type="button">分配张角</button></div>
+      </div>
+      <div id="laSpOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>垂直指向性与旁瓣</h3>
+      <p class="hint">阵列因子 |AF| = |Σaₙe^{jnψ}|/Σaₙ，ψ = k·d·sinθ + ψ₀。间距超过 λ/2 即在覆盖区外出现栅瓣；幅度锥化可压旁瓣，代价是主瓣变宽。</p>
+      <div class="field-row">
+        <div class="field"><label for="laDirN">箱体数 N</label><input id="laDirN" type="number" step="1" value="8" /></div>
+        <div class="field"><label for="laDirD">箱间距 d (m)</label><input id="laDirD" type="number" step="0.01" value="0.35" /></div>
+        <div class="field"><label for="laDirF">频率 (Hz)</label><input id="laDirF" type="number" step="50" value="1000" /></div>
+        <div class="field"><label for="laDirSteer">电子偏转俯角 (°)</label><input id="laDirSteer" type="number" step="1" value="0" /></div>
+        <div class="field"><label for="laDirTaper">幅度锥化</label>
+          <select id="laDirTaper">
+            <option value="uniform">均匀（旁瓣 −13 dB）</option>
+            <option value="cosine">升余弦（压旁瓣）</option>
+            <option value="linear">线性锥化</option>
+          </select>
+        </div>
+        <div class="field" id="laDirFloorRow" style="display:none"><label for="laDirFloor">端部衰减 (dB)</label><input id="laDirFloor" type="number" step="1" value="-12" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="laDirBtn" class="btn primary" type="button">算指向性</button></div>
+      </div>
+      <div id="laDirOut" class="result-line" hidden></div>
+      <canvas id="laDirChart" height="260"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>近场—远场过渡与声压衰减</h3>
+      <p class="hint">阵列末端与中心到观测点的路程差为 λ/4 处是柱面波区边界 r₁ = L²/(2λ)；λ/8 处之后完全转为球面波 r₂ = L²/λ。柱面区每倍距离只掉 3 dB。</p>
+      <div class="field-row">
+        <div class="field"><label for="laNfL">阵列长度 L (m)</label><input id="laNfL" type="number" step="0.1" value="2.8" /></div>
+        <div class="field"><label for="laNfF">频率 (Hz)</label><input id="laNfF" type="number" step="50" value="1000" /></div>
+        <div class="field"><label for="laNfN">箱体数（叠加增益）</label><input id="laNfN" type="number" step="1" value="8" /></div>
+        <div class="field"><label for="laNfRref">参考距离 (m)</label><input id="laNfRref" type="number" step="1" value="1" /></div>
+        <div class="field"><label for="laNfSpl">参考声压级 (dB)</label><input id="laNfSpl" type="number" step="1" value="110" /></div>
+        <div class="field"><label for="laNfR">目标距离 (m)</label><input id="laNfR" type="number" step="1" value="30" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="laNfBtn" class="btn primary" type="button">算衰减</button></div>
+      </div>
+      <div id="laNfOut" class="result-line" hidden></div>
+      <canvas id="laNfChart" height="250"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>梳状滤波与临界间距</h3>
+      <p class="hint">相邻箱体到偏离轴线听众的路程差 Δ = d·sin|θ|，在 Δ = λ/2 的奇数倍处出现陷波：f<sub>m</sub> = (2m+1)·c/(2Δ)。</p>
+      <div class="field-row">
+        <div class="field"><label for="laCbD">相邻声源间距 (m)</label><input id="laCbD" type="number" step="0.01" value="0.35" /></div>
+        <div class="field"><label for="laCbTheta">听众偏角 (°)</label><input id="laCbTheta" type="number" step="5" value="45" /></div>
+        <div class="field"><label for="laCbN">陷波个数</label><input id="laCbN" type="number" step="1" value="3" /></div>
+        <div class="field"><label for="laCbFmax">要求无陷波的上限频率 (Hz)</label><input id="laCbFmax" type="number" step="500" value="8000" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="laCbBtn" class="btn primary" type="button">算陷波</button></div>
+      </div>
+      <div id="laCbOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3730,6 +3835,7 @@
 <script src="js/pasystem.js"></script>
 <script src="js/speakerbox.js"></script>
 <script src="js/crossover.js"></script>
+<script src="js/linearray.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
@@ -3760,6 +3866,7 @@
 <script src="js/view-noisemap.js"></script>
 <script src="js/view-speakerbox.js"></script>
 <script src="js/view-crossover.js"></script>
+<script src="js/view-linearray.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
