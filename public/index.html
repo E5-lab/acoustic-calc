@@ -99,10 +99,19 @@
       </div>
     </nav>
     <div class="topbar-actions">
-      <a class="nav-blog" href="https://blog.124365.xyz" target="_blank" rel="noopener noreferrer" title="访问我的个人博客 blog.124365.xyz">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
-        <span>友链</span>
-      </a>
+      <div class="nav-group topbar-group">
+        <button class="nav-parent nav-blog" type="button" aria-expanded="false" aria-haspopup="true" title="友链：博客 / 视频 / 音乐 / 导航">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
+          <span>友链</span>
+          <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <div class="nav-menu nav-menu-friends">
+          <a href="https://blog.124365.xyz" target="_blank" rel="noopener noreferrer"><span class="nm-t">博客站</span><small class="nm-d">蓝宇梦欣 · blog.124365.xyz</small></a>
+          <a href="https://v.124365.xyz" target="_blank" rel="noopener noreferrer"><span class="nm-t">视频站</span><small class="nm-d">v.124365.xyz</small></a>
+          <a href="https://lx.124365.xyz" target="_blank" rel="noopener noreferrer"><span class="nm-t">音乐站</span><small class="nm-d">lx.124365.xyz</small></a>
+          <a href="https://nav.124365.xyz" target="_blank" rel="noopener noreferrer"><span class="nm-t">导航站</span><small class="nm-d">nav.124365.xyz</small></a>
+        </div>
+      </div>
       <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换日间/夜间模式" aria-pressed="false" title="切换日间/夜间模式">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>
@@ -115,21 +124,17 @@
 
   <!-- ============================ 总览 ============================ -->
   <section class="view" id="view-home" data-view="home">
-    <div class="hero">
-      <span class="eyebrow">纯静态 · 零依赖 · 标准依据</span>
-      <h1 class="hero-title">声学计算工具箱</h1>
-      <p class="hero-sub">把常用的建筑与材料声学计算拆成独立模块，一个模块解决一类问题 —— 输入参数、给出结果，并附计算依据。所有运算在浏览器本地完成，数据不上传。</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#/noise">背景噪声评价</a>
-        <a class="btn" href="#/levels">声压级叠加</a>
-        <a class="btn" href="#/perforation">穿孔率计算</a>
+    <h1 class="sr-only">声学计算工具箱 · 建筑与材料声学计算工具集</h1>
+
+    <div class="home-search" id="homeSearch">
+      <div class="hs-field">
+        <svg class="hs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
+        <input id="hsInput" type="search" autocomplete="off" spellcheck="false"
+               placeholder="检索功能模块" aria-label="检索功能模块" aria-controls="view-home" />
+        <button id="hsClear" class="hs-clear" type="button" aria-label="清空检索" hidden>&#215;</button>
+        <kbd class="hs-kbd" id="hsKbd">/</kbd>
       </div>
-      <div class="badge-row">
-        <span class="badge">ANSI/ASA S12.2-2019</span>
-        <span class="badge">ISO/R 1996</span>
-        <span class="badge">IEC 61672</span>
-        <span class="badge">GB/T 50121 常用参考</span>
-      </div>
+      <p class="hs-count" id="hsCount" hidden></p>
     </div>
 
     <div class="hero-banner" id="heroBanner">
@@ -2929,6 +2934,7 @@
 <script src="js/view-simfx.js"></script>
 <script src="js/view-aural.js"></script>
 <script src="js/banner.js"></script>
+<script src="js/search.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>

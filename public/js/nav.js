@@ -49,7 +49,8 @@
     if (!nav) return;
 
     // 分组标题：点击切换（触屏必需；桌面端与悬停配合）
-    nav.addEventListener('click', function (e) {
+    // 顶栏（友链等）同样使用 .nav-group 结构，一并绑定
+    function onNavClick(e) {
       var parent = e.target.closest ? e.target.closest('.nav-parent') : null;
       if (parent) {
         var group = parent.closest('.nav-group');
@@ -60,7 +61,10 @@
       // 点击二级菜单内的链接后立即收起
       var link = e.target.closest ? e.target.closest('.nav-menu a') : null;
       if (link) closeAll();
-    });
+    }
+    nav.addEventListener('click', onNavClick);
+    var topbar = document.querySelector('.topbar-actions');
+    if (topbar) topbar.addEventListener('click', onNavClick);
 
     // 点击空白处收起
     document.addEventListener('click', function (e) {
