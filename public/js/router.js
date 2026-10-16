@@ -36,6 +36,8 @@
     psycho: 'view-psycho',
     vibeval: 'view-vibeval',
     roomq: 'view-roomq',
+    smallroom: 'view-smallroom',
+    absdesign: 'view-absdesign',
     sim: 'view-sim',
     simfx: 'view-simfx',
     aural: 'view-aural'
@@ -57,6 +59,8 @@
     psycho: '心理声学/声品质 · 声学计算工具箱',
     vibeval: '振动评价 · 声学计算工具箱',
     roomq: '厅堂与扩声音质 · 声学计算工具箱',
+    smallroom: '小房间与室内声场 · 声学计算工具箱',
+    absdesign: '吸声结构设计 · 声学计算工具箱',
     sim: '室内音质模拟彩图 · 声学计算工具箱',
     simfx: '声场粒子动画 · 声学计算工具箱',
     aural: '声学可听化 · 声学计算工具箱'
@@ -78,6 +82,8 @@
     { route: 'psycho', get: function () { return window.PsyView; } },
     { route: 'vibeval', get: function () { return window.VibEvalView; } },
     { route: 'roomq', get: function () { return window.RoomQView; } },
+    { route: 'smallroom', get: function () { return window.SmallRoomView; } },
+    { route: 'absdesign', get: function () { return window.AbsDesignView; } },
     { route: 'sim', get: function () { return window.SimView; } },
     { route: 'simfx', get: function () { return window.SimFxView; } },
     { route: 'aural', get: function () { return window.AuralView; } }

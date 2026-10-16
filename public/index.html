@@ -47,6 +47,7 @@
         <div class="nav-menu">
           <a href="#/perforation" data-route="perforation"><span class="nm-t">穿孔率计算</span><small class="nm-d">四种阵列形制 · 反算中心距 · 微穿孔板共振</small></a>
           <a href="#/absorber" data-route="absorber"><span class="nm-t">吸声材料阻抗</span><small class="nm-d">Delany–Bazley 模型 · 吸声系数 · NRC</small></a>
+          <a href="#/absdesign" data-route="absdesign"><span class="nm-t">吸声结构设计</span><small class="nm-d">传递矩阵法 · 微穿孔板 · 共振结构 · 降噪量</small></a>
           <a href="#/muffler" data-route="muffler"><span class="nm-t">消声器计算</span><small class="nm-d">阻性 / 抗性 / 阻抗复合 · A 计权插入损失</small></a>
         </div>
       </div>
@@ -60,6 +61,7 @@
           <a href="#/rt60" data-route="rt60"><span class="nm-t">混响时间 RT60</span><small class="nm-d">Sabine / Eyring · 材料吸声库 · 用途推荐值</small></a>
           <a href="#/stc" data-route="stc"><span class="nm-t">墙体隔声量 Rw / STC</span><small class="nm-d">GB/T 50121 计权隔声量 · ASTM E413</small></a>
           <a href="#/roomq" data-route="roomq"><span class="nm-t">厅堂与扩声音质</span><small class="nm-d">RT60/EDT · C50/C80 · D50 · G · 扩声预测</small></a>
+          <a href="#/smallroom" data-route="smallroom"><span class="nm-t">小房间与室内声场</span><small class="nm-d">简正频率 · Bonello · 房间常数 · 临界距离</small></a>
         </div>
       </div>
 
@@ -179,7 +181,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、17 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、19 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -251,6 +253,19 @@
             <span class="mc-desc">Delany–Bazley 模型由流阻率推算特征阻抗、表面阻抗与倍频带法向吸声系数，含 NRC、空腔增益与厚度建议。</span>
           </span>
         </a>
+        <a class="module-card" href="#/absdesign">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="8" y="10" width="32" height="28" rx="3" />
+              <path d="M8 20h32M8 30h32" />
+              <path d="M16 10v28M24 10v28M32 10v28" stroke-dasharray="2 4" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">吸声结构设计 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">传递矩阵法（TMM）逐频带吸声谱、微穿孔板（马大猷）与多孔材料（Delany–Bazley / Miki）吸声结构、薄板/薄膜共振频率与吸声降噪量 ΔL 计算。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -291,6 +306,19 @@
           <span class="mc-body">
             <span class="mc-title">厅堂与扩声音质 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">由衰减曲线求 RT60／EDT，清晰度 C50／C80、明晰度 D50、中心时间 Ts、强度因子 G，以及房间常数、临界距离与直达+混响扩声级预测。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/smallroom">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="8" y="10" width="32" height="28" rx="3" />
+              <path d="M8 24h32M24 10v28" />
+              <circle cx="24" cy="24" r="3" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">小房间与室内声场 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">矩形房间简正频率分布与轴向/切向/斜向分类、Bonello 低频均匀性准则、Schroeder 频率、房间常数与临界距离、稳态声压级（直达+混响）及多声源叠加、空气吸收（ISO 9613-1）。</span>
           </span>
         </a>
       </div>
@@ -434,9 +462,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 18 个文件 / 1110 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 21 个文件 / 1200+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -2891,6 +2919,177 @@
     </div>
   </section>
 
+  <section class="view" id="view-smallroom" data-view="smallroom" hidden>
+    <div class="page-head">
+      <h2>小房间与室内声场</h2>
+      <p class="hint">矩形房间简正频率与分类 · Bonello 低频均匀性准则 · Schroeder 频率 · 房间常数与临界距离 · 稳态声压级（直达+混响）· 多声源叠加 · 空气吸收（ISO 9613-1）</p>
+    </div>
+
+    <section class="card">
+      <h3>矩形房间简正频率分布</h3>
+      <p class="hint">f = (c/2)√[(n_x/L)² + (n_y/W)² + (n_z/H)²]；按轴向/切向/斜向分类，并统计简并（频率重合）。</p>
+      <div class="field-row">
+        <div class="field"><label for="srL">长 L (m)</label><input id="srL" type="number" step="0.1" value="5.4" /></div>
+        <div class="field"><label for="srW">宽 W (m)</label><input id="srW" type="number" step="0.1" value="4.2" /></div>
+        <div class="field"><label for="srH">高 H (m)</label><input id="srH" type="number" step="0.1" value="3.0" /></div>
+        <div class="field"><label for="srFmax">上限频率 (Hz)</label><input id="srFmax" type="number" step="10" value="200" /></div>
+        <div class="field"><label for="srC">声速 c (m/s)</label><input id="srC" type="number" step="1" placeholder="343" /></div>
+        <div class="field"><label for="srTol">简并容差 (Hz)</label><input id="srTol" type="number" step="0.1" value="0.5" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srModeBtn" class="btn primary" type="button">计算简正频率</button></div>
+      </div>
+      <div id="srModeOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>Bonello 低频均匀性准则</h3>
+      <p class="hint">将模态按 1/3 倍频程计数，要求计数单调不减且空带不连续，否则低频易出现声染色。</p>
+      <div class="field-row">
+        <div class="field"><label for="srBonLo">下限 (Hz)</label><input id="srBonLo" type="number" step="1" value="20" /></div>
+        <div class="field"><label for="srBonHi">上限 (Hz)</label><input id="srBonHi" type="number" step="1" value="300" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srBonBtn" class="btn primary" type="button">Bonello 检验</button></div>
+      </div>
+      <div id="srBonOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>Schroeder 频率</h3>
+      <p class="hint">f_s = 2000√(RT60/V)，统计声学方法在此频率以上更可靠。</p>
+      <div class="field-row">
+        <div class="field"><label for="srRT">RT60 (s)</label><input id="srRT" type="number" step="0.1" value="0.6" /></div>
+        <div class="field"><label for="srV">体积 V (m³)</label><input id="srV" type="number" step="1" value="68" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srSchBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="srSchOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>房间常数 R 与临界距离 r_c</h3>
+      <p class="hint">R = Sᾱ/(1−ᾱ)；r_c = 0.141√(Q·R) 为直达声与混响声相等的混响半径。</p>
+      <div class="field-row">
+        <div class="field"><label for="srS">总表面积 S (m²)</label><input id="srS" type="number" step="1" value="95" /></div>
+        <div class="field"><label for="srA">平均吸声系数 ᾱ</label><input id="srA" type="number" step="0.01" value="0.25" /></div>
+        <div class="field"><label for="srQ">指向性因子 Q</label><input id="srQ" type="number" step="0.1" value="1" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srRoomBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="srRoomOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>稳态声压级（直达 + 混响）</h3>
+      <p class="hint">Lp = Lw + 10lg[Q/(4πr²) + 4/R]；可分别读出直达、混响分量与 D/R。</p>
+      <div class="field-row">
+        <div class="field"><label for="srLw">声功率级 Lw (dB)</label><input id="srLw" type="number" step="0.1" value="90" /></div>
+        <div class="field"><label for="srLpq">指向性 Q</label><input id="srLpq" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="srR">距离 r (m)</label><input id="srR" type="number" step="0.1" value="3" /></div>
+        <div class="field"><label for="srRc">房间常数 R (m²)</label><input id="srRc" type="number" step="1" value="31" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srLpBtn" class="btn primary" type="button">计算 Lp</button></div>
+      </div>
+      <div id="srLpOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>多声源能量叠加</h3>
+      <p class="hint">每行填「Lw Q r」（空格/逗号分隔），按能量叠加求总声压级。需房间常数 R。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="srMulSrc">声源列表（每行一个）</label>
+          <textarea id="srMulSrc" rows="4" placeholder="例：90 1 3&#10;88 2 5&#10;85 1 8"></textarea>
+        </div>
+        <div class="field"><label for="srMulR">房间常数 R (m²)</label><input id="srMulR" type="number" step="1" value="31" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srMulBtn" class="btn primary" type="button">叠加计算</button></div>
+      </div>
+      <div id="srMulOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>空气吸收衰减（ISO 9613-1）</h3>
+      <p class="hint">逐倍频带给出空气吸收系数 α (dB/m)，随温度、湿度、气压变化（高频、干燥环境更显著）。</p>
+      <div class="field-row">
+        <div class="field"><label for="srTc">温度 (℃)</label><input id="srTc" type="number" step="1" value="20" /></div>
+        <div class="field"><label for="srHr">相对湿度 (%)</label><input id="srHr" type="number" step="1" value="50" /></div>
+        <div class="field"><label for="srPk">气压 (kPa)</label><input id="srPk" type="number" step="1" value="101.3" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="srAirBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="srAirOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-absdesign" data-view="absdesign" hidden>
+    <div class="page-head">
+      <h2>吸声结构设计</h2>
+      <p class="hint">传递矩阵法（TMM）逐频带吸声谱 · 微穿孔板（马大猷）· 多孔材料（Delany–Bazley / Miki）· 薄板/薄膜共振 · 吸声降噪量 ΔL</p>
+    </div>
+
+    <section class="card">
+      <h3>微穿孔板吸声结构</h3>
+      <p class="hint">马大猷微穿孔板理论：给定孔径、板厚、穿孔率与背后空腔，用传递矩阵法求法向吸声系数谱与共振频率。</p>
+      <div class="field-row">
+        <div class="field"><label for="abMppD">孔径 d (mm)</label><input id="abMppD" type="number" step="0.1" value="0.8" /></div>
+        <div class="field"><label for="abMppT">板厚 t (mm)</label><input id="abMppT" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="abMppP">穿孔率 (%)</label><input id="abMppP" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="abMppDc">空腔 D (mm)</label><input id="abMppDc" type="number" step="1" value="50" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="abMppBtn" class="btn primary" type="button">计算吸声谱</button></div>
+      </div>
+      <div id="abMppOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>多孔材料层 + 空腔（传递矩阵法）</h3>
+      <p class="hint">由流阻率经 Delany–Bazley 或 Miki 模型得特性阻抗与传播常数，串联空气腔后求法向吸声系数谱。</p>
+      <div class="field-row">
+        <div class="field"><label for="abPorMat">材料</label>
+          <select id="abPorMat">
+            <option value="glass-24">玻璃棉 24 kg/m³</option>
+            <option value="glass-40" selected>玻璃棉 40 kg/m³</option>
+            <option value="rock-60">岩棉 60 kg/m³</option>
+            <option value="rock-100">岩棉 100 kg/m³</option>
+            <option value="polyester-30">聚酯纤维棉 30 kg/m³</option>
+            <option value="melamine-10">三聚氰胺棉 10 kg/m³</option>
+          </select>
+        </div>
+        <div class="field"><label for="abPorTh">厚度 (mm)</label><input id="abPorTh" type="number" step="1" value="50" /></div>
+        <div class="field"><label for="abPorCav">空腔 (mm)</label><input id="abPorCav" type="number" step="1" value="100" /></div>
+        <div class="field"><label for="abPorModel">模型</label>
+          <select id="abPorModel"><option value="db" selected>Delany–Bazley</option><option value="miki">Miki</option></select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="abPorBtn" class="btn primary" type="button">计算吸声谱</button></div>
+      </div>
+      <div id="abPorOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>薄板 / 薄膜共振频率</h3>
+      <p class="hint">f₀ = (c/2π)√(ρ₀/(m·d))，m 为面密度 (kg/m²)，d 为空腔深度 (m)。</p>
+      <div class="field-row">
+        <div class="field"><label for="abPanelM">面密度 m (kg/m²)</label><input id="abPanelM" type="number" step="0.1" value="2" /></div>
+        <div class="field"><label for="abPanelD">空腔深度 d (m)</label><input id="abPanelD" type="number" step="0.01" value="0.1" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="abPanelBtn" class="btn primary" type="button">计算 f₀</button></div>
+      </div>
+      <div id="abPanelOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>吸声降噪量 ΔL</h3>
+      <p class="hint">ΔL = 10lg(A₂/A₁)，A 为各频带吸声量（m² 赛宾）。可选填背景噪声谱估算处理后 A 声级。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="abA1">处理前吸声量 A₁（倍频带，等长数组）</label>
+          <input id="abA1" type="text" placeholder="例：10 15 20 30 40 50" />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="abA2">处理后吸声量 A₂</label>
+          <input id="abA2" type="text" placeholder="例：40 60 80 90 95 98" />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="abBg">背景噪声谱（可选，与上面等长）</label>
+          <input id="abBg" type="text" placeholder="例：55 52 50 48 45 42" />
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="abRedBtn" class="btn primary" type="button">计算 ΔL</button></div>
+      </div>
+      <div id="abRedOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -2933,6 +3132,8 @@
 <script src="js/view-sim.js"></script>
 <script src="js/view-simfx.js"></script>
 <script src="js/view-aural.js"></script>
+<script src="js/view-smallroom.js"></script>
+<script src="js/view-absdesign.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/nav.js"></script>

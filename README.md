@@ -184,16 +184,36 @@
 - **B. 隔声试听**：按倍频带频谱整形噪声作声源，逐带减去隔声量 R 得到透射声，试听**阻隔前 / 后**的响度差；给出线性降噪量与 A 计权降噪量（IEC 61672）、计权隔声量 R_w 估算（GB/T 50121 参考曲线偏移法），并画出阻隔前后倍频带谱对比。
   - 内置多种构件隔声量预设（可直接改任一带的 R）与多种典型噪声源。
 
+### ⑰ 小房间与室内声场（`#/smallroom`）
+
+> 矩形房间简正频率分布、Bonello 低频均匀性准则、Schroeder 频率、房间常数与临界距离、稳态声压级（直达+混响）及多声源叠加、空气吸收（ISO 9613-1）。
+
+- **简正频率**：f = (c/2)√[(n_x/L)² + (n_y/W)² + (n_z/H)²]，按轴向/切向/斜向分类并统计简并。
+- **Bonello 准则**：按 1/3 倍频程统计模态计数，要求单调不减且空带不连续，否则低频易染色。
+- **Schroeder 频率** f_s = 2000√(RT60/V)；房间常数 R = Sᾱ/(1−ᾱ)、临界距离 r_c = 0.141√(Q·R)。
+- **稳态声压级** Lp = Lw + 10lg[Q/(4πr²) + 4/R]，多声源按能量叠加。
+- **空气吸收**（ISO 9613-1）：逐倍频带 α（随温度 / 湿度 / 气压变化）。
+
+### ⑱ 吸声结构设计（`#/absdesign`）
+
+> 用传递矩阵法（TMM）计算吸声结构逐频带吸声谱，覆盖微穿孔板（马大猷）、多孔材料（Delany–Bazley / Miki）、薄板/薄膜共振与吸声降噪量 ΔL。
+
+- **微穿孔板**：给定孔径 d、板厚 t、穿孔率 p、空腔 D，求法向吸声系数谱与共振频率 f₀。
+- **多孔材料 + 空腔**：由流阻率经 Delany–Bazley / Miki 模型得特性阻抗与传播常数，串联空气腔求吸声谱（NRC）。
+- **薄板 / 薄膜共振**：f₀ = (c/2π)√(ρ₀/(m·d))。
+- **吸声降噪量** ΔL = 10lg(A₂/A₁)，可由背景噪声谱估算处理后 A 声级。
+
 ### 计算内核与测试
 
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
 - `public/js/perforation.js`、`absorber.js`、`room.js`、`insulation.js`、`barrier.js`、`vibration.js` — 各模块计算内核（均为 UMD）
+- `public/js/smallroom.js`、`absdesign.js` — 小房间声场与吸声结构设计内核（UMD，TMM / 微穿孔板 / 多孔模型）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
 - `public/js/sim.js` — 室内音质模拟内核（几何声学：房间几何/Sabine/Eyring+空气吸收、三维光线追踪（俄罗斯轮盘赌 + 朗伯散射）、逐带网格指标、接收点 ISO 3382、Lundeby 截断补偿；含轴测投影 `isoFit/isoProject` 与色标刻度 `niceRange/scaleTicks`）
 - `public/js/aural.js` — 声学可听化内核（迭代基-2 FFT、倍频带频谱整形、由回波/RT 合成脉冲响应、FFT 快速卷积、A 计权降噪量、16 bit WAV 编码）
 - `public/js/gif.js` — 零依赖 GIF89a 编码器（8×8×4 调色板 + Bayer 抖动 + 变字长 LZW + 循环扩展）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
-- `node tests/*.test.js` 共 19 个测试文件、**1155 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页改版结构（检索栏 / 轮播 / 友链下拉））。
+- `node tests/*.test.js` 共 21 个测试文件、**1200+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页改版结构（检索栏 / 轮播 / 友链下拉））。
 
 ## 目录结构
 
