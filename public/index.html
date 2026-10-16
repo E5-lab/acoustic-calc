@@ -105,6 +105,7 @@
           <a href="#/speakerbox" data-route="speakerbox"><span class="nm-t">扬声器箱体设计</span><small class="nm-d">Thiele-Small · 封闭箱/倒相箱 · 导风管 · T/S 参数</small></a>
           <a href="#/crossover" data-route="crossover"><span class="nm-t">分频器设计</span><small class="nm-d">1~4 阶 · LR2/LR4 · Zobel · L-pad 衰减</small></a>
           <a href="#/linearray" data-route="linearray"><span class="nm-t">线阵列覆盖设计</span><small class="nm-d">覆盖角 · 逐箱张角 · 旁瓣/栅瓣 · 近远场</small></a>
+          <a href="#/audiolevel" data-route="audiolevel"><span class="nm-t">音频电平与阻抗</span><small class="nm-d">dBV/dBu/dBFS · 灵敏度 · 串并联 · 阻尼系数</small></a>
         </div>
       </div>
     </nav>
@@ -191,7 +192,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、27 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、28 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -523,6 +524,20 @@
             <span class="mc-desc">由吊挂高度与近/远端距离反推需要的覆盖角、每节张角与箱体规模；逐箱张角与瞄准角分配（等角 / J 形渐进曲率）；离散阵列因子的垂直指向性、−6 dB 覆盖角、第一旁瓣与幅度锥化、栅瓣频率上限与 λ/2 间距判据；近场—远场过渡距离（L²/2λ 与 L²/λ）、柱面 −3 dB 与球面 −6 dB 衰减曲线、多箱叠加增益；相邻箱体梳状滤波陷波与临界间距。</span>
           </span>
         </a>
+        <a class="module-card" href="#/audiolevel">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 24h6l5-9v18l-5-9" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M24 17a10 10 0 010 14" stroke-linecap="round" />
+              <path d="M30 12a16 16 0 010 24" stroke-linecap="round" opacity="0.55" />
+              <path d="M8 34h32" stroke-linecap="round" opacity="0.4" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">音频电平与阻抗 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">dBV / dBu / dBm / dBW / dBFS 五种电平互转（含 +15~+24 dBu 满刻度基准与常用电平锚点对照）；音箱灵敏度 1 W/1 m ↔ 2.83 V/1 m ↔ 1 V/1 m 互换；多只音箱串／并／串并联的总阻抗、每只功率与 SPL 增减（恒压功放模型）；功放功率 → 最大声压级与声压-距离曲线；由目标声压级反算所需连续功率、峰值功率与功放选型（含波峰因数与余量）；线材电阻、回路损耗与阻尼系数（含允许线长反算与线规对照）；IEC 60268-5 最小阻抗校核。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -575,9 +590,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 29 个文件 / 1580+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 30 个文件 / 1800+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3957,6 +3972,178 @@
     </section>
   </section>
 
+  <section class="view" id="view-audiolevel" data-view="audiolevel" hidden>
+    <div class="page-head">
+      <h2>音频电平与阻抗</h2>
+      <p class="hint">电声工程里最容易记混的一组量：dBV / dBu / dBm / dBFS 到底以谁为 0 dB，2.83 V 与 1 W 差多少，多只并联是 +3 dB 还是 −3 dB，长线会把阻尼系数拖到多少。8 个计算场景，全部可离线复核。</p>
+    </div>
+
+    <section class="card">
+      <h3>电平换算</h3>
+      <p class="hint">dBV 以 1 V 为 0 dB，dBu 以 √0.6 = 0.7746 V 为 0 dB，两者相差 2.2185 dB；dBm 是功率量（1 mW 基准），必须指定负载才有确定电压；dBFS 需先选定满刻度基准。</p>
+      <div class="field-row">
+        <div class="field"><label for="alVal">数值</label><input id="alVal" type="number" step="any" value="1.2278" /></div>
+        <div class="field"><label for="alUnit">单位</label>
+          <select id="alUnit">
+            <option value="v">V（伏特，rms）</option>
+            <option value="dbv" selected>dBV（1 V 基准）</option>
+            <option value="dbu">dBu（0.7746 V 基准）</option>
+            <option value="dbm">dBm（1 mW，按负载）</option>
+            <option value="dbw">dBW（1 W，按负载）</option>
+            <option value="dbfs">dBFS（按满刻度）</option>
+          </select>
+        </div>
+        <div class="field"><label for="alZ">负载阻抗 (Ω)</label><input id="alZ" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alFs">0 dBFS 满刻度</label><select id="alFs"></select></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtn" class="btn primary" type="button">换算</button></div>
+      </div>
+      <div id="alOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>灵敏度：1 W/1 m ↔ 2.83 V/1 m</h3>
+      <p class="hint">SPL(2.83 V) = SPL(1 W) + 10·lg(8/Z)。8 Ω 时两套标注数值相同；4 Ω 音箱用 2.83 V 标注会比 1 W 标注「好看」3 dB。比较不同厂家灵敏度时务必先看是哪种标注。</p>
+      <div class="field-row">
+        <div class="field"><label for="alSensMode">已知标注方式</label>
+          <select id="alSensMode">
+            <option value="1w">1 W / 1 m</option>
+            <option value="2.83v">2.83 V / 1 m</option>
+            <option value="1v">1 V / 1 m</option>
+          </select>
+        </div>
+        <div class="field"><label for="alSensSpl">灵敏度 (dB)</label><input id="alSensSpl" type="number" step="0.5" value="90" /></div>
+        <div class="field"><label for="alSensZ">标称阻抗 (Ω)</label><input id="alSensZ" type="number" step="any" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnSens" class="btn primary" type="button">互换标注</button></div>
+      </div>
+      <div id="alOutSens" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>串并联阻抗与 SPL 增减</h3>
+      <p class="hint">恒压功放模型：并联每只都拿到满电压，总功率 ×N（每加倍 +3 dB）；串联每只只拿到 U/N，总功率 ÷N（每加倍 −3 dB）；串并联可在总阻抗与声压之间折中。</p>
+      <div class="field-row">
+        <div class="field"><label for="alArrZ">单只阻抗 (Ω)</label><input id="alArrZ" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alArrN">只数</label><input id="alArrN" type="number" step="1" value="4" /></div>
+        <div class="field"><label for="alArrWiring">接法</label>
+          <select id="alArrWiring">
+            <option value="parallel">并联</option>
+            <option value="series">串联</option>
+            <option value="sp">串并联（每串 s 只）</option>
+          </select>
+        </div>
+        <div class="field" id="alArrPerRow" hidden><label for="alArrPer">每串只数 s</label><input id="alArrPer" type="number" step="1" value="2" /></div>
+        <div class="field"><label for="alArrV">功放输出电压 (V)</label><input id="alArrV" type="number" step="any" value="28.28" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnArr" class="btn primary" type="button">算阻抗与增益</button></div>
+      </div>
+      <div id="alOutArr" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>功放功率 → 最大声压级</h3>
+      <p class="hint">SPL(r) = SPL<sub>1W/1m</sub> + 10·lg(P) − 20·lg(r)。每倍距离 −6 dB、功率每加倍 +3 dB。多只非相干叠加 +10·lg N，理想同相相干叠加 +20·lg N。</p>
+      <div class="field-row">
+        <div class="field"><label for="alAmpSpl">灵敏度 (dB @ 1W/1m)</label><input id="alAmpSpl" type="number" step="0.5" value="90" /></div>
+        <div class="field"><label for="alAmpP">功放总功率 (W)</label><input id="alAmpP" type="number" step="any" value="100" /></div>
+        <div class="field"><label for="alAmpR">听音距离 (m)</label><input id="alAmpR" type="number" step="any" value="10" /></div>
+        <div class="field"><label for="alAmpN">音箱只数</label><input id="alAmpN" type="number" step="1" value="1" /></div>
+        <div class="field"><label for="alAmpZ">估算电压用阻抗 (Ω)</label><input id="alAmpZ" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alAmpSpace">辐射空间</label>
+          <select id="alAmpSpace">
+            <option value="half">半空间 2π（常规标称）</option>
+            <option value="full">全空间 4π（−3 dB）</option>
+          </select>
+        </div>
+        <div class="field"><label for="alAmpCoh">多只叠加</label>
+          <select id="alAmpCoh">
+            <option value="inc">非相干 +10 lg N</option>
+            <option value="coh">理想相干 +20 lg N</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnAmp" class="btn primary" type="button">算声压级</button></div>
+      </div>
+      <div id="alOutAmp" class="result-line" hidden></div>
+      <canvas id="alAmpChart" height="250"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>功放选型：目标声压反算功率</h3>
+      <p class="hint">先由目标 SPL 与距离反算 1 m 处所需声压级，再换算每只连续功率；叠加波峰因数得峰值功率，叠加余量得建议功放功率。功放长期功率不足会削波失真，比功率不足本身更伤高音单元。</p>
+      <div class="field-row">
+        <div class="field"><label for="alSzSpl">灵敏度 (dB @ 1W/1m)</label><input id="alSzSpl" type="number" step="0.5" value="90" /></div>
+        <div class="field"><label for="alSzTarget">目标声压级 (dB)</label><input id="alSzTarget" type="number" step="1" value="100" /></div>
+        <div class="field"><label for="alSzR">距离 (m)</label><input id="alSzR" type="number" step="any" value="10" /></div>
+        <div class="field"><label for="alSzN">音箱只数</label><input id="alSzN" type="number" step="1" value="1" /></div>
+        <div class="field"><label for="alSzCrest">波峰因数 (dB)</label><input id="alSzCrest" type="number" step="0.5" value="10" /></div>
+        <div class="field"><label for="alSzHead">功率余量 (dB)</label><input id="alSzHead" type="number" step="0.5" value="3" /></div>
+        <div class="field"><label for="alSzSpace">辐射空间</label>
+          <select id="alSzSpace">
+            <option value="half">半空间 2π</option>
+            <option value="full">全空间 4π</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnSz" class="btn primary" type="button">反算功率</button></div>
+      </div>
+      <div id="alOutSz" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>线材电阻与阻尼系数</h3>
+      <p class="hint">R = ρ·L/A（回路按往返两根计）。阻尼系数 DF = Z<sub>负载</sub> / (Z<sub>功放内阻</sub> + R<sub>回路</sub>)；线损 = 20·lg(Z/(Z+R<sub>s</sub>))。DF ≥ 50 优秀、20~50 良好、10~20 可接受、&lt;10 时低频明显拖尾。</p>
+      <div class="field-row">
+        <div class="field"><label for="alWLen">单程线长 (m)</label><input id="alWLen" type="number" step="any" value="20" /></div>
+        <div class="field"><label for="alWArea">截面积 (mm²)</label><input id="alWArea" type="number" step="any" value="2.5" /></div>
+        <div class="field"><label for="alWMat">材质</label>
+          <select id="alWMat">
+            <option value="copper">铜</option>
+            <option value="aluminium">铝</option>
+            <option value="cca">铜包铝 CCA</option>
+            <option value="silver">银</option>
+          </select>
+        </div>
+        <div class="field"><label for="alWTemp">线材温度 (℃)</label><input id="alWTemp" type="number" step="5" value="20" /></div>
+        <div class="field"><label for="alWZ">音箱标称阻抗 (Ω)</label><input id="alWZ" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alWZamp">功放输出内阻 (Ω)</label><input id="alWZamp" type="number" step="any" value="0.02" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnW" class="btn primary" type="button">算线损与阻尼</button></div>
+      </div>
+      <div id="alOutW" class="result-line" hidden></div>
+      <canvas id="alWChart" height="240"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>允许线长反算</h3>
+      <p class="hint">给定线损上限（工程常用 0.5 dB）与阻尼系数下限（常用 20），两条约束取更严格者，反算允许的回路电阻与单程线长，并给出各规格对照。</p>
+      <div class="field-row">
+        <div class="field"><label for="alMLArea">截面积 (mm²)</label><input id="alMLArea" type="number" step="any" value="2.5" /></div>
+        <div class="field"><label for="alMLMat">材质</label>
+          <select id="alMLMat">
+            <option value="copper">铜</option>
+            <option value="aluminium">铝</option>
+            <option value="cca">铜包铝 CCA</option>
+          </select>
+        </div>
+        <div class="field"><label for="alMLZ">音箱标称阻抗 (Ω)</label><input id="alMLZ" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alMLZamp">功放输出内阻 (Ω)</label><input id="alMLZamp" type="number" step="any" value="0.02" /></div>
+        <div class="field"><label for="alMLLoss">线损上限 (dB)</label><input id="alMLLoss" type="number" step="0.1" value="0.5" /></div>
+        <div class="field"><label for="alMLDf">阻尼系数下限</label><input id="alMLDf" type="number" step="1" value="20" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnML" class="btn primary" type="button">反算线长</button></div>
+      </div>
+      <div id="alOutML" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>IEC 60268-5 阻抗校核与功放匹配</h3>
+      <p class="hint">IEC 60268-5：扬声器阻抗模的最小值不得低于标称值的 80 %。实际阻抗随频率大幅起伏（谐振峰可达标称的 3~5 倍），应以实测曲线最低点为准。工程惯例：功放额定功率取音箱连续功率的 1.5~2 倍。</p>
+      <div class="field-row">
+        <div class="field"><label for="alIcZn">标称阻抗 (Ω)</label><input id="alIcZn" type="number" step="any" value="8" /></div>
+        <div class="field"><label for="alIcZmin">实测最小阻抗 (Ω)</label><input id="alIcZmin" type="number" step="any" value="6.4" /></div>
+        <div class="field"><label for="alIcPcont">音箱连续功率 (W)</label><input id="alIcPcont" type="number" step="any" value="200" /></div>
+        <div class="field"><label for="alIcV">功放输出电压 (V)</label><input id="alIcV" type="number" step="any" value="40" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="alBtnIc" class="btn primary" type="button">校核</button></div>
+      </div>
+      <div id="alOutIc" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3992,6 +4179,7 @@
 <script src="js/speakerbox.js"></script>
 <script src="js/crossover.js"></script>
 <script src="js/linearray.js"></script>
+<script src="js/audiolevel.js"></script>
 <script src="js/wave.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
@@ -4024,6 +4212,7 @@
 <script src="js/view-speakerbox.js"></script>
 <script src="js/view-crossover.js"></script>
 <script src="js/view-linearray.js"></script>
+<script src="js/view-audiolevel.js"></script>
 <script src="js/view-wave.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
