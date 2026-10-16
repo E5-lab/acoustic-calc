@@ -102,6 +102,19 @@
       </div>
     </nav>
     <div class="topbar-actions">
+      <div class="ts-wrap" id="tsWrap">
+        <button class="ts-trigger" id="tsTrigger" type="button" aria-label="展开检索框" title="检索功能模块（快捷键 /）">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
+        </button>
+        <div class="ts-field" id="tsField">
+          <svg class="ts-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
+          <input id="tsInput" type="search" autocomplete="off" spellcheck="false"
+                 placeholder="检索功能模块" aria-label="检索功能模块" aria-controls="view-home" />
+          <kbd class="ts-kbd">/</kbd>
+          <button id="tsClear" class="ts-clear" type="button" aria-label="清空检索" hidden>&#215;</button>
+          <div class="ts-panel" id="tsPanel" hidden></div>
+        </div>
+      </div>
       <div class="nav-group topbar-group">
         <button class="nav-parent nav-blog" type="button" aria-expanded="false" aria-haspopup="true" title="友链：博客 / 视频 / 音乐 / 导航">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
@@ -128,17 +141,6 @@
   <!-- ============================ 总览 ============================ -->
   <section class="view" id="view-home" data-view="home">
     <h1 class="sr-only">声学计算工具箱 · 建筑与材料声学计算工具集</h1>
-
-    <div class="home-search" id="homeSearch">
-      <div class="hs-field">
-        <svg class="hs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
-        <input id="hsInput" type="search" autocomplete="off" spellcheck="false"
-               placeholder="检索功能模块" aria-label="检索功能模块" aria-controls="view-home" />
-        <button id="hsClear" class="hs-clear" type="button" aria-label="清空检索" hidden>&#215;</button>
-        <kbd class="hs-kbd" id="hsKbd">/</kbd>
-      </div>
-      <p class="hs-count" id="hsCount" hidden></p>
-    </div>
 
     <div class="hero-banner" id="heroBanner">
       <div class="hb-track" id="hbTrack">
@@ -3192,8 +3194,16 @@
 </main>
 
 <footer class="site-footer">
+  <div class="footer-stats">
+    <span class="fs-item" id="fsPv">总访问 <b id="busuanzi_value_site_pv">—</b> 次</span>
+    <span class="fs-sep" aria-hidden="true">·</span>
+    <span class="fs-item" id="fsUv">访客 <b id="busuanzi_value_site_uv">—</b> 人</span>
+    <span class="fs-sep" aria-hidden="true">·</span>
+    <span class="fs-item">已运营 <b id="statDays">—</b> 天</span>
+    <span class="fs-since">（2026-07-13 建站）</span>
+  </div>
   <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型；计权隔声量 Rw — GB/T 50121-2005；声压级叠加 — 声能量与相干叠加基本公式；阻性消声器 — GB/T 50087-2013《工业企业噪声控制设计规范》第 6.3 节；隔振计算 — 《噪声与振动控制工程技术导则》第 7.4 节隔振设计。</p>
-  <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。</p>
+  <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。访客统计由 Vercount 提供，仅统计访问次数、不采集个人身份信息。</p>
 </footer>
 
 <script src="js/chart-util.js"></script>
@@ -3237,6 +3247,8 @@
 <script src="js/view-insdesign.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
+<script src="js/site-stats.js"></script>
+<script src="https://events.vercount.one/js" async></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
