@@ -100,7 +100,13 @@
     var minE = opt.minEnergy == null ? 0.03 : num(opt.minEnergy);
     if (minE == null) minE = 0.03;
     var maxLen = num(opt.maxLength) || 2000;
-    var src = opt.source || { x: model.bounds.w / 2, y: model.bounds.d / 2 };
+    var raw = opt.source || {};
+    var sx = num(raw.x), sy = num(raw.y);
+    if (sx == null) sx = model.bounds.w / 2;
+    if (sy == null) sy = model.bounds.d / 2;
+    // 声源必须落在房间内部（留极小内缩），否则贴着墙面的声源会射出“零反射”的退化光线
+    var ex = model.bounds.w * 1e-4, ey = model.bounds.d * 1e-4;
+    var src = { x: clamp(sx, ex, model.bounds.w - ex), y: clamp(sy, ey, model.bounds.d - ey) };
     var walls = model.walls;
 
     var rays = [], totalHits = 0, totalAbs = 0, maxLength = 0;
@@ -302,8 +308,120 @@
     };
   }
 
+  /* ==================== 轴测投影（3D 视图 → 2D 画布） ====================
+   * 采用斜轴测：先绕 z 轴偏航 yaw 旋转平面，再按俯仰 elev 压缩纵深、把高度抬升。
+   * 纯几何，无依赖，便于单测与复用。
+   */
+  var CAM_DEFAULT = { yaw: 0.62, elev: 0.44 };
+
+  function isoProject(x, y, z, cam) {
+    var ca = cam.ca != null ? cam.ca : Math.cos(cam.yaw);
+    var sa = cam.sa != null ? cam.sa : Math.sin(cam.yaw);
+    var se = cam.se != null ? cam.se : Math.sin(cam.elev);
+    var ce = cam.ce != null ? cam.ce : Math.cos(cam.elev);
+    var X = x * ca - y * sa;
+    var Y = x * sa + y * ca;
+    return {
+      u: cam.ox + X * cam.scale,
+      v: cam.oy + (Y * se - z * ce) * cam.scale,
+      depth: Y * ce + z * se
+    };
+  }
+
+  /* 由房间包围盒与视口矩形求投影参数，保证 8 个角点都落在视口内 */
+  function isoFit(o) {
+    o = o || {};
+    var w = num(o.w) || 10, d = num(o.d) || 8, h = num(o.h) || 3;
+    var view = o.view || { x: 0, y: 0, w: 800, h: 400 };
+    var m = num(o.margin); if (m == null) m = 16;
+    var cam = {
+      yaw: num(o.yaw), elev: num(o.elev), scale: 1, ox: 0, oy: 0
+    };
+    if (cam.yaw == null) cam.yaw = CAM_DEFAULT.yaw;
+    if (cam.elev == null) cam.elev = CAM_DEFAULT.elev;
+    cam.elev = clamp(cam.elev, 0.05, 1.45);
+    cam.ca = Math.cos(cam.yaw); cam.sa = Math.sin(cam.yaw);
+    cam.se = Math.sin(cam.elev); cam.ce = Math.cos(cam.elev);
+
+    var minU = Infinity, maxU = -Infinity, minV = Infinity, maxV = -Infinity;
+    [0, w].forEach(function (x) {
+      [0, d].forEach(function (y) {
+        [0, h].forEach(function (z) {
+          var p = isoProject(x, y, z, cam);
+          if (p.u < minU) minU = p.u;
+          if (p.u > maxU) maxU = p.u;
+          if (p.v < minV) minV = p.v;
+          if (p.v > maxV) maxV = p.v;
+        });
+      });
+    });
+    var sw = Math.max(1e-6, maxU - minU), sh = Math.max(1e-6, maxV - minV);
+    cam.scale = Math.max(1e-6, Math.min((view.w - 2 * m) / sw, (view.h - 2 * m) / sh));
+    cam.ox = view.x + (view.w - sw * cam.scale) / 2 - minU * cam.scale;
+    cam.oy = view.y + (view.h - sh * cam.scale) / 2 - minV * cam.scale;
+    return cam;
+  }
+
+  /* ==================== 色标刻度（右栏指标标杆） ==================== */
+
+  /* 把一段量程切成"整齐"的步长（1 / 2 / 2.5 / 5 / 10 × 10^n） */
+  function niceStep(range, n) {
+    var raw = Math.abs(num(range) || 0) / Math.max(1, Math.round(num(n) || 5));
+    if (!(raw > 0)) return 1;
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var f = raw / mag, s;
+    if (f <= 1) s = 1; else if (f <= 2) s = 2; else if (f <= 2.5) s = 2.5; else if (f <= 5) s = 5; else s = 10;
+    return s * mag;
+  }
+
+  /* 把 [lo,hi] 向外取整到整齐步长，返回 [lo', hi', step] */
+  function niceRange(lo, hi, n) {
+    lo = num(lo); hi = num(hi);
+    if (lo == null || hi == null) return null;
+    if (!(hi > lo)) { var mid = lo; lo = mid - 0.5; hi = mid + 0.5; }
+    var step = niceStep(hi - lo, n);
+    var a = Math.floor(lo / step) * step, b = Math.ceil(hi / step) * step;
+    if (!(b > a)) b = a + step;
+    return [a, b, step];
+  }
+
+  /* 等分刻度：返回 n+1 项，frac 自上而下 1→0，首末标记 ≥ / ≤ */
+  function scaleTicks(lo, hi, n) {
+    lo = num(lo); hi = num(hi);
+    if (lo == null || hi == null || !(hi > lo)) return [];
+    n = Math.max(1, Math.round(num(n) || 5));
+    var out = [];
+    for (var i = 0; i <= n; i++) {
+      var f = 1 - i / n;
+      out.push({
+        frac: f, value: lo + (hi - lo) * f,
+        edge: (i === 0 ? 'hi' : (i === n ? 'lo' : null))
+      });
+    }
+    return out;
+  }
+
+  /* 取任意平面点所在网格格的指标值（用于标注接收点模拟值） */
+  function metricAtCell(gm, model, pt, key) {
+    if (!gm || !model || !pt || !model.bounds) return null;
+    var bw = model.bounds.w, bd = model.bounds.d;
+    if (!(bw > 0) || !(bd > 0)) return null;
+    var ix = clamp(Math.floor(pt.x / bw * gm.gx), 0, gm.gx - 1);
+    var iy = clamp(Math.floor(pt.y / bd * gm.gy), 0, gm.gy - 1);
+    var m = gm.metrics[iy * gm.gx + ix];
+    if (!m || m[key] == null || !isFinite(m[key])) return null;
+    return m[key];
+  }
+
   var API = {
     C_AIR: C_AIR,
+    CAM_DEFAULT: CAM_DEFAULT,
+    isoProject: isoProject,
+    isoFit: isoFit,
+    niceStep: niceStep,
+    niceRange: niceRange,
+    scaleTicks: scaleTicks,
+    metricAtCell: metricAtCell,
     buildRoom: buildRoom,
     raySeg: raySeg,
     traceRoom: traceRoom,
