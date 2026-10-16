@@ -1,5 +1,5 @@
 /*
- * nav.js — 顶栏二级菜单（分组下拉）交互 + 模块页面包屑
+ * nav.js — 顶栏导航交互（一级/二级/三级菜单）+ 单行收纳 + 模块页面包屑
  *
  * 结构约定（见 index.html）：
  *   .mainnav
@@ -9,20 +9,64 @@
  *       .nav-menu > a[data-route]              二级：模块
  *         span.nm-t                            模块名
  *         small.nm-d                           一句话说明
+ *         span.nav-sub                         三级：子计算器清单（由本文件注入）
+ *     .nav-group.nav-more                      溢出收纳分组（由本文件动态创建）
  *
  * 交互：
  *   - 桌面端（hover: hover）悬停展开，移出收起
  *   - 触屏端点击分组标题展开/收起
  *   - Esc 关闭；点击分组外区域关闭；点击菜单内链接后关闭
  *   - 路由变化时由 router.js 调用 syncActive(route)，同步分组高亮
+ *   - 一级菜单恒定单行：宽度不足时，靠后的分组自动收进「更多」，
+ *     并在其分栏面板中按分组列出全部模块（含三级子计算器）
  */
 (function () {
   'use strict';
 
   var mqHover = window.matchMedia ? window.matchMedia('(hover: hover)') : null;
 
+  // ------------------------------ 三级菜单数据 ------------------------------
+  // 模块路由 → 子计算器清单，与 index.html 中各 view 区块的 <h3> 小节一一对应。
+  // 新增模块：在四处登记之外，若希望菜单展示三级入口，在此补一行即可。
+  var NAV_SUB = {
+    levels: ['多声源能量叠加', '相干叠加', '背景噪声修正', '增量速查表'],
+    noise: ['A 声级', 'NC 曲线', 'NR 曲线', 'RC Mark II', '频谱对比'],
+    db: ['声级加减', '声压/声强/声功率', '距离衰减', 'A/C/Z 计权'],
+    perforation: ['四种阵列形制', '中心距反算', '微穿孔板共振'],
+    absorber: ['流阻率模型', '吸声系数曲线', 'NRC'],
+    absdesign: ['微穿孔板', '多孔+空腔 TMM', '薄板共振', '吸声降噪量'],
+    muffler: ['阻性消声器', '抗性消声器', '阻抗复合', '插入损失'],
+    rt60: ['Sabine / Eyring', '材料吸声库', '用途推荐值'],
+    stc: ['计权隔声量 Rw', 'STC', '隔声频率特性'],
+    roomq: ['RT60 / EDT', 'C50 / C80 / D50', 'Ts / G', '扩声预测'],
+    smallroom: ['简正频率', 'Bonello 准则', 'Schroeder 频率', '房间常数/临界距离', '稳态声压级'],
+    insdesign: ['质量定律+吻合', '双层共振', '隔声罩插入损失', '浮筑撞击声', '组合/侧向传声'],
+    sim: ['三维房间模型', '声场彩图', '指标色标', '导出 PNG'],
+    simfx: ['2D / 3D 粒子', '导出 GIF', '导出 MP4'],
+    aural: ['混响 A/B 试听', '隔声前后试听'],
+    barrier: ['菲涅尔数法', '插入损失', '所需高度反算'],
+    vibration: ['静变形法', '频率比法', '隔振效率计算书'],
+    env: ['Leq / L10 / L90', 'Ldn / Lden', 'NPL / TNI', '户外传播 ISO 9613-2', '公路交通噪声'],
+    vibeval: ['振动级换算', 'ISO 2631 计权 / aw', 'VDV', 'GB 10070'],
+    hvacnoise: ['设备噪声→房间 Lp', '风管路径衰减', '风管元件 TL', '声功率 ISO 3744/3746'],
+    noisemap: ['噪声等值线图', '道路交通噪声', 'GB 3096 / 55016 判定'],
+    psycho: ['响度 phon↔sone', '尖锐度', '粗糙度 / 抖动度', 'PNL', 'STIPA'],
+    pasystem: ['临界距离 / D-R', '可用增益与声反馈', 'STIPA 预测', '扬声器电功率']
+  };
+
   function groups() {
     return Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
+  }
+
+  function isMore(g) { return !!g && g.classList.contains('nav-more'); }
+
+  // 仅一级菜单（.mainnav）内的分组参与收纳/面包屑/三级注入；
+  // 顶栏右区的「友链」也是 .nav-group，但不能被收纳隐藏。
+  function navGroups() {
+    return Array.prototype.slice.call(document.querySelectorAll('.mainnav > .nav-group'));
+  }
+  function realGroups() {
+    return navGroups().filter(function (g) { return !isMore(g); });
   }
 
   function setOpen(group, open) {
@@ -43,10 +87,142 @@
     return !!group && group.classList.contains('open');
   }
 
+  // ------------------------------ 三级菜单注入 ------------------------------
+  function injectSub() {
+    navGroups().forEach(function (g) {
+      if (isMore(g)) return;
+      Array.prototype.forEach.call(g.querySelectorAll('.nav-menu a[data-route]'), function (a) {
+        if (a.querySelector('.nav-sub')) return;
+        var sub = NAV_SUB[a.getAttribute('data-route')];
+        if (!sub || !sub.length) return;
+        var span = document.createElement('span');
+        span.className = 'nav-sub';
+        span.textContent = sub.join(' · ');
+        a.appendChild(span);
+      });
+    });
+  }
+
+  // ------------------------------ 一级菜单单行收纳 ------------------------------
+  var nav = null;
+  var more = null;
+  var hiddenGroups = [];
+  var queued = false;
+
+  // 当前已显示的一级项（含「更多」）总宽度，与容器可用宽度比较
+  function neededWidth() {
+    var kids = Array.prototype.slice.call(nav.children).filter(function (k) { return !k.hidden; });
+    var gap = parseFloat(window.getComputedStyle(nav).columnGap) || 0;
+    var w = kids.reduce(function (s, k) { return s + k.getBoundingClientRect().width; }, 0);
+    return w + gap * Math.max(0, kids.length - 1);
+  }
+
+  function createMore() {
+    more = document.createElement('div');
+    more.className = 'nav-group nav-more';
+    more.hidden = true;
+    more.innerHTML =
+      '<button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true">更多' +
+      '<svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true">' +
+      '<path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+      'stroke-linecap="round" stroke-linejoin="round" /></svg></button>' +
+      '<div class="nav-menu nav-menu-mega"></div>';
+    nav.appendChild(more);
+    if (mqHover && mqHover.matches) {
+      more.addEventListener('mouseleave', function () { setOpen(more, false); });
+    }
+  }
+
+  // 按分组分栏，重建「更多」面板内容（含三级子计算器）
+  function buildMoreMenu(list) {
+    hiddenGroups = list;
+    var menu = more.querySelector('.nav-menu');
+    menu.innerHTML = list.map(function (g) {
+      var btn = g.querySelector('.nav-parent');
+      var colName = btn ? btn.textContent.trim() : '';
+      var links = Array.prototype.slice.call(g.querySelectorAll('.nav-menu a'));
+      return '<div class="nm-col"><p class="nm-col-h">' + colName + '</p>' +
+        links.map(function (a) {
+          var t = a.querySelector('.nm-t');
+          var d = a.querySelector('.nm-d');
+          var s = a.querySelector('.nav-sub');
+          return '<a href="' + a.getAttribute('href') + '" data-route="' +
+            a.getAttribute('data-route') + '">' +
+            (t ? '<span class="nm-t">' + t.textContent + '</span>' : '') +
+            (d ? '<small class="nm-d">' + d.textContent + '</small>' : '') +
+            (s ? '<span class="nav-sub">' + s.textContent + '</span>' : '') +
+            '</a>';
+        }).join('') + '</div>';
+    }).join('');
+    highlightMore();
+  }
+
+  // 同步「更多」面板与按钮的高亮（被收纳分组含当前路由时点亮）
+  function highlightMore() {
+    if (!more) return;
+    var route = window.AppRouter ? window.AppRouter.parse().route : 'home';
+    Array.prototype.forEach.call(more.querySelectorAll('a[data-route]'), function (a) {
+      a.classList.toggle('active', a.getAttribute('data-route') === route);
+    });
+    var anyActive = hiddenGroups.some(function (g) {
+      return !!g.querySelector('a[data-route="' + route + '"]');
+    });
+    more.classList.toggle('has-active', anyActive);
+    var btn = more.querySelector('.nav-parent');
+    if (btn) btn.classList.toggle('active', anyActive);
+  }
+
+  // 先全部展开，再从后往前把装不下的分组收进「更多」
+  function relayout() {
+    if (!nav) return;
+    var real = realGroups();
+    if (!real.length) return;
+
+    real.forEach(function (g) { g.hidden = false; });
+    if (more) more.hidden = true;
+
+    if (neededWidth() <= nav.clientWidth + 1) {
+      setOpen(more, false);
+      hiddenGroups = [];
+      highlightMore();
+      return;
+    }
+
+    if (!more) createMore();
+    more.hidden = false;
+
+    var list = [];
+    for (var i = real.length - 1; i >= 0; i--) {
+      real[i].hidden = true;
+      list.unshift(real[i]);
+      if (neededWidth() <= nav.clientWidth + 1) break;
+    }
+    if (list.length) buildMoreMenu(list);
+    else more.hidden = true;
+  }
+
+  function queueLayout() {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(function () { queued = false; relayout(); });
+  }
+
+  function watchWidth() {
+    nav = document.querySelector('.mainnav');
+    if (!nav) return;
+    window.addEventListener('resize', queueLayout);
+    window.addEventListener('load', queueLayout);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(queueLayout);
+    }
+    if (window.ResizeObserver) new ResizeObserver(queueLayout).observe(nav);
+    queueLayout();
+  }
+
   // ------------------------------ 事件绑定 ------------------------------
   function bind() {
-    var nav = document.querySelector('.mainnav');
-    if (!nav) return;
+    var navEl = document.querySelector('.mainnav');
+    if (!navEl) return;
 
     // 分组标题：点击切换（触屏必需；桌面端与悬停配合）
     // 顶栏（友链等）同样使用 .nav-group 结构，一并绑定
@@ -62,7 +238,7 @@
       var link = e.target.closest ? e.target.closest('.nav-menu a') : null;
       if (link) closeAll();
     }
-    nav.addEventListener('click', onNavClick);
+    navEl.addEventListener('click', onNavClick);
     var topbar = document.querySelector('.topbar-actions');
     if (topbar) topbar.addEventListener('click', onNavClick);
 
@@ -90,19 +266,21 @@
   function syncActive(route) {
     var activeLink = document.querySelector('.mainnav a[data-route="' + route + '"]');
     groups().forEach(function (g) {
+      if (isMore(g)) return;
       var hit = !!g.querySelector('a[data-route="' + route + '"]');
       g.classList.toggle('has-active', hit);
       var btn = g.querySelector('.nav-parent');
       if (btn) btn.classList.toggle('active', hit);
       if (hit) setOpen(g, false);
     });
+    highlightMore();
     if (!activeLink) closeAll();
   }
 
   // ------------------------------ 面包屑 ------------------------------
   // 在每个模块视图的 .page-head 顶部插入「分组 / 模块名」，与二级菜单结构呼应
   function crumbs() {
-    groups().forEach(function (g) {
+    realGroups().forEach(function (g) {
       var btn = g.querySelector('.nav-parent');
       var groupName = btn ? btn.textContent.trim() : '';
       Array.prototype.forEach.call(g.querySelectorAll('.nav-menu a'), function (a) {
@@ -126,8 +304,10 @@
 
   function boot() {
     bind();
+    injectSub();
     crumbs();
     syncActive(window.AppRouter ? window.AppRouter.parse().route : 'home');
+    watchWidth();
   }
 
   if (document.readyState === 'loading') {
@@ -136,5 +316,10 @@
     boot();
   }
 
-  window.AppNav = { syncActive: syncActive, closeAll: closeAll, groups: groups };
+  window.AppNav = {
+    syncActive: syncActive,
+    closeAll: closeAll,
+    groups: groups,
+    relayout: function () { relayout(); }
+  };
 })();

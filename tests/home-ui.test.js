@@ -9,7 +9,9 @@
  *   5) 顶栏「友链」为下拉菜单，含博客 / 视频 / 音乐 / 导航 4 个站点；
  *   6) nav.js 已把顶栏下拉纳入统一管理；
  *   7) 检索关键词在模块文案中有实际命中（保证索引可用）；
- *   8) 页脚访客统计（Vercount）与建站运营天数就位。
+ *   8) 页脚访客统计（Vercount）与建站运营天数就位；
+ *   9) 顶栏一级菜单恒定单行（nowrap + 溢出收纳进「更多」），
+ *      「友链」不竖排，三级子计算器覆盖全部模块。
  */
 var fs = require('fs');
 var path = require('path');
@@ -126,6 +128,38 @@ assert('site-stats.js 含本机计数回退', statsJs.indexOf('localStorage') >=
 var iStatsJs = html.indexOf('js/site-stats.js');
 assert('site-stats.js 在 nav.js 之前加载', iStatsJs > 0 && iStatsJs < iNavJs);
 assert('异步加载 Vercount 计数脚本', /events\.vercount\.one\/js/.test(html));
+
+// ---- 9) 顶栏导航单行与三级菜单 ----
+console.log('\n[9] 顶栏导航单行与三级菜单');
+var css = fs.readFileSync(path.join(__dirname, '..', 'public', 'css', 'styles.css'), 'utf8');
+assert('.mainnav 禁止换行 flex-wrap:nowrap', /\.mainnav\s*\{[\s\S]*?flex-wrap:\s*nowrap/.test(css));
+assert('.nav-blog 禁止文字竖排 white-space:nowrap', /\.nav-blog\s*\{[\s\S]*?white-space:\s*nowrap/.test(css));
+assert('顶栏栅格中间列可压缩 auto minmax(0,1fr) auto',
+  /\.topbar-inner\s*\{[\s\S]*?grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\)\s+auto/.test(css));
+assert('友链按钮不被压缩 flex:none', /\.nav-blog\s*\{[\s\S]*?flex:\s*none/.test(css));
+assert('存在分栏 Mega 面板样式 .nav-menu-mega', css.indexOf('.nav-menu-mega') >= 0);
+assert('存在三级子计算器样式 .nav-sub', css.indexOf('.nav-sub') >= 0);
+assert('窄屏检索折叠断点提高到 1400px', /@media \(max-width: 1400px\)/.test(css));
+
+assert('nav.js 提供三级菜单数据表 NAV_SUB', /var NAV_SUB = \{/.test(navJs));
+assert('nav.js 动态创建「更多」收纳分组', navJs.indexOf("'nav-group nav-more'") >= 0);
+assert('nav.js 含按可用宽度重排逻辑', navJs.indexOf('function relayout') >= 0);
+assert('nav.js 用 ResizeObserver 监听容器宽度', navJs.indexOf('ResizeObserver') >= 0);
+assert('收纳仅作用于 .mainnav（不影响友链）', navJs.indexOf("'.mainnav > .nav-group'") >= 0);
+
+// 三级菜单必须覆盖一级/二级菜单中的全部模块路由
+var subKeys = [];
+var sk = /^\s{4}([a-z0-9]+):\s*\[/gm, sm;
+while ((sm = sk.exec(navJs)) !== null) subKeys.push(sm[1]);
+var navHtml = html.slice(html.indexOf('<nav class="mainnav"'), html.indexOf('</nav>'));
+var navRoutes = [];
+var nr = /<a href="#\/([\w-]+)" data-route="/g, nm;
+while ((nm = nr.exec(navHtml)) !== null) navRoutes.push(nm[1]);
+assert('一级/二级菜单含 ' + navRoutes.length + ' 个模块路由', navRoutes.length >= 20);
+var noSub = navRoutes.filter(function (r) { return subKeys.indexOf(r) < 0; });
+assert('每个模块都有三级子计算器条目 (缺失: ' + (noSub.join(',') || '无') + ')', noSub.length === 0);
+var extraSub = subKeys.filter(function (k) { return navRoutes.indexOf(k) < 0; });
+assert('三级菜单无孤儿条目 (多余: ' + (extraSub.join(',') || '无') + ')', extraSub.length === 0);
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);

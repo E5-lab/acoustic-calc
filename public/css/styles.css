@@ -179,15 +179,17 @@ kbd {
   background: color-mix(in srgb, var(--card) 82%, transparent);
   border-bottom: 1px solid var(--border);
 }
+/* 三栏：品牌(auto) / 一级菜单(弹性可压缩) / 操作区(auto 不被压缩)
+   中间列用 minmax(0,1fr) 让菜单获得确定的可压缩宽度，
+   两侧 auto 保证品牌与「友链/主题」永远不会被挤成竖排。 */
 .topbar-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 9px 16px;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 .brand {
   display: inline-flex;
@@ -211,25 +213,28 @@ kbd {
 .brand-name {
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.04;
   letter-spacing: 0.01em;
   font-weight: 700;
 }
 .brand-name .bn-l2 { color: var(--primary); }
+/* 一级菜单：严禁换行（nowrap）。装不下的分组由 nav.js 收纳进「更多」，
+   任何视口宽度下都保持单行。 */
 .mainnav {
   display: flex;
   align-items: center;
-  justify-self: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-left: 0;
+  justify-content: center;
+  justify-self: stretch;
+  min-width: 0;
+  gap: 2px;
+  flex-wrap: nowrap;
 }
 .mainnav a,
 .nav-soon {
-  padding: 6px 11px;
+  padding: 6px 9px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--muted);
   transition: background 0.15s, color 0.15s;
@@ -252,15 +257,18 @@ kbd {
   display: flex;
   align-items: center;
   justify-self: end;
-  gap: 10px;
+  flex: none;
+  gap: 8px;
 }
 .nav-blog {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  flex: none;
+  white-space: nowrap;
+  gap: 5px;
+  padding: 6px 10px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--muted);
   border: 1px solid var(--border);
@@ -273,8 +281,8 @@ kbd {
 .theme-toggle {
   display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--card-soft);
@@ -305,16 +313,17 @@ kbd {
 .nav-parent {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 10px;
+  gap: 4px;
+  padding: 6px 9px;
   border: 0;
   border-radius: 999px;
   background: none;
   color: var(--muted);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   line-height: 1.4;
+  white-space: nowrap;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
@@ -381,6 +390,38 @@ kbd {
 .nav-menu a .nm-t { display: block; }
 .nav-menu a small { color: var(--muted); font-size: 11.5px; font-weight: 400; }
 .nav-menu a.active small { color: var(--primary-d); opacity: 0.75; }
+
+/* --------------- 三级菜单：模块下的子计算器清单 --------------- */
+.nav-sub {
+  display: block;
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+.nav-menu a.active .nav-sub { color: var(--primary-d); opacity: 0.7; }
+
+/* --------------- 「更多」收纳分组：分栏 Mega 面板 --------------- */
+.nav-menu-mega {
+  grid-template-columns: repeat(auto-fit, minmax(214px, 1fr));
+  gap: 2px 8px;
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  padding: 10px 12px 12px;
+  max-height: min(72vh, 580px);
+  overflow-y: auto;
+}
+.nm-col { display: flex; flex-direction: column; gap: 1px; }
+.nm-col-h {
+  margin: 8px 0 3px;
+  padding: 0 12px;
+  color: var(--faint);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.nav-group.nav-more > .nav-menu { left: auto; right: 0; }
 
 /* --------------- 模块页面包屑（与二级菜单呼应） --------------- */
 .crumb {
@@ -1666,7 +1707,7 @@ select.btn:focus,
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 196px;
+  width: 176px;
   padding: 0 10px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -1775,12 +1816,13 @@ select.btn:focus,
 .module-card.hs-hit { outline: 2px solid var(--primary); outline-offset: 2px; }
 .hs-hidden { display: none !important; }
 
-/* 窄屏：检索框折叠为放大镜图标，点击后悬浮展开 */
-@media (max-width: 1200px) {
+/* 检索框：仅在超宽屏（≥1400px）常驻，其余宽度折叠为放大镜图标，
+   点击后悬浮展开——为一级菜单让出约 190px 宽度（主流工具站做法）。 */
+@media (max-width: 1400px) {
   .ts-trigger {
     display: grid;
     place-items: center;
-    width: 38px; height: 38px;
+    width: 36px; height: 36px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: var(--card-soft);
