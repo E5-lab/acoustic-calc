@@ -52,7 +52,8 @@
     noisemap: ['噪声等值线图', '道路交通噪声', 'GB 3096 / 55016 判定'],
     psycho: ['响度 phon↔sone', '尖锐度', '粗糙度 / 抖动度', 'PNL', 'STIPA'],
     pasystem: ['临界距离 / D-R', '可用增益与声反馈', 'STIPA 预测', '扬声器电功率'],
-    speakerbox: ['T/S 参数与 Vas', '封闭箱设计', '倒相箱设计', '导风管设计', '箱体尺寸']
+    speakerbox: ['T/S 参数与 Vas', '封闭箱设计', '倒相箱设计', '导风管设计', '箱体尺寸'],
+    crossover: ['1~4 阶元件值', 'LR2 / LR4', 'Zobel 补偿', 'L-pad 衰减', '灵敏度匹配']
   };
 
   function groups() {

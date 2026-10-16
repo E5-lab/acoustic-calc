@@ -102,6 +102,7 @@
           <a href="#/psycho" data-route="psycho"><span class="nm-t">心理声学 / 声品质</span><small class="nm-d">响度 · 尖锐度 · 粗糙度/抖动度 · PNL · STIPA</small></a>
           <a href="#/pasystem" data-route="pasystem"><span class="nm-t">电声与语言清晰度</span><small class="nm-d">覆盖临界距离 · 扩声增益 · STIPA · 扬声器功率</small></a>
           <a href="#/speakerbox" data-route="speakerbox"><span class="nm-t">扬声器箱体设计</span><small class="nm-d">Thiele-Small · 封闭箱/倒相箱 · 导风管 · T/S 参数</small></a>
+          <a href="#/crossover" data-route="crossover"><span class="nm-t">分频器设计</span><small class="nm-d">1~4 阶 · LR2/LR4 · Zobel · L-pad 衰减</small></a>
         </div>
       </div>
     </nav>
@@ -188,7 +189,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、24 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、25 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -480,6 +481,18 @@
             <span class="mc-desc">Thiele-Small 理论：Vas 正算与附加质量法/阻抗峰法测 T/S 参数、参考效率与灵敏度换算、封闭箱（α/fc/Qtc/f3/隆起）、倒相箱四阶系统函数（f3/纹波/对齐类型 + 响应与群延迟曲线 + 最平坦调谐）、导风管长度与端口风速校核、箱体三边尺寸与净容积。</span>
           </span>
         </a>
+        <a class="module-card" href="#/crossover">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 40V18M14 40V8M22 40V26M30 40V12M38 40V22" stroke-linecap="round" />
+              <path d="M6 18h8M14 8h8M22 26h8M30 12h8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">分频器设计 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">按电压驱动条件推导元件值（1~4 阶）：二阶五种 Q 预设（巴特沃斯 / LR2 / 贝塞尔 / 契比雪夫）、三阶巴特沃斯、四阶 LR4（两级二阶巴特沃斯级联）与四阶巴特沃斯数值解；低通/高通/合成响应曲线与极性判定、Zobel 阻抗补偿、L-pad 恒阻抗衰减、灵敏度匹配与现成元件反算分频点。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -532,9 +545,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 26 个文件 / 1340+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 27 个文件 / 1400+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3606,6 +3619,83 @@
     </section>
   </section>
 
+  <section class="view" id="view-crossover" data-view="crossover" hidden>
+    <div class="page-head">
+      <h2>扬声器分频器设计</h2>
+      <p class="hint">功率放大器输出阻抗近似为 0，分频网络按「电压驱动 + 负载 Z」推导元件值（不能直接套用双端接 g 值原型表）。覆盖 1~4 阶、二阶五种 Q 预设、阻抗补偿与 L-pad 衰减。</p>
+    </div>
+
+    <section class="card">
+      <h3>分频器元件值设计</h3>
+      <p class="hint">二阶：C = Q/(ω₀Z)、L = Z/(Qω₀)；三阶巴特沃斯：L₁ = 1.5Z/ω₀、C₁ = 4/(3ω₀Z)、L₂ = 0.5Z/ω₀；LR4 = 两级相同的二阶巴特沃斯级联。</p>
+      <div class="field-row">
+        <div class="field"><label for="xoOrder">阶数 / 滚降</label>
+          <select id="xoOrder">
+            <option value="1">一阶（6 dB/oct）</option>
+            <option value="2" selected>二阶（12 dB/oct）</option>
+            <option value="3">三阶巴特沃斯（18 dB/oct）</option>
+            <option value="4">四阶（24 dB/oct）</option>
+          </select>
+        </div>
+        <div class="field" id="xoTypeRow"><label for="xoType">二阶响应类型</label><select id="xoType"></select></div>
+        <div class="field" id="xoO4Row" style="display:none"><label for="xoO4Type">四阶类型</label>
+          <select id="xoO4Type">
+            <option value="lr4">Linkwitz-Riley LR4（推荐）</option>
+            <option value="butter">四阶巴特沃斯</option>
+          </select>
+        </div>
+        <div class="field" id="xoQRow" style="display:none"><label for="xoQ">自定义 Q</label><input id="xoQ" type="number" step="0.01" value="0.707" /></div>
+        <div class="field"><label for="xoFc">分频点 fc (Hz)</label><input id="xoFc" type="number" step="50" value="2000" /></div>
+        <div class="field"><label for="xoZ">标称阻抗 Z (Ω)</label><input id="xoZ" type="number" step="0.1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="xoBtn" class="btn primary" type="button">计算元件值</button></div>
+      </div>
+      <div id="xoOut" class="result-line" hidden></div>
+      <canvas id="xoChart" height="250"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>阻抗补偿（Zobel 网络）</h3>
+      <p class="hint">音圈电感使阻抗随频率上升，会让分频点漂移（对二阶以上影响显著）。Rz + Cz 串联后与单元并联可把高频阻抗拉回接近 Re。</p>
+      <div class="field-row">
+        <div class="field"><label for="xoZRe">直流电阻 Re (Ω)</label><input id="xoZRe" type="number" step="0.1" value="6" /></div>
+        <div class="field"><label for="xoZLe">音圈电感 Le (mH)</label><input id="xoZLe" type="number" step="0.01" value="0.5" /></div>
+        <div class="field"><label for="xoZK">Rz 系数 k（Rz = k·Re）</label><input id="xoZK" type="number" step="0.05" value="1.25" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="xoZBtn" class="btn" type="button">求补偿元件</button></div>
+      </div>
+      <div id="xoZOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>L-pad 衰减器</h3>
+      <p class="hint">在保持输入阻抗等于标称阻抗 Z 的前提下衰减指定 dB：R_series = Z(1−k)，R_shunt = kZ/(1−k)，k = 10^(−dB/20)。</p>
+      <div class="field-row">
+        <div class="field"><label for="xoLpDb">衰减量 (dB)</label><input id="xoLpDb" type="number" step="0.5" value="6" /></div>
+        <div class="field"><label for="xoLpZ">标称阻抗 Z (Ω)</label><input id="xoLpZ" type="number" step="0.1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="xoLpBtn" class="btn" type="button">求衰减元件</button></div>
+      </div>
+      <div id="xoLpOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>灵敏度匹配与元件反算</h3>
+      <p class="hint">两单元灵敏度差决定需要衰减多少 dB；也可由手上的现成电感 / 电容反算实际分频点。</p>
+      <div class="field-row">
+        <div class="field"><label for="xoMtTw">高音灵敏度 (dB/W/m)</label><input id="xoMtTw" type="number" step="0.5" value="92" /></div>
+        <div class="field"><label for="xoMtWf">低音灵敏度 (dB/W/m)</label><input id="xoMtWf" type="number" step="0.5" value="88" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="xoMtBtn" class="btn" type="button">比较灵敏度</button></div>
+      </div>
+      <div id="xoMtOut" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="xoFcL">电感 L (mH)</label><input id="xoFcL" type="number" step="0.01" value="0.637" /></div>
+        <div class="field"><label for="xoFcC">电容 C (µF)</label><input id="xoFcC" type="number" step="0.1" value="9.95" /></div>
+        <div class="field"><label for="xoFcZ">负载阻抗 Z (Ω)</label><input id="xoFcZ" type="number" step="0.1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="xoFcBtn" class="btn" type="button">反算分频点</button></div>
+      </div>
+      <div id="xoFcOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3639,6 +3729,7 @@
 <script src="js/psycho.js"></script>
 <script src="js/pasystem.js"></script>
 <script src="js/speakerbox.js"></script>
+<script src="js/crossover.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
@@ -3668,6 +3759,7 @@
 <script src="js/view-pasystem.js"></script>
 <script src="js/view-noisemap.js"></script>
 <script src="js/view-speakerbox.js"></script>
+<script src="js/view-crossover.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>

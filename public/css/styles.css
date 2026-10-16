@@ -1861,6 +1861,19 @@ select.btn:focus,
 .topbar-actions .nav-parent.nav-blog .nav-caret { width: 10px; height: 6px; }
 .topbar-actions .nav-group.open > .nav-parent .nav-caret { transform: rotate(180deg); }
 
+/* 分频器元件清单小标签 */
+.xo-chip {
+  display: inline-block;
+  margin: 3px 6px 3px 0;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-soft);
+  font-size: 12.5px;
+  color: var(--text-soft);
+}
+.xo-chip b { color: var(--primary-d); font-weight: 600; margin-right: 3px; }
+
 /* 无障碍：仅供读屏/搜索引擎 */
 .sr-only {
   position: absolute;
