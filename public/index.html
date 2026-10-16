@@ -59,6 +59,7 @@
         <div class="nav-menu">
           <a href="#/rt60" data-route="rt60"><span class="nm-t">混响时间 RT60</span><small class="nm-d">Sabine / Eyring · 材料吸声库 · 用途推荐值</small></a>
           <a href="#/stc" data-route="stc"><span class="nm-t">墙体隔声量 Rw / STC</span><small class="nm-d">GB/T 50121 计权隔声量 · ASTM E413</small></a>
+          <a href="#/roomq" data-route="roomq"><span class="nm-t">厅堂与扩声音质</span><small class="nm-d">RT60/EDT · C50/C80 · D50 · G · 扩声预测</small></a>
         </div>
       </div>
 
@@ -71,6 +72,17 @@
           <a href="#/barrier" data-route="barrier"><span class="nm-t">声屏障衰减</span><small class="nm-d">菲涅尔数法 · 插入损失 · 所需高度反算</small></a>
           <a href="#/vibration" data-route="vibration"><span class="nm-t">弹簧减振</span><small class="nm-d">隔振效率计算书 · 静变形法 / 频率比法</small></a>
           <a href="#/env" data-route="env"><span class="nm-t">环境噪声评价</span><small class="nm-d">Leq/L10/L90 · Ldn/Lden · NR · 户外传播 · 交通噪声</small></a>
+          <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true">
+          心理与声品质
+          <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <div class="nav-menu">
+          <a href="#/psycho" data-route="psycho"><span class="nm-t">心理声学 / 声品质</span><small class="nm-d">响度 · 尖锐度 · 粗糙度/抖动度 · PNL · STIPA</small></a>
         </div>
       </div>
     </nav>
@@ -553,6 +565,245 @@
         <div class="field field-auto"><label>&nbsp;</label><button id="tBtn" class="btn primary" type="button">计算 L_pA</button></div>
       </div>
       <div id="tOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-psycho" data-view="psycho" hidden>
+    <div class="page-head">
+      <h2>心理声学 / 声品质</h2>
+      <p class="hint">响度 · 尖锐度 · 粗糙度 / 抖动度 · 感觉噪声级 PNL · 语言传输指数 STIPA</p>
+    </div>
+
+    <section class="card">
+      <h3>响度级 ↔ 响度 换算</h3>
+      <p class="hint">响度级 L_N（phon）与响度 N（sone）精确换算：N = 2^((L_N−40)/10)。1 sone = 40 phon。</p>
+      <div class="field-row">
+        <div class="field"><label for="psPhon">响度级 (phon)</label><input id="psPhon" type="number" step="0.1" placeholder="如 60" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="psPhonBtn" class="btn" type="button">→ sone</button></div>
+        <div class="field"><label for="psSone">响度 (sone)</label><input id="psSone" type="number" step="0.1" placeholder="如 4" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="psSoneBtn" class="btn" type="button">→ phon</button></div>
+      </div>
+      <div id="psConvOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>总响度估算 / 尖锐度（倍频带，工程近似）</h3>
+      <p class="hint">输入各倍频带声压级（dB），估算总响度（sones，仅供参考）与尖锐度（acum）。高频占比越高越尖锐。</p>
+      <div class="field-row">
+        <div class="field"><label for="lo31">31.5 Hz</label><input id="lo31" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo63">63 Hz</label><input id="lo63" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo125">125 Hz</label><input id="lo125" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo250">250 Hz</label><input id="lo250" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo500">500 Hz</label><input id="lo500" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo1k">1000 Hz</label><input id="lo1k" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo2k">2000 Hz</label><input id="lo2k" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo4k">4000 Hz</label><input id="lo4k" type="number" step="0.1" /></div>
+        <div class="field"><label for="lo8k">8000 Hz</label><input id="lo8k" type="number" step="0.1" /></div>
+      </div>
+      <div class="btn-row"><button id="psLoudBtn" class="btn primary" type="button">计算</button></div>
+      <div id="psLoudOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>粗糙度 / 抖动度（调制感知，经典模型）</h3>
+      <p class="hint">粗糙度峰值在调制频率≈70Hz，抖动度峰值≈4Hz。需给出调制频率、调制深度(0~1)与整体响度 N（sones）。</p>
+      <div class="field-row">
+        <div class="field"><label for="psFmod">调制频率 f_mod (Hz)</label><input id="psFmod" type="number" step="0.1" value="70" /></div>
+        <div class="field"><label for="psDepth">调制深度 m (0~1)</label><input id="psDepth" type="number" step="0.05" value="1" /></div>
+        <div class="field"><label for="psN">整体响度 N (sones)</label><input id="psN" type="number" step="0.1" value="10" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="psRuffBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="psRuffOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>感觉噪声级 PNL（倍频带，简化）</h3>
+      <p class="hint">基于 1/1 倍频带声压级估算感觉噪声级 PNL（dB）。低/高频比中频更"吵"，低带贡献更大。</p>
+      <div class="field-row">
+        <div class="field"><label for="pn31">31.5 Hz</label><input id="pn31" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn63">63 Hz</label><input id="pn63" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn125">125 Hz</label><input id="pn125" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn250">250 Hz</label><input id="pn250" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn500">500 Hz</label><input id="pn500" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn1k">1000 Hz</label><input id="pn1k" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn2k">2000 Hz</label><input id="pn2k" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn4k">4000 Hz</label><input id="pn4k" type="number" step="0.1" /></div>
+        <div class="field"><label for="pn8k">8000 Hz</label><input id="pn8k" type="number" step="0.1" /></div>
+      </div>
+      <div class="btn-row"><button id="psPnlBtn" class="btn primary" type="button">计算 PNL</button></div>
+      <div id="psPnlOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>语言传输指数 STIPA / STI</h3>
+      <p class="hint">输入 14 个调制带（0.63~12.5Hz）的调制传输 MTF（0~1，逗号/空格分隔），计算 STI 并评级。MTF=1 传输完美，0 完全丢失。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="psMtf">MTF 列表（14 个，0~1）</label>
+          <input id="psMtf" type="text" placeholder="例：0.9 0.9 0.95 0.95 0.95 0.95 0.9 0.9 0.85 0.8 0.7 0.6 0.5 0.4" />
+        </div>
+      </div>
+      <div class="btn-row"><button id="psStiBtn" class="btn primary" type="button">计算 STI</button></div>
+      <div id="psStiOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-vibeval" data-view="vibeval" hidden>
+    <div class="page-head">
+      <h2>振动评价</h2>
+      <p class="hint">振动级换算 · ISO 2631 频率计权与计权加速度 aw · VDV · 暴露限值 · GB 10070 环境振动标准</p>
+    </div>
+
+    <section class="card">
+      <h3>振动级换算与 a / v / d 互算</h3>
+      <p class="hint">参考值：加速度 a₀=10⁻⁶ m/s²、速度 v₀=10⁻⁹ m/s、位移 d₀=10⁻¹² m。给定频率可互算加速度/速度/位移。</p>
+      <div class="field-row">
+        <div class="field"><label for="vaAccel">加速度 a (m/s²)</label><input id="vaAccel" type="number" step="any" value="0.01" /></div>
+        <div class="field"><label for="vaFreq">频率 f (Hz)</label><input id="vaFreq" type="number" step="0.1" value="10" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="vaBtn" class="btn primary" type="button">换算</button></div>
+      </div>
+      <div id="vaOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>计权振动级与计权加速度 aw（倍频带，近似）</h3>
+      <p class="hint">输入各倍频带加速度级（dB），按 ISO 2631-1 频率计权（Wb 建筑物/连续、Wc 冲击、Wd 车间、We 船舶）求计权总振动级与计权 RMS 加速度 aw。</p>
+      <div class="field-row">
+        <div class="field"><label for="vb1">1 Hz</label><input id="vb1" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb2">2 Hz</label><input id="vb2" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb4">4 Hz</label><input id="vb4" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb8">8 Hz</label><input id="vb8" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb16">16 Hz</label><input id="vb16" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb31">31.5 Hz</label><input id="vb31" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb63">63 Hz</label><input id="vb63" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb125">125 Hz</label><input id="vb125" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb250">250 Hz</label><input id="vb250" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb500">500 Hz</label><input id="vb500" type="number" step="0.1" /></div>
+        <div class="field"><label for="vb1k">1000 Hz</label><input id="vb1k" type="number" step="0.1" /></div>
+        <div class="field"><label for="vbType">计权类型</label>
+          <select id="vbType"><option value="Wb">Wb（建筑物/连续）</option><option value="Wc">Wc（冲击/爆破）</option><option value="Wd">Wd（车间/精密）</option><option value="We">We（船舶）</option></select>
+        </div>
+      </div>
+      <div class="btn-row"><button id="vbBtn" class="btn primary" type="button">计算</button></div>
+      <div id="vbOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>人体暴露评价（ISO 2631-1）</h3>
+      <p class="hint">由计权 RMS 加速度 aw（m/s²）与每日暴露时长(h)评价。8h 行动值 0.5、暴露限值 1.15 m/s²；按 √(t) 缩放。</p>
+      <div class="field-row">
+        <div class="field"><label for="exAw">aw (m/s²)</label><input id="exAw" type="number" step="0.01" value="0.5" /></div>
+        <div class="field"><label for="exT">暴露时长 (h)</label><input id="exT" type="number" step="0.5" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="exBtn" class="btn primary" type="button">评价</button></div>
+      </div>
+      <div id="exOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>振动剂量值 VDV</h3>
+      <p class="hint">VDV = (∫ a_w⁴ dt)^(1/4)，稳态近似 VDV = a_rms·Cf·T^¼（T 秒）。常用限值：8h 行动值 8.5、暴露限值 17（m/s^1.75）。</p>
+      <div class="field-row">
+        <div class="field"><label for="vdAw">aw (m/s²)</label><input id="vdAw" type="number" step="0.01" value="0.5" /></div>
+        <div class="field"><label for="vdT">时长 T (s)</label><input id="vdT" type="number" step="1" value="28800" /></div>
+        <div class="field"><label for="vdCf">波峰因子 Cf</label><input id="vdCf" type="number" step="0.1" value="1.4" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="vdBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="vdOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>GB 10070 城市区域环境振动标准</h3>
+      <p class="hint">铅垂向 Z 计权振动级（dB，快档）对照标准限值。昼/夜分别判定达标。</p>
+      <div class="field-row">
+        <div class="field"><label for="gbVL">实测振动级 VL (dB)</label><input id="gbVL" type="number" step="0.1" value="70" /></div>
+        <div class="field"><label for="gbZone">适用地带</label>
+          <select id="gbZone">
+            <option value="特殊住宅区">特殊住宅区</option>
+            <option value="居民文教区" selected>居民文教区</option>
+            <option value="混合区/商业中心区">混合区/商业中心区</option>
+            <option value="工业集中区">工业集中区</option>
+            <option value="交通干线道路两侧">交通干线道路两侧</option>
+            <option value="铁路干线两侧">铁路干线两侧</option>
+          </select>
+        </div>
+        <div class="field"><label for="gbDN">昼/夜</label>
+          <select id="gbDN"><option value="day">昼间</option><option value="night">夜间</option></select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="gbBtn" class="btn primary" type="button">判定</button></div>
+      </div>
+      <div id="gbOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-roomq" data-view="roomq" hidden>
+    <div class="page-head">
+      <h2>厅堂与扩声音质</h2>
+      <p class="hint">混响/早期衰减(RT60/EDT) · 清晰度(C50/C80) · 定义度(D50) · 中心时间(Ts) · 强度因子(G) · 扩声系统预测</p>
+    </div>
+
+    <section class="card">
+      <h3>混响时间 RT60 与早期衰减 EDT</h3>
+      <p class="hint">由能量衰减曲线不同区间的时间(s)外推：RT60 = 6·T₁₀ = 3·T₂₀ = 2·T₃₀；EDT = 6·T₁₀（仅前 10dB 斜率）。</p>
+      <div class="field-row">
+        <div class="field"><label for="rqT10">T₁₀ (s)</label><input id="rqT10" type="number" step="0.1" placeholder="前 10dB 时间" /></div>
+        <div class="field"><label for="rqT20">T₂₀ (s)</label><input id="rqT20" type="number" step="0.1" placeholder="前 20dB 时间" /></div>
+        <div class="field"><label for="rqT30">T₃₀ (s)</label><input id="rqT30" type="number" step="0.1" placeholder="前 30dB 时间" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rqRtBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="rqRtOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>清晰度 C50 / C80 与定义度 D50</h3>
+      <p class="hint">输入脉冲响应积分"线性能量"（可带相对量纲）：E₅₀(0–50ms)、E₈₀(0–80ms)、E_tot（总）。C50=10lg(E₅₀/(E_tot−E₅₀))，C80=10lg(E₈₀/(E_tot−E₈₀))，D50=E₅₀/E_tot×100%。</p>
+      <div class="field-row">
+        <div class="field"><label for="rqE50">E₅₀ (0–50ms)</label><input id="rqE50" type="number" step="any" placeholder="如 0.5" /></div>
+        <div class="field"><label for="rqE80">E₈₀ (0–80ms)</label><input id="rqE80" type="number" step="any" placeholder="如 0.8" /></div>
+        <div class="field"><label for="rqEtot">E_tot（总）</label><input id="rqEtot" type="number" step="any" placeholder="如 1.0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rqClarityBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="rqClarityOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>中心时间 Ts</h3>
+      <p class="hint">Ts = Σ t·E(t) / Σ E(t)。输入逐点"时间(ms)"与对应"能量(dB)"，逗号/空格分隔（成对）。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="rqTsT">时间 t (ms，逗号分隔)</label><input id="rqTsT" type="text" placeholder="例：5 20 50 100 200 500 1000" />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="rqTsL">能量 E(t) (dB，逗号分隔)</label><input id="rqTsL" type="text" placeholder="例：-5 -8 -12 -18 -25 -32 -38" />
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rqTsBtn" class="btn primary" type="button">计算 Ts</button></div>
+      </div>
+      <div id="rqTsOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>强度因子 G</h3>
+      <p class="hint">G = Lp − Lw + 10lg(4πr²)（点声源，r 米）。反映声场"响度"相对于参考距离的增益(或衰减)。</p>
+      <div class="field-row">
+        <div class="field"><label for="rqGLp">测点 Lp (dB)</label><input id="rqGLp" type="number" step="0.1" placeholder="如 80" /></div>
+        <div class="field"><label for="rqGLw">声源 Lw (dB)</label><input id="rqGLw" type="number" step="0.1" placeholder="如 100" /></div>
+        <div class="field"><label for="rqGr">距离 r (m)</label><input id="rqGr" type="number" step="0.1" placeholder="如 10" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rqGBtn" class="btn primary" type="button">计算 G</button></div>
+      </div>
+      <div id="rqGOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>扩声系统声场预测</h3>
+      <p class="hint">给定声源 Lw、指向性 Q、听众距离 r，以及房间表面积 S 与平均吸声系数 α：求房间常数 R、临界距离 r_c、该处声压级 Lp（直达+混响）。</p>
+      <div class="field-row">
+        <div class="field"><label for="rqLw">声源 Lw (dB)</label><input id="rqLw" type="number" step="0.1" value="100" /></div>
+        <div class="field"><label for="rqQ">指向性 Q</label><input id="rqQ" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="rqRr">听众距离 r (m)</label><input id="rqRr" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="rqS">房间表面积 S (m²)</label><input id="rqS" type="number" step="1" value="1000" /></div>
+        <div class="field"><label for="rqA">平均吸声 α</label><input id="rqA" type="number" step="0.01" value="0.3" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rqReinBtn" class="btn primary" type="button">预测</button></div>
+      </div>
+      <div id="rqReinOut" class="result-line" hidden></div>
     </section>
   </section>
 
@@ -2162,6 +2413,9 @@
 <script src="js/muffler.js"></script>
 <script src="js/dbcalc.js"></script>
 <script src="js/env.js"></script>
+<script src="js/psycho.js"></script>
+<script src="js/vibeval.js"></script>
+<script src="js/roomq.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -2173,6 +2427,9 @@
 <script src="js/view-muffler.js"></script>
 <script src="js/view-dbcalc.js"></script>
 <script src="js/view-env.js"></script>
+<script src="js/view-psycho.js"></script>
+<script src="js/view-vibeval.js"></script>
+<script src="js/view-roomq.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
