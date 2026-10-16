@@ -17,6 +17,7 @@
  *   #/roomq         厅堂与扩声音质
  *   #/iso3382       厅堂音质参数量测（ISO 3382）
  *   #/sim           室内音质模拟（几何声学）
+ *   #/sim-*         声学模拟器（10 个动态演示：共鸣器/行波/频谱/消声/FXLMS 等）
  */
 (function () {
   'use strict';
@@ -54,7 +55,17 @@
     noisemap: 'view-noisemap',
     sim: 'view-sim',
     simfx: 'view-simfx',
-    aural: 'view-aural'
+    aural: 'view-aural',
+    'sim-helmholtz': 'view-sim-helmholtz',
+    'sim-impedance': 'view-sim-impedance',
+    'sim-octave': 'view-sim-octave',
+    'sim-hvac': 'view-sim-hvac',
+    'sim-fxlms': 'view-sim-fxlms',
+    'sim-drone': 'view-sim-drone',
+    'sim-micarray': 'view-sim-micarray',
+    'sim-wedge': 'view-sim-wedge',
+    'sim-tube': 'view-sim-tube',
+    'sim-echo': 'view-sim-echo'
   };
 
   var TITLES = {
@@ -90,7 +101,17 @@
     noisemap: '环境噪声进阶 · 声学计算工具箱',
     sim: '室内音质模拟彩图 · 声学计算工具箱',
     simfx: '声场粒子动画 · 声学计算工具箱',
-    aural: '声学可听化 · 声学计算工具箱'
+    aural: '声学可听化 · 声学计算工具箱',
+    'sim-helmholtz': '亥姆霍兹共鸣器模拟器 · 声学计算工具箱',
+    'sim-impedance': '声阻抗反射/透射模拟器 · 声学计算工具箱',
+    'sim-octave': '倍频程频谱模拟器 · 声学计算工具箱',
+    'sim-hvac': 'HVAC 消声器模拟器 · 声学计算工具箱',
+    'sim-fxlms': '主动降噪 FXLMS 模拟器 · 声学计算工具箱',
+    'sim-drone': '无人机噪声模拟器 · 声学计算工具箱',
+    'sim-micarray': '麦克风阵列波束模拟器 · 声学计算工具箱',
+    'sim-wedge': '消声室吸声楔模拟器 · 声学计算工具箱',
+    'sim-tube': '声阻抗管模拟器 · 声学计算工具箱',
+    'sim-echo': '回声测距模拟器 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -126,7 +147,17 @@
     { route: 'noisemap', get: function () { return window.NoiseMapView; } },
     { route: 'sim', get: function () { return window.SimView; } },
     { route: 'simfx', get: function () { return window.SimFxView; } },
-    { route: 'aural', get: function () { return window.AuralView; } }
+    { route: 'aural', get: function () { return window.AuralView; } },
+    { route: 'sim-helmholtz', get: function () { return window.SimHelmholtzView; } },
+    { route: 'sim-impedance', get: function () { return window.SimImpedanceView; } },
+    { route: 'sim-octave', get: function () { return window.SimOctaveView; } },
+    { route: 'sim-hvac', get: function () { return window.SimHvacView; } },
+    { route: 'sim-fxlms', get: function () { return window.SimFxlmsView; } },
+    { route: 'sim-drone', get: function () { return window.SimDroneView; } },
+    { route: 'sim-micarray', get: function () { return window.SimMicarrayView; } },
+    { route: 'sim-wedge', get: function () { return window.SimWedgeView; } },
+    { route: 'sim-tube', get: function () { return window.SimTubeView; } },
+    { route: 'sim-echo', get: function () { return window.SimEchoView; } }
   ];
 
   function parse() {

@@ -33,7 +33,7 @@ assert('router.js 中可解析出 VIEWS', !!viewsBlock);
 var routes = [];
 if (viewsBlock) {
   var body = viewsBlock[1];
-  var re = /(\w+)\s*:\s*'view-[\w-]+'/g, m;
+  var re = /'?([\w-]+)'?\s*:\s*'view-[\w-]+'/g, m;
   while ((m = re.exec(body)) !== null) routes.push(m[1]);
 }
 assert('VIEWS 路由数量 >= 10', routes.length >= 10);
