@@ -213,18 +213,28 @@
 - **浮筑楼板 / 弹性垫层**：撞击声改进量 ΔL(f) = 20lg(f/f₀) 与共振频率 f₀ = (1/2π)√(s′/m)。
 - **组合与侧向传声**：多路径能量叠加 R_total = −10lg(Σ10^(−Rᵢ/10))，低频常由最薄弱（侧向）路径主导。
 
+### ⑳ 设备与管道声学（`#/hvacnoise`）
+
+> 面向机房 / 风系统噪声控制的工程估算，与「消声器」「环境噪声」模块互补。
+
+- **设备噪声 → 房间声压级**：Lp = Lw + 10lg[Q/(4πr²) + 4/R]，17 频带逐带计算并汇总 A 声级。
+- **风管路径衰减**：直管（L×衰减率）、弯头（截止频率 fc = c₀/2w 之上每倍频程约 +3 dB，封顶 10 dB）、末端反射（开口端损失，封顶 25 dB）逐频带叠加 → 出口 Lw → 房间声压级。
+- **风管元件传声损失**：直管 / 弯头 / 末端反射单件速算。
+- **声功率测定 ISO 3744 / 3746**：Lw = L̄p + 10lg(S/S₀) − K₁ − K₂，反射面上半球面 S = 2πr²、矩形包络测量面，含背景噪声与环境修正。
+
 ### 计算内核与测试
 
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
 - `public/js/perforation.js`、`absorber.js`、`room.js`、`insulation.js`、`barrier.js`、`vibration.js` — 各模块计算内核（均为 UMD）
 - `public/js/smallroom.js`、`absdesign.js` — 小房间声场与吸声结构设计内核（UMD，TMM / 微穿孔板 / 多孔模型）
 - `public/js/insdesign.js` — 隔声与撞击声进阶内核（UMD，质量定律/吻合频率/双层共振/隔声罩/浮筑/组合传声）
+- `public/js/hvacnoise.js` — 设备与管道声学内核（UMD，A 计权/房间常数/风管元件 TL/管系叠加/ISO 3744-3746 声功率）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
 - `public/js/sim.js` — 室内音质模拟内核（几何声学：房间几何/Sabine/Eyring+空气吸收、三维光线追踪（俄罗斯轮盘赌 + 朗伯散射）、逐带网格指标、接收点 ISO 3382、Lundeby 截断补偿；含轴测投影 `isoFit/isoProject` 与色标刻度 `niceRange/scaleTicks`）
 - `public/js/aural.js` — 声学可听化内核（迭代基-2 FFT、倍频带频谱整形、由回波/RT 合成脉冲响应、FFT 快速卷积、A 计权降噪量、16 bit WAV 编码）
 - `public/js/gif.js` — 零依赖 GIF89a 编码器（8×8×4 调色板 + Bayer 抖动 + 变字长 LZW + 循环扩展）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
-- `node tests/*.test.js` 共 22 个测试文件、**1200+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页改版结构（检索栏 / 轮播 / 友链下拉））。
+- `node tests/*.test.js` 共 23 个测试文件、**1230+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计））。
 
 ## 目录结构
 

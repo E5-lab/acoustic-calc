@@ -88,6 +88,7 @@
           <a href="#/vibration" data-route="vibration"><span class="nm-t">弹簧减振</span><small class="nm-d">隔振效率计算书 · 静变形法 / 频率比法</small></a>
           <a href="#/env" data-route="env"><span class="nm-t">环境噪声评价</span><small class="nm-d">Leq/L10/L90 · Ldn/Lden · NR · 户外传播 · 交通噪声</small></a>
           <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
+          <a href="#/hvacnoise" data-route="hvacnoise"><span class="nm-t">设备与管道声学</span><small class="nm-d">设备噪声→房间Lp · 风管衰减 · 声功率测定</small></a>
         </div>
       </div>
 
@@ -184,7 +185,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、20 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、21 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -407,6 +408,19 @@
             <span class="mc-desc">阻性消声器（GB/T 50087-2013 式 6.3.1，附别洛夫式对照、高频失效折减、流速与压力损失校核）、抗性消声器（扩张室与共振腔）与阻抗复合验算（逐频带相加 → A 计权插入损失）。</span>
           </span>
         </a>
+        <a class="module-card" href="#/hvacnoise">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="7" y="20" width="14" height="10" rx="2" />
+              <path d="M21 25h6l8-6v16l-8-6h-6z" />
+              <path d="M38 19v12M42 22v6" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">设备与管道声学 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">设备声功率 → 房间声压级（直达+混响）、风管路径衰减（直管/弯头/末端反射逐频带叠加）、风管元件传声损失、ISO 3744/3746 声功率测定（测量面与背景/环境修正）。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -478,9 +492,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 22 个文件 / 1200+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 23 个文件 / 1230+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3191,6 +3205,81 @@
     </section>
   </section>
 
+  <section class="view" id="view-hvacnoise" data-view="hvacnoise" hidden>
+    <div class="page-head">
+      <h2>设备与管道声学</h2>
+      <p class="hint">设备声功率 → 房间声压级 · 风管路径衰减（直管 / 弯头 / 末端反射）· 风管元件传声损失 · ISO 3744/3746 声功率测定。工程估算，供方案比选与初步设计。</p>
+    </div>
+
+    <section class="card">
+      <h3>设备噪声 → 房间声压级</h3>
+      <p class="hint">Lp = Lw + 10 lg[Q/(4πr²) + 4/R]，含直达声与混响声叠加，R 为房间常数（可用 RT60 模块由 S·ᾱ 估算）。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;"><label for="hnLw">声功率谱 Lw（17 频带 dB，逗号分隔，100–4000 Hz）</label><input id="hnLw" type="text" value="82,84,86,88,89,88,86,84,81,78,75,71,67,63,59,55,51" /></div>
+        <div class="field"><label for="hnR">房间常数 R (m²)</label><input id="hnR" type="number" step="1" value="31.7" /></div>
+        <div class="field"><label for="hnQ">指向性因数 Q</label><input id="hnQ" type="number" step="0.5" value="1" /></div>
+        <div class="field"><label for="hnDist">测点距离 r (m)</label><input id="hnDist" type="number" step="0.1" value="3" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnDevBtn" class="btn primary" type="button">计算房间声压级</button></div>
+      </div>
+      <div id="hnDevOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>风管路径衰减</h3>
+      <p class="hint">沿「入口 → 直管 → 弯头 → 风口出口」顺序逐频带叠加传声损失，得到出口声功率谱；填入接收房间参数后进一步估算房间声压级。弯头 / 出口可留空跳过。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;"><label for="hnPathLw">入口声功率谱 Lw（17 频带 dB，逗号分隔）</label><input id="hnPathLw" type="text" value="82,84,86,88,89,88,86,84,81,78,75,71,67,63,59,55,51" /></div>
+        <div class="field"><label for="hnSegL">直管长度 L (m)</label><input id="hnSegL" type="number" step="0.5" value="8" /></div>
+        <div class="field"><label for="hnSegRate">直管衰减率 (dB/m)</label><input id="hnSegRate" type="number" step="0.1" value="0.6" /></div>
+        <div class="field"><label for="hnElbowW">弯头管宽 (m，可空)</label><input id="hnElbowW" type="number" step="0.05" value="0.3" /></div>
+        <div class="field"><label for="hnEndD">风口出口直径 (m，可空)</label><input id="hnEndD" type="number" step="0.05" value="0.3" /></div>
+        <div class="field"><label for="hnEndFlanged">出口是否设法兰</label><select id="hnEndFlanged"><option value="no">无法兰</option><option value="yes">设法兰</option></select></div>
+        <div class="field"><label for="hnPathR">接收房间常数 R (m²)</label><input id="hnPathR" type="number" step="1" value="31.7" /></div>
+        <div class="field"><label for="hnPathQ">指向性因数 Q</label><input id="hnPathQ" type="number" step="0.5" value="1" /></div>
+        <div class="field"><label for="hnPathDist">测点距离 r (m)</label><input id="hnPathDist" type="number" step="0.1" value="3" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnPathBtn" class="btn primary" type="button">计算管系衰减</button></div>
+      </div>
+      <div id="hnPathOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>风管元件传声损失</h3>
+      <p class="hint">直管 TL = L × 衰减率；弯头以管宽对应截止频率 fc = c₀/(2w) 为界，其上每倍频程约 +3 dB（封顶 10 dB）；末端反射为开口端反射损失（封顶 25 dB）。</p>
+      <div class="field-row">
+        <div class="field"><label for="hnTL_L">直管长度 (m)</label><input id="hnTL_L" type="number" step="0.5" value="10" /></div>
+        <div class="field"><label for="hnTL_Rate">衰减率 (dB/m)</label><input id="hnTL_Rate" type="number" step="0.1" value="0.6" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnTL1Btn" class="btn primary" type="button">直管 TL</button></div>
+      </div>
+      <div id="hnTL1Out" class="result-line" hidden></div>
+      <div class="field-row">
+        <div class="field"><label for="hnTL_F">频率 (Hz)</label><input id="hnTL_F" type="number" step="10" value="2000" /></div>
+        <div class="field"><label for="hnTL_W">弯头管宽 (m)</label><input id="hnTL_W" type="number" step="0.05" value="0.3" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnTL2Btn" class="btn primary" type="button">弯头 TL</button></div>
+      </div>
+      <div id="hnTL2Out" class="result-line" hidden></div>
+      <div class="field-row">
+        <div class="field"><label for="hnTL_F2">频率 (Hz)</label><input id="hnTL_F2" type="number" step="10" value="2000" /></div>
+        <div class="field"><label for="hnTL_D">出口直径 (m)</label><input id="hnTL_D" type="number" step="0.05" value="0.3" /></div>
+        <div class="field"><label for="hnTL_Flanged">是否设法兰</label><select id="hnTL_Flanged"><option value="no">无法兰</option><option value="yes">设法兰</option></select></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnTL3Btn" class="btn primary" type="button">末端反射 TL</button></div>
+      </div>
+      <div id="hnTL3Out" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>声功率测定 ISO 3744 / 3746</h3>
+      <p class="hint">Lw = L̄p + 10 lg(S/S₀) − K₁ − K₂，S₀ = 1 m²。反射面上半球面 S = 2πr²；矩形包络面按设备尺寸 + 测量距离展开（顶面 + 四侧）。K₁ 为背景噪声修正、K₂ 为环境（反射）修正。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;"><label for="hnSwLp">测量面平均声压级（6 倍频带 dB，逗号分隔，125–4000 Hz）</label><input id="hnSwLp" type="text" value="72,74,76,75,71,66" /></div>
+        <div class="field"><label for="hnSwS">测量面面积 S (m²)</label><input id="hnSwS" type="number" step="0.1" value="25.13" /></div>
+        <div class="field"><label for="hnSwK1">背景修正 K₁ (dB)</label><input id="hnSwK1" type="number" step="0.5" value="0" /></div>
+        <div class="field"><label for="hnSwK2">环境修正 K₂ (dB)</label><input id="hnSwK2" type="number" step="0.5" value="0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="hnSwBtn" class="btn primary" type="button">计算声功率级</button></div>
+      </div>
+      <div id="hnSwOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3213,6 +3302,7 @@
 <script src="js/room.js"></script>
 <script src="js/insulation.js"></script>
 <script src="js/insdesign.js"></script>
+<script src="js/hvacnoise.js"></script>
 <script src="js/barrier.js"></script>
 <script src="js/levels.js"></script>
 <script src="js/vibration.js"></script>
@@ -3245,6 +3335,7 @@
 <script src="js/view-smallroom.js"></script>
 <script src="js/view-absdesign.js"></script>
 <script src="js/view-insdesign.js"></script>
+<script src="js/view-hvacnoise.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
