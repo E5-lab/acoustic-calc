@@ -91,6 +91,7 @@
           <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
           <a href="#/hvacnoise" data-route="hvacnoise"><span class="nm-t">设备与管道声学</span><small class="nm-d">设备噪声→房间Lp · 风管衰减 · 声功率测定</small></a>
           <a href="#/noisemap" data-route="noisemap"><span class="nm-t">环境噪声进阶</span><small class="nm-d">等值线图 · 交通噪声 · GB 3096/55016 判定</small></a>
+          <a href="#/spectrum" data-route="spectrum"><span class="nm-t">频谱分析与计权</span><small class="nm-d">倍频程归并 · A/C/Z 计权 · NR / NC 评级</small></a>
         </div>
       </div>
 
@@ -192,7 +193,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、28 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、29 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -453,6 +454,21 @@
             <span class="mc-desc">多点声源噪声等值线图（ISO 9613-2 传播 + marching squares 等值线，可导出 PNG）、道路交通噪声线声源模型、GB 3096 声环境功能区与 GB 55016 室内噪声限值达标判定。</span>
           </span>
         </a>
+        <a class="module-card" href="#/spectrum">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 40h36" stroke-linecap="round" />
+              <rect x="10" y="26" width="5" height="14" rx="1" />
+              <rect x="18" y="18" width="5" height="22" rx="1" />
+              <rect x="26" y="10" width="5" height="30" rx="1" />
+              <rect x="34" y="22" width="5" height="18" rx="1" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">频谱分析与计权 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">把窄带 / 任意频率点按能量求和归并到 1/1 或 1/3 倍频程（ISO 266 标称频率与带宽，含频谱图）；A / C / Z 计权网络按 IEC 61672-1 解析式施加，给出总级、L<sub>C</sub> − L<sub>A</sub> 低频含量、频谱重心与 PSIL 语言干扰级；NR 曲线评级（ISO 1996 解析式 L = a + b·N）与 NC 曲线评级（Beranek 表，取「任一频带触碰的最高曲线」）；1/1 ↔ 1/3 双向拆分合并（能量守恒）；分段等效连续声级 L<sub>eq</sub> 合成；计权网络速查表。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -590,9 +606,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 30 个文件 / 1800+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 31 个文件 / 1900+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -4144,6 +4160,149 @@
     </section>
   </section>
 
+  <section class="view" id="view-spectrum" data-view="spectrum" hidden>
+    <div class="page-head">
+      <h2>频谱分析与计权</h2>
+      <p class="hint">把测得的窄带数据整理成能下结论的形式：归并到倍频程、施加 A/C/Z 计权、对照 NR / NC 曲线评级。全部按能量运算，归并前后总能量守恒。</p>
+    </div>
+
+    <section class="card">
+      <h3>频带归并</h3>
+      <p class="hint">粘贴任意频率点（窄带 FFT、1/3 倍频程、或零散读数），按能量求和归并到 1/1 或 1/3 倍频程。每行一条「频率 声压级」，可用空格、逗号、制表符或分号分隔，<code>#</code> 开头为注释。</p>
+      <div class="field-row">
+        <div class="field"><label for="spFrac">目标频带</label>
+          <select id="spFrac">
+            <option value="3">1/3 倍频程</option>
+            <option value="1">1/1 倍频程</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnMerge" class="btn primary" type="button">归并并绘图</button></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnW" class="btn" type="button">计权与指标</button></div>
+      </div>
+      <div class="field-row">
+        <div class="field" style="flex:1 1 100%"><label for="spText">频谱数据（频率 声压级）</label>
+          <textarea id="spText" rows="8" spellcheck="false">
+# 频率 Hz   声压级 dB（示例：风机房实测）
+50    62
+63    65
+80    63
+100   60
+125   58
+160   55
+200   53
+250   51
+315   49
+400   47
+500   45
+630   43
+800   41
+1000  39
+1250  37
+1600  35
+2000  33
+2500  31
+3150  29
+4000  27
+5000  25
+6300  23
+8000  21</textarea>
+        </div>
+      </div>
+      <div id="spOutMerge" class="result-line" hidden></div>
+      <div id="spOutW" class="result-line" hidden></div>
+      <canvas id="spChart" height="280"></canvas>
+      <p class="hint">柱状为未计权频带级，橙线为 A 计权后。</p>
+    </section>
+
+    <section class="card">
+      <h3>NR / NC 评级</h3>
+      <p class="hint">填入 1/1 倍频程声压级，对照 NR 曲线（ISO 1996 解析式，31.5~8 kHz）或 NC 曲线（Beranek 表，63~8 kHz）评级。评级取「任一频带触碰的最高曲线」，不是各频带平均值。</p>
+      <div class="field-row">
+        <div class="field" style="flex:1 1 100%"><label for="spOct">1/1 倍频程数据（频率 声压级）</label>
+          <textarea id="spOct" rows="10" spellcheck="false">
+31.5  58
+63    57
+125   52
+250   47
+500   42
+1000  38
+2000  34
+4000  30
+8000  26</textarea>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnNR" class="btn primary" type="button">NR 评级</button></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnNC" class="btn primary" type="button">NC 评级</button></div>
+      </div>
+      <div id="spOutNR" class="result-line" hidden></div>
+      <div id="spOutNC" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>1/1 ↔ 1/3 双向转换</h3>
+      <p class="hint">1/1 → 1/3 时假定带内频谱平坦，每个 1/3 频带减 10·lg 3 = 4.77 dB；1/3 → 1/1 为三个频带能量求和。两个方向总能量守恒。</p>
+      <div class="field-row">
+        <div class="field"><label for="spConvMode">方向</label>
+          <select id="spConvMode">
+            <option value="to3">1/1 → 1/3（拆分）</option>
+            <option value="to1">1/3 → 1/1（合并）</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnConv" class="btn primary" type="button">转换</button></div>
+      </div>
+      <div class="field-row">
+        <div class="field" style="flex:1 1 100%"><label for="spConvText">频谱数据（频率 声压级）</label>
+          <textarea id="spConvText" rows="10" spellcheck="false">
+31.5  58
+63    57
+125   52
+250   47
+500   42
+1000  38
+2000  34
+4000  30
+8000  26</textarea>
+        </div>
+      </div>
+      <div id="spOutConv" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>分段等效连续声级</h3>
+      <p class="hint">L<sub>eq</sub> = 10·lg[ Σ tᵢ·10^(Lᵢ/10) / Σ tᵢ ]。每行一条「声压级 时长」，时长可省略（按等权处理）。适用于把不同工况的测量段合成为全天的等效声级。</p>
+      <div class="field-row">
+        <div class="field" style="flex:1 1 100%"><label for="spSegText">数据（声压级 时长）</label>
+          <textarea id="spSegText" rows="7" spellcheck="false">
+# 声压级 dB   时长 h
+85  2
+72  6
+58  8
+45  8</textarea>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnSeg" class="btn primary" type="button">算 L<sub>eq</sub></button></div>
+      </div>
+      <div id="spOutSeg" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>计权网络速查表</h3>
+      <p class="hint">IEC 61672-1 的 A / C 计权由解析式给出，1 kHz 处均为 0 dB。A 计权模拟 40 phon 等响曲线反曲线；C 计权低频衰减很少，用于峰值与低频冲击；Z 为线性。</p>
+      <div class="field-row">
+        <div class="field"><label for="spWFrac">频带</label>
+          <select id="spWFrac">
+            <option value="1">1/1 倍频程</option>
+            <option value="3">1/3 倍频程</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnTable" class="btn primary" type="button">刷新</button></div>
+      </div>
+      <div id="spOutTable" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -4180,6 +4339,7 @@
 <script src="js/crossover.js"></script>
 <script src="js/linearray.js"></script>
 <script src="js/audiolevel.js"></script>
+<script src="js/spectrum.js"></script>
 <script src="js/wave.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
@@ -4213,6 +4373,7 @@
 <script src="js/view-crossover.js"></script>
 <script src="js/view-linearray.js"></script>
 <script src="js/view-audiolevel.js"></script>
+<script src="js/view-spectrum.js"></script>
 <script src="js/view-wave.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
