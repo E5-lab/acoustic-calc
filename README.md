@@ -157,7 +157,7 @@
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
 - `public/js/perforation.js`、`absorber.js`、`room.js`、`insulation.js`、`barrier.js`、`vibration.js` — 各模块计算内核（均为 UMD）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
-- `node tests/*.test.js` 共 14 个测试文件、**791 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑）。
+- `node tests/*.test.js` 共 15 个测试文件、**870 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览」三处登记一致，防止新增模块后首页漏更新）。
 
 ## 目录结构
 
@@ -222,6 +222,7 @@ node tests/room.test.js
 node tests/insulation.test.js
 node tests/barrier.test.js
 node tests/levels.test.js
+node tests/overview.test.js   # 首页总览一致性守护（新增模块后必跑）
 ```
 
 ## 计算方法与公式
@@ -295,6 +296,7 @@ wrangler deploy          # 读取 wrangler.toml，将 public/ 作为资源发布
 
 ## 更新记录
 
+- v2.2.1：**修复首页总览漏更新 + 加守护测试**——v2.2 新增的 5 个模块此前只进了顶栏二级菜单，首页总览仍停留在旧的「4 分组 / 8 模块」，需从菜单深入才能找到。本次将首页总览补齐为与顶栏完全对应的 **5 分组 / 14 模块**（新增「心理与声品质」分组卡区，并补插 `#/db`、`#/env`、`#/vibeval`、`#/roomq` 四张卡片），同步更新 hero 按钮、使用说明地址清单与计数文案。新增守护测试 **`tests/overview.test.js`（79 项断言）**：解析 `index.html` 与 `router.js`，强制「每个路由在 视图 section / 顶栏导航 / 首页总览卡片 / 使用说明地址清单 四处齐全」且「顶栏分组数 == 首页分组数 == 文案计数」，从机制上杜绝下次再漏。全套单测扩至 **15 个文件、870 项断言全部通过**。
 - v2.2：**声学工具箱大幅扩容（全能声学站点）**——新增五大计算模块，工具总数由 9 个增至 14 个、导航新增「心理与声品质」分组：
   - **⑨ 单位与换算（`#/db`）**：声级相加/背景修正、声压/声强/声功率六量换算、点/线/面距离衰减、A/C/Z 计权速查。
   - **⑩ 环境噪声评价（`#/env`）**：Leq 与 L5/L10/L50/L90/L95、Ldn/Lden、NPL/TNI、噪声评价数 NR、ISO 9613-2 户外 A 计权传播（含 ISO 9613-1 大气吸收精确公式）、公路交通噪声线声源模型。

@@ -122,7 +122,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 4 个分组、8 个模块，与顶栏二级菜单对应</p>
+      <p class="hint">共 5 个分组、14 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -149,6 +149,18 @@
           <span class="mc-body">
             <span class="mc-title">背景噪声评价 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">A 声级 / NC / NR / RC Mark II 倍频带评价，支持 1/1 与 1/3 倍频程、多测点能量平均、房间目标值对照。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/db">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 9v30M24 9l-13 5 13 5 13-5z" stroke-linejoin="round" />
+              <path d="M11 14v20M37 14v20M11 34l13 5 13-5" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">单位与换算 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">声压级加减（含相干与非相干合成、背景噪声修正）、声压／声强／声功率级换算、距离衰减与指向性、A/B/C 计权网络换算。</span>
           </span>
         </a>
       </div>
@@ -211,6 +223,19 @@
             <span class="mc-desc">质量定律估算或输入实测隔声量，同时给出国标 GB/T 50121 计权隔声量 Rw 与频谱修正量 C、Ctr，以及美标 ASTM E413 的 STC，并对照 GB 50118 / GB 55038 限值判定。</span>
           </span>
         </a>
+        <a class="module-card" href="#/roomq">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 16v18a4 4 0 004 4h20a4 4 0 004-4V16" stroke-linejoin="round" />
+              <path d="M6 16c4-3 8-3 12 0s8 3 12 0 8-3 12 0" />
+              <path d="M18 30h12" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">厅堂与扩声音质 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">由衰减曲线求 RT60／EDT，清晰度 C50／C80、明晰度 D50、中心时间 Ts、强度因子 G，以及房间常数、临界距离与直达+混响扩声级预测。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -243,6 +268,30 @@
             <span class="mc-desc">静变形法选型计算书（运行重量→每只承载→静压缩量→固有频率→频率比→传递率→隔振效率）与频率比法含阻尼验算双路并行，附目标效率反算与传递率曲线。</span>
           </span>
         </a>
+        <a class="module-card" href="#/env">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 32h5l3-12 5 22 4-16 3 8h13" stroke-linejoin="round" />
+              <path d="M6 12h16M6 18h10" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">环境噪声评价 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">由实测序列求 Leq 与 L5/L10/L50/L90/L95 统计声级、昼夜等效 Ldn/Lden、NPL/TNI，NR 曲线反查，ISO 9613 户外传播与道路交通线声源预测，附 GB 3096 对照。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/vibeval">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 24h6l3-9 4 18 4-13 3 6h16" stroke-linejoin="round" />
+              <path d="M10 38h28" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">振动评价 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">加速度／速度／位移振级互换（基准 10⁻⁶/10⁻⁹/10⁻¹²），ISO 2631 计权 Wb/Wc/Wd/We 与加权振级 aw，VDV 累积暴露、每日暴露限值，附 GB 10070 区域限值判定。</span>
+          </span>
+        </a>
 
         <a class="module-card" href="#/muffler">
           <span class="mc-icon" aria-hidden="true">
@@ -260,13 +309,32 @@
       </div>
     </div>
 
+    <div class="module-group">
+      <div class="group-label">心理与声品质</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/psycho">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 34c6 0 6-20 12-20s6 20 12 20 6-12 8-12" stroke-linejoin="round" />
+              <circle cx="12" cy="12" r="2" />
+              <circle cx="36" cy="12" r="2" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">心理声学 / 声品质 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">响度 phon↔sone（Stevens）、Bark 临界带映射、Zwicker 特征响度与尖锐度（DIN 45692），粗糙度／抖动度估算，PNL/Noy 总感觉噪声级与 STIPA 语言传输指数。</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
     <section class="card notes">
       <h2>使用说明</h2>
       <ul>
-        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动</strong> 四个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/barrier</code> 声屏障、<code>#/muffler</code> 消声器、<code>#/vibration</code> 减振计算。</li>
-        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 570+ 条断言）。</li>
+        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质</strong> 五个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 790+ 条断言）。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
