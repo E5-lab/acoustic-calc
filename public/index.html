@@ -35,6 +35,7 @@
         <div class="nav-menu">
           <a href="#/levels" data-route="levels"><span class="nm-t">声压级叠加</span><small class="nm-d">多声源合成 · 相干叠加 · 背景噪声修正</small></a>
           <a href="#/noise" data-route="noise"><span class="nm-t">背景噪声评价</span><small class="nm-d">A 声级 · NC / NR / RC Mark II</small></a>
+          <a href="#/db" data-route="db"><span class="nm-t">单位与换算</span><small class="nm-d">声压级加减 · 声压/声强/声功率 · 距离衰减</small></a>
         </div>
       </div>
 
@@ -354,6 +355,93 @@
   </section>
 
   <!-- ========================= 穿孔率计算 ========================= -->
+  <section class="view" id="view-db" data-view="db" hidden>
+    <div class="page-head">
+      <h2>单位与换算</h2>
+      <p class="hint">声压级能量加减、声压 / 声强 / 声功率互转、点 / 线 / 面声源距离衰减，以及 A / C / Z 计权网络速查</p>
+    </div>
+
+    <section class="card">
+      <h3>声级相加 / 相减（背景修正）</h3>
+      <p class="hint">粘贴若干声压级（空格 / 逗号分隔）求能量总和与增加值；或填写「总量」与「部分量（如背景）」求扣除后剩余。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="dbLevels">声压级列表（dB）</label>
+          <input id="dbLevels" type="text" placeholder="例：80 82 75 90" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button id="dbSumBtn" class="btn primary" type="button">计算总和</button>
+        <span id="dbSumMsg" class="aux-msg"></span>
+      </div>
+      <div id="dbSumOut" class="result-line" hidden></div>
+
+      <hr class="sep" />
+      <div class="field-row">
+        <div class="field">
+          <label for="dbTot">总量 L<sub>总</sub> (dB)</label>
+          <input id="dbTot" type="number" step="0.1" placeholder="如 85" />
+        </div>
+        <div class="field">
+          <label for="dbPart">部分量 L<sub>部分</sub> (dB，如背景)</label>
+          <input id="dbPart" type="number" step="0.1" placeholder="如 80" />
+        </div>
+        <div class="field field-auto">
+          <label>&nbsp;</label>
+          <button id="dbSubBtn" class="btn" type="button">扣除并修正</button>
+        </div>
+      </div>
+      <div id="dbSubOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>单位换算</h3>
+      <p class="hint">四个量任选其一，其余自动算出（声压 p₀=20 µPa，声强 I₀=10⁻¹² W/m²，声功率 W₀=10⁻¹² W；平面波下 I = p²/(ρc)，ρc≈400 Pa·s/m）。</p>
+      <div class="field-row">
+        <div class="field"><label for="dbSpl">声压级 L<sub>p</sub> (dB)</label><input id="dbSpl" type="number" step="0.1" /></div>
+        <div class="field"><label for="dbPa">声压 p (Pa)</label><input id="dbPa" type="number" step="any" /></div>
+        <div class="field"><label for="dbI">声强 I (W/m²)</label><input id="dbI" type="number" step="any" /></div>
+        <div class="field"><label for="dbLI">声强级 L<sub>I</sub> (dB)</label><input id="dbLI" type="number" step="0.1" /></div>
+        <div class="field"><label for="dbW">声功率 W (W)</label><input id="dbW" type="number" step="any" /></div>
+        <div class="field"><label for="dbLW">声功率级 L<sub>W</sub> (dB)</label><input id="dbLW" type="number" step="0.1" /></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>距离衰减 / 点声源声压级</h3>
+      <div class="field-row">
+        <div class="field">
+          <label for="dbSrcType">声源类型</label>
+          <select id="dbSrcType">
+            <option value="point">点声源（按两距离衰减）</option>
+            <option value="line">线声源</option>
+            <option value="plane">面声源（方形）</option>
+            <option value="fromLw">点声源：由声功率级 L<sub>W</sub> 反算</option>
+          </select>
+        </div>
+        <div class="field"><label for="dbL1">已知声级 L₁ (dB)</label><input id="dbL1" type="number" step="0.1" /></div>
+        <div class="field"><label for="dbR1">已知距离 r₁ (m)</label><input id="dbR1" type="number" step="0.1" /></div>
+        <div class="field"><label for="dbR2">目标距离 r₂ (m)</label><input id="dbR2" type="number" step="0.1" /></div>
+        <div class="field" data-dep="fromLw" hidden><label for="dbLw">声功率级 L<sub>W</sub> (dB)</label><input id="dbLw" type="number" step="0.1" /></div>
+        <div class="field" data-dep="fromLw" hidden><label for="dbQ">指向性因子 Q</label><input id="dbQ" type="number" step="0.1" value="1" /></div>
+        <div class="field" data-dep="plane" hidden><label for="dbSide">面源边长 a (m)</label><input id="dbSide" type="number" step="0.1" /></div>
+      </div>
+      <div class="btn-row">
+        <button id="dbDistBtn" class="btn primary" type="button">计算 r₂ 处声级</button>
+      </div>
+      <div id="dbDistOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>A / C / Z 计权网络（相对 1000 Hz）</h3>
+      <p class="hint">各中心频率处的计权衰减值（dB）。A 计权对应人耳等响曲线，C 计权近线性，Z 计权（零计权）为平直。</p>
+      <table class="weight-table">
+        <thead><tr><th>频率 (Hz)</th><th>A</th><th>C</th><th>Z</th></tr></thead>
+        <tbody id="dbWeightBody"></tbody>
+      </table>
+    </section>
+  </section>
+
   <section class="view" id="view-perforation" data-view="perforation">
     <div class="page-head">
       <h2>穿孔率计算</h2>
@@ -1958,6 +2046,7 @@
 <script src="js/levels.js"></script>
 <script src="js/vibration.js"></script>
 <script src="js/muffler.js"></script>
+<script src="js/dbcalc.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -1967,6 +2056,7 @@
 <script src="js/view-levels.js"></script>
 <script src="js/view-vibration.js"></script>
 <script src="js/view-muffler.js"></script>
+<script src="js/view-dbcalc.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>

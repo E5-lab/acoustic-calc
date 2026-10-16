@@ -1538,3 +1538,17 @@ select.btn:focus,
 /* --- 页脚：不再用最浅一级 --- */
 .site-footer { color: var(--muted); }
 .site-footer .footer-note { color: var(--faint); }
+
+/* ------------------------------- 单位与换算模块 ------------------------------- */
+.result-line {
+  margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--card-soft); border: 1px solid var(--border);
+  color: var(--text); font-weight: 600; line-height: 1.5;
+}
+.result-line.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, var(--border)); }
+.result-line.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, var(--border)); }
+.sep { border: none; border-top: 1px dashed var(--border-strong); margin: 18px 0; }
+.weight-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.weight-table th, .weight-table td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); }
+.weight-table th:first-child, .weight-table td:first-child { text-align: left; }
+.weight-table thead th { background: var(--card-soft); color: var(--muted); font-weight: 600; }
