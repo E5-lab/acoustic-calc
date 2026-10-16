@@ -101,8 +101,8 @@ var cre = /<a class="module-card" href="#\/([\w-]+)">([\s\S]*?)<\/a>/g, cm;
 while ((cm = cre.exec(home)) !== null) {
   cards.push({ route: cm[1], text: cm[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ') });
 }
-assert('总览卡片数 = 19 (实际 ' + cards.length + ')', cards.length === 19);
-['混响', '隔声', '穿孔率', '声屏障', '消声器', '响度', 'Leq', '声压级', '减振', 'GIF', '尖锐度', '简正', '传递矩阵', '微穿孔'].forEach(function (kw) {
+assert('总览卡片数 = 20 (实际 ' + cards.length + ')', cards.length === 20);
+['混响', '隔声', '穿孔率', '声屏障', '消声器', '响度', 'Leq', '声压级', '减振', 'GIF', '尖锐度', '简正', '传递矩阵', '微穿孔', '撞击声', '浮筑'].forEach(function (kw) {
   var hit = cards.filter(function (c) { return c.text.indexOf(kw) >= 0; });
   assert('关键词「' + kw + '」命中 ' + hit.length + ' 个模块', hit.length >= 1);
 });
