@@ -323,6 +323,16 @@
 
 > **说明**：有效频段为由几何尺度推算的估算值，**不含 BEM / FEM 物理仿真**，最终散射性能以现场测量或专业仿真为准。
 
+### ㉚ 听觉与听阈（`#/hearing`）
+
+> 听力计量侧：等响曲线、年龄相关听阈、听力图分级、临界带与掩蔽。与「心理声学 / 声品质」互补（那边管响度与粗糙度，这边管听阈与听力评价）。
+
+- **ISO 226:2003 等响曲线**：phon ↔ dB SPL 双向换算。1 kHz 上 phon 数值恒等于 dB 数值；40 phon 时 100 Hz 需 64.4 dB、4 kHz 仅需 36.7 dB、8 kHz 需 51.8 dB。适用范围 20 Hz~12.5 kHz、20~90 phon（5 kHz 以上 20~80 phon），20 phon 以下仅具参考性；非表列频率按对数频率插值。附等响曲线族图（20/40/60/80 phon + 自由场听阈虚线）。
+- **ISO 7029:2017 年龄相关听阈**：ΔH<sub>md,Y</sub> = α<sub>md</sub>·(Y−18)^β<sub>md</sub>（男女分列，125 Hz~8 kHz）。65 岁男性中位数阈移：1 kHz 约 10.4 dB、4 kHz 约 26.2 dB、8 kHz 约 39.5 dB；女性同岁 4 kHz 约 20.7 dB。3 kHz 以上且超过 70 岁的数值仅具参考性；公式上限 80 岁。
+- **WHO 2021 听力图分级**：较好耳 500/1k/2k/4k 四频平均（PTA4，dB HL）→ <20 正常｜20~<35 轻度｜35~<50 中度｜50~<65 中重度｜65~<80 重度｜80~<95 极重度｜≥95 全聋；双耳输入，较好耳与较差耳分级并列，单侧损失（较好耳 <20 且较差耳 ≥35）单独标注。
+- **RETSPL 听力零级**：ISO 389 / GB/T 4854.1（TDH-39 耳机 + IEC 303 耦合腔），1 kHz = 7.0、4 kHz = 9.5 dB SPL @ 0 dB HL，可把听力图 dB HL 折算为 dB SPL。
+- **临界带与掩蔽**：Zwicker 刻度 z = 13·atan(0.00076f) + 3.5·atan((f/7500)²)、临界带宽 Δf = 25 + 75·(1 + 1.4(f/1000)²)^0.69（1 kHz 带 919~1081 Hz），附 Moore ERB 对照。掩蔽阈用简化扩散模型：带内平顶、带外按 Bark 距离线性衰减（下 −27 / 上 −20 dB/Bark，斜率可调），并给出扩散曲线图。
+
 ### 计算内核与测试
 
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
@@ -339,12 +349,13 @@
 - `public/js/audiolevel.js` — 音频电平与阻抗内核（UMD，电平互转/灵敏度互换/串并联增益/功放选型/线材阻尼）
 - `public/js/spectrum.js` — 频谱分析与计权内核（UMD，ISO 266 频带/能量归并/IEC 61672 A·C·Z 计权/NR·NC 评级/分段 Leq）
 - `public/js/diffuser.js` — 扩散体设计内核（UMD，mm 制；QRD/PRD/MLS/2D QRD/Skyline/Binary/Wave/Fractal 八类几何与裁切清单）
+- `public/js/hearing.js` — 听觉与听阈内核（UMD，ISO 226 等响曲线/ISO 7029 年龄阈移/WHO 2021 分级/RETSPL/Zwicker 临界带与掩蔽）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
 - `public/js/sim.js` — 室内音质模拟内核（几何声学：房间几何/Sabine/Eyring+空气吸收、三维光线追踪（俄罗斯轮盘赌 + 朗伯散射）、逐带网格指标、接收点 ISO 3382、Lundeby 截断补偿；含轴测投影 `isoFit/isoProject` 与色标刻度 `niceRange/scaleTicks`）
 - `public/js/aural.js` — 声学可听化内核（迭代基-2 FFT、倍频带频谱整形、由回波/RT 合成脉冲响应、FFT 快速卷积、A 计权降噪量、16 bit WAV 编码）
 - `public/js/gif.js` — 零依赖 GIF89a 编码器（8×8×4 调色板 + Bayer 抖动 + 变字长 LZW + 循环扩展）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
-- `node tests/*.test.js` 共 32 个测试文件、**2040+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单））。
+- `node tests/*.test.js` 共 33 个测试文件、**2050+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单））。
 
 ## 目录结构
 
