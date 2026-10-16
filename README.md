@@ -239,6 +239,17 @@
 - **道路交通噪声**：线声源模型 Lp = LwL − 10lg(2πr) − A_atm − A_gr（车流量 / 车速 / 车型比 / 地面）。
 - **限值达标判定**：GB 3096-2008 声环境功能区（0/1/2/3/4a/4b 类，昼/夜）、GB 55016-2021 表 2.1.3（外部噪声源传入室内）与表 2.1.4（内部设备传播至室内），含 2/3/4 类区放宽 5 dB 规则。
 
+### ㉓ 扬声器箱体设计（`#/speakerbox`）
+
+> 电声器件级设计：从 T/S 参数到箱体与导风管，一次算清低频系统。
+
+- **T/S 参数与 Vas**：Vas = ρc²·Sd²/(Mms·ωs²)；附加质量法 Mms = ΔM/[(Fs/Fm)²−1]；阻抗峰法 Qms = Fs·√R₀/(F2−F1)、Qes = Qms/(R₀−1)、Qts = Qms·Qes/(Qms+Qes)；参考效率 η₀ = 4π²/c³·Fs³·Vas/Qes 与灵敏度（半空间 112.1 + 10lg η₀，1% 效率 ≈ 92 dB/W/m）。
+- **封闭箱（二阶）**：α = Vas/Vb、fc = Fs·√(1+α)、Qtc = Qts·√(1+α)；解 v² + v(2 − 1/Qtc²) − 1 = 0 得 f3；Qtc > 0.7071 时隆起 2Qtc²/√(4Qtc²−1)，峰频 fc·√(2Qtc²/(2Qtc²−1))；可由目标 Qtc 反算容积。
+- **倒相箱（四阶，Small / DAFx-14 系统函数）**：G(s) = s⁴/[s⁴ + a₃s³ + a₂s² + a₁s + 1]，h = Fb/Fs、α = Vas/Vb、f₀ = √(Fs·Fb)，含箱损 Ql。给出 f3、通带纹波、对齐类型判定（A₁ = A₂ = A₃ = 0 即 B4）、幅频与**群延迟解析曲线**；支持按给定 Vb 数值搜索最平坦调谐 Fb。
+  - 自校验锚点：Qts = 0.3827、Vb = Vas/√2、Fb = Fs 时精确退化为四阶巴特沃斯（纹波 0 dB、f3 = Fs）。有限 Ql（默认 7）会使 f₀ 附近下陷、f3 上移——这正是理论计算与实测不符的常见原因。
+- **导风管**：Leff = c²S/((2πFb)²·Vb)，L = Leff − k·D，端修正 k = 0.732（一端障板 + 一端自由）/ 0.85（两端法兰）/ 0.61（两端自由）；支持由管长正算调谐频率；端口峰值风速由半空间单极子 p = ρωU/(2πr) 反算，按 12 / 18 / 25 m/s 三档给出风噪评价。
+- **箱体尺寸**：按内部净容积与三边比例（黄金 / Keele / 经典 / 立方体）求内部尺寸；净容积扣除单元、倒相管、加强筋占用并计入吸声棉等效增益。
+
 ### 计算内核与测试
 
 - `public/js/acoustics.js` — 噪声评价内核（UMD，Node 可直接 require）
@@ -248,12 +259,13 @@
 - `public/js/hvacnoise.js` — 设备与管道声学内核（UMD，A 计权/房间常数/风管元件 TL/管系叠加/ISO 3744-3746 声功率）
 - `public/js/pasystem.js` — 电声与语言清晰度内核（UMD，临界距离/可用增益/STIPA 预测/电功率）
 - `public/js/noisemap.js` — 环境噪声进阶内核（UMD，依赖 env.js：网格声压级/marching squares 等值线/GB 3096 与 GB 55016 限值判定）
+- `public/js/speakerbox.js` — 扬声器箱体设计内核（UMD，Thiele-Small / 封闭箱二阶 / 倒相箱四阶 / 导风管 / 箱体尺寸）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
 - `public/js/sim.js` — 室内音质模拟内核（几何声学：房间几何/Sabine/Eyring+空气吸收、三维光线追踪（俄罗斯轮盘赌 + 朗伯散射）、逐带网格指标、接收点 ISO 3382、Lundeby 截断补偿；含轴测投影 `isoFit/isoProject` 与色标刻度 `niceRange/scaleTicks`）
 - `public/js/aural.js` — 声学可听化内核（迭代基-2 FFT、倍频带频谱整形、由回波/RT 合成脉冲响应、FFT 快速卷积、A 计权降噪量、16 bit WAV 编码）
 - `public/js/gif.js` — 零依赖 GIF89a 编码器（8×8×4 调色板 + Bayer 抖动 + 变字长 LZW + 循环扩展）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
-- `node tests/*.test.js` 共 25 个测试文件、**1270+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计））。
+- `node tests/*.test.js` 共 26 个测试文件、**1340+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单））。
 
 ## 目录结构
 

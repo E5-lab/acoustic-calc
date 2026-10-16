@@ -95,12 +95,13 @@
 
       <div class="nav-group">
         <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true">
-          心理与声品质
+          电声与听觉
           <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
         </button>
         <div class="nav-menu">
           <a href="#/psycho" data-route="psycho"><span class="nm-t">心理声学 / 声品质</span><small class="nm-d">响度 · 尖锐度 · 粗糙度/抖动度 · PNL · STIPA</small></a>
           <a href="#/pasystem" data-route="pasystem"><span class="nm-t">电声与语言清晰度</span><small class="nm-d">覆盖临界距离 · 扩声增益 · STIPA · 扬声器功率</small></a>
+          <a href="#/speakerbox" data-route="speakerbox"><span class="nm-t">扬声器箱体设计</span><small class="nm-d">Thiele-Small · 封闭箱/倒相箱 · 导风管 · T/S 参数</small></a>
         </div>
       </div>
     </nav>
@@ -187,7 +188,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、23 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、24 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -439,7 +440,7 @@
     </div>
 
     <div class="module-group">
-      <div class="group-label">心理与声品质</div>
+      <div class="group-label">电声与听觉</div>
       <div class="module-grid">
         <a class="module-card" href="#/psycho">
           <span class="mc-icon" aria-hidden="true">
@@ -463,6 +464,20 @@
           <span class="mc-body">
             <span class="mc-title">电声与语言清晰度 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">扬声器覆盖与临界距离（rc = 0.141√(QR)）、直达/混响声能与 D/R、扩声可用增益与声反馈稳定性、STIPA 语言清晰度预测（7 倍频带 × 2 调制频率）、扬声器电功率估算。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/speakerbox">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="12" y="6" width="24" height="36" rx="3" />
+              <circle cx="24" cy="19" r="7" />
+              <circle cx="24" cy="19" r="2.4" />
+              <circle cx="24" cy="35" r="3.4" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">扬声器箱体设计 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">Thiele-Small 理论：Vas 正算与附加质量法/阻抗峰法测 T/S 参数、参考效率与灵敏度换算、封闭箱（α/fc/Qtc/f3/隆起）、倒相箱四阶系统函数（f3/纹波/对齐类型 + 响应与群延迟曲线 + 最平坦调谐）、导风管长度与端口风速校核、箱体三边尺寸与净容积。</span>
           </span>
         </a>
       </div>
@@ -517,9 +532,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 25 个文件 / 1270+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 26 个文件 / 1340+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3445,6 +3460,152 @@
     </section>
   </section>
 
+  <section class="view" id="view-speakerbox" data-view="speakerbox" hidden>
+    <div class="page-head">
+      <h2>扬声器箱体设计</h2>
+      <p class="hint">Thiele-Small 理论：由 T/S 参数求等效容积 Vas，按二阶 / 四阶系统函数设计封闭箱与倒相箱，反算导风管尺寸并校核端口风速。工程估算，供音箱方案比选。</p>
+    </div>
+
+    <section class="card">
+      <h3>T/S 参数与 Vas</h3>
+      <p class="hint">Vas = ρc²·Sd²/(Mms·ωs²)；附加质量法 Mms = ΔM/[(Fs/Fm)²−1]；阻抗峰法 Qms = Fs·√R₀/(F2−F1)、Qes = Qms/(R₀−1)、Qts = Qms·Qes/(Qms+Qes)。</p>
+      <div class="field-row">
+        <div class="field"><label for="sbVasFs">自由场谐振 Fs (Hz)</label><input id="sbVasFs" type="number" step="0.1" value="30" /></div>
+        <div class="field"><label for="sbVasMms">振动系统质量 Mms (g)</label><input id="sbVasMms" type="number" step="0.1" value="20" /></div>
+        <div class="field"><label for="sbVasSd">振膜有效面积 Sd (cm²)</label><input id="sbVasSd" type="number" step="1" value="200" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbVasBtn" class="btn primary" type="button">求等效容积</button></div>
+      </div>
+      <div id="sbVasOut" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="sbAddFs">自由场 Fs (Hz)</label><input id="sbAddFs" type="number" step="0.1" value="30" /></div>
+        <div class="field"><label for="sbAddFm">加质量后 Fm (Hz)</label><input id="sbAddFm" type="number" step="0.1" value="25" /></div>
+        <div class="field"><label for="sbAddM">附加质量 ΔM (g)</label><input id="sbAddM" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="sbAddSd">Sd (cm²，可空)</label><input id="sbAddSd" type="number" step="1" value="200" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbAddBtn" class="btn" type="button">附加质量法</button></div>
+      </div>
+      <div id="sbAddOut" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="sbZRe">直流电阻 Re (Ω)</label><input id="sbZRe" type="number" step="0.1" value="6" /></div>
+        <div class="field"><label for="sbZZmax">阻抗峰 Zmax (Ω)</label><input id="sbZZmax" type="number" step="0.5" value="60" /></div>
+        <div class="field"><label for="sbZFs">谐振 Fs (Hz)</label><input id="sbZFs" type="number" step="0.1" value="40" /></div>
+        <div class="field"><label for="sbZF1">下半功率 F1 (Hz)</label><input id="sbZF1" type="number" step="0.1" value="34" /></div>
+        <div class="field"><label for="sbZF2">上半功率 F2 (Hz)</label><input id="sbZF2" type="number" step="0.1" value="47" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbZBtn" class="btn" type="button">阻抗峰法求 Q</button></div>
+      </div>
+      <div id="sbZOut" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="sbSensFs">Fs (Hz)</label><input id="sbSensFs" type="number" step="0.1" value="30" /></div>
+        <div class="field"><label for="sbSensVas">Vas (L)</label><input id="sbSensVas" type="number" step="1" value="80" /></div>
+        <div class="field"><label for="sbSensQes">Qes</label><input id="sbSensQes" type="number" step="0.01" value="0.5" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbSensBtn" class="btn" type="button">效率与灵敏度</button></div>
+      </div>
+      <div id="sbSensOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>封闭箱设计</h3>
+      <p class="hint">α = Vas/Vb，fc = Fs·√(1+α)，Qtc = Qts·√(1+α)。Qtc ≈ 0.707 为最平坦（巴特沃斯）；Qtc &gt; 0.707 出现低频隆起。</p>
+      <div class="field-row">
+        <div class="field"><label for="sbCbMode">设计方式</label>
+          <select id="sbCbMode">
+            <option value="vb">给定箱体容积 Vb</option>
+            <option value="qtc">给定目标 Qtc（反算容积）</option>
+          </select>
+        </div>
+        <div class="field"><label for="sbCbVas">Vas (L)</label><input id="sbCbVas" type="number" step="1" value="80" /></div>
+        <div class="field"><label for="sbCbFs">Fs (Hz)</label><input id="sbCbFs" type="number" step="0.1" value="30" /></div>
+        <div class="field"><label for="sbCbQts">Qts</label><input id="sbCbQts" type="number" step="0.01" value="0.4" /></div>
+        <div class="field"><label for="sbCbVb">Vb (L)</label><input id="sbCbVb" type="number" step="1" value="20" /></div>
+        <div class="field"><label for="sbCbQtc">目标 Qtc</label><input id="sbCbQtc" type="number" step="0.01" value="0.707" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbCbBtn" class="btn primary" type="button">设计封闭箱</button></div>
+      </div>
+      <div id="sbCbOut" class="result-line" hidden></div>
+      <canvas id="sbCbChart" height="240"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>倒相箱设计（四阶系统）</h3>
+      <p class="hint">系统函数 G(s) = s⁴/[s⁴ + a₃s³ + a₂s² + a₁s + 1]，h = Fb/Fs，α = Vas/Vb，f₀ = √(Fs·Fb)。Qts ≈ 0.383 时取 Vb = Vas/√2、Fb = Fs 即四阶巴特沃斯（B4）。</p>
+      <div class="field-row">
+        <div class="field"><label for="sbVbFbMode">调谐方式</label>
+          <select id="sbVbFbMode">
+            <option value="auto">自动求最平坦 Fb</option>
+            <option value="manual">手动指定 Fb</option>
+          </select>
+        </div>
+        <div class="field"><label for="sbVbVas">Vas (L)</label><input id="sbVbVas" type="number" step="1" value="80" /></div>
+        <div class="field"><label for="sbVbFs">Fs (Hz)</label><input id="sbVbFs" type="number" step="0.1" value="30" /></div>
+        <div class="field"><label for="sbVbQts">Qts</label><input id="sbVbQts" type="number" step="0.01" value="0.383" /></div>
+        <div class="field"><label for="sbVbVb">箱体容积 Vb (L)</label><input id="sbVbVb" type="number" step="1" value="56.6" /></div>
+        <div class="field"><label for="sbVbFb">调谐频率 Fb (Hz)</label><input id="sbVbFb" type="number" step="0.5" value="30" /></div>
+        <div class="field"><label for="sbVbQl">箱损 Ql</label><input id="sbVbQl" type="number" step="0.5" value="7" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbVbBtn" class="btn primary" type="button">设计倒相箱</button></div>
+      </div>
+      <div id="sbVbOut" class="result-line" hidden></div>
+      <canvas id="sbVbChart" height="240"></canvas>
+      <canvas id="sbVbGdChart" height="200"></canvas>
+    </section>
+
+    <section class="card">
+      <h3>导风管设计</h3>
+      <p class="hint">Leff = c²S/((2πFb)²·Vb)，物理管长 L = Leff − k·D。端修正系数 k：一端有障板 + 一端自由 0.732，两端法兰 0.85，两端自由 0.61。</p>
+      <div class="field-row">
+        <div class="field"><label for="sbPortMode">计算目标</label>
+          <select id="sbPortMode">
+            <option value="length">求所需管长</option>
+            <option value="tuning">由管长求调谐频率</option>
+            <option value="velocity">端口风速校核</option>
+          </select>
+        </div>
+        <div class="field"><label for="sbPortFb">调谐频率 Fb (Hz)</label><input id="sbPortFb" type="number" step="0.5" value="30" /></div>
+        <div class="field"><label for="sbPortVb">箱体容积 Vb (L)</label><input id="sbPortVb" type="number" step="1" value="56.6" /></div>
+        <div class="field"><label for="sbPortD">管内径 D (cm)</label><input id="sbPortD" type="number" step="0.1" value="6.5" /></div>
+        <div class="field"><label for="sbPortL">管长 L (cm)</label><input id="sbPortL" type="number" step="0.1" value="15" /></div>
+        <div class="field"><label for="sbPortEnds">管端形式</label>
+          <select id="sbPortEnds">
+            <option value="baffled">一端障板 + 一端自由</option>
+            <option value="flanged">两端法兰</option>
+            <option value="free">两端自由</option>
+          </select>
+        </div>
+        <div class="field"><label for="sbPortSpl">目标声压级 (dB @1m)</label><input id="sbPortSpl" type="number" step="1" value="100" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbPortBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="sbPortOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>箱体尺寸与净容积</h3>
+      <p class="hint">按内部净容积与三边比例求内部尺寸；三边比取无理数比例可抑制驻波简并。</p>
+      <div class="field-row">
+        <div class="field"><label for="sbBoxVb">内部净容积 (L)</label><input id="sbBoxVb" type="number" step="1" value="56.6" /></div>
+        <div class="field"><label for="sbBoxRatio">三边比例</label>
+          <select id="sbBoxRatio">
+            <option value="1,1.618,2.618">黄金比例 1 : 1.618 : 2.618</option>
+            <option value="1,1.26,1.59">Keele 1 : 1.26 : 1.59</option>
+            <option value="1,1.3,1.6">经典 1 : 1.3 : 1.6</option>
+            <option value="1,1,1">立方体 1 : 1 : 1</option>
+          </select>
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbBoxBtn" class="btn" type="button">求内部尺寸</button></div>
+      </div>
+      <div id="sbBoxOut" class="result-line" hidden></div>
+
+      <div class="field-row" style="margin-top:14px">
+        <div class="field"><label for="sbNetGross">毛容积 (L)</label><input id="sbNetGross" type="number" step="1" value="60" /></div>
+        <div class="field"><label for="sbNetDriver">单元占容 (L)</label><input id="sbNetDriver" type="number" step="0.1" value="3" /></div>
+        <div class="field"><label for="sbNetPort">倒相管占容 (L)</label><input id="sbNetPort" type="number" step="0.1" value="1.5" /></div>
+        <div class="field"><label for="sbNetBrace">加强筋占容 (L)</label><input id="sbNetBrace" type="number" step="0.1" value="0.5" /></div>
+        <div class="field"><label for="sbNetFill">吸声棉等效增益 (%)</label><input id="sbNetFill" type="number" step="1" value="8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="sbNetBtn" class="btn" type="button">求净容积</button></div>
+      </div>
+      <div id="sbNetOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3477,6 +3638,7 @@
 <script src="js/noisemap.js"></script>
 <script src="js/psycho.js"></script>
 <script src="js/pasystem.js"></script>
+<script src="js/speakerbox.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
@@ -3505,6 +3667,7 @@
 <script src="js/view-hvacnoise.js"></script>
 <script src="js/view-pasystem.js"></script>
 <script src="js/view-noisemap.js"></script>
+<script src="js/view-speakerbox.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>

@@ -51,7 +51,8 @@
     hvacnoise: ['设备噪声→房间 Lp', '风管路径衰减', '风管元件 TL', '声功率 ISO 3744/3746'],
     noisemap: ['噪声等值线图', '道路交通噪声', 'GB 3096 / 55016 判定'],
     psycho: ['响度 phon↔sone', '尖锐度', '粗糙度 / 抖动度', 'PNL', 'STIPA'],
-    pasystem: ['临界距离 / D-R', '可用增益与声反馈', 'STIPA 预测', '扬声器电功率']
+    pasystem: ['临界距离 / D-R', '可用增益与声反馈', 'STIPA 预测', '扬声器电功率'],
+    speakerbox: ['T/S 参数与 Vas', '封闭箱设计', '倒相箱设计', '导风管设计', '箱体尺寸']
   };
 
   function groups() {
