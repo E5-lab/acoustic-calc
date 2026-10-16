@@ -60,6 +60,7 @@
           <a href="#/rt60" data-route="rt60"><span class="nm-t">混响时间 RT60</span><small class="nm-d">Sabine / Eyring · 材料吸声库 · 用途推荐值</small></a>
           <a href="#/stc" data-route="stc"><span class="nm-t">墙体隔声量 Rw / STC</span><small class="nm-d">GB/T 50121 计权隔声量 · ASTM E413</small></a>
           <a href="#/roomq" data-route="roomq"><span class="nm-t">厅堂与扩声音质</span><small class="nm-d">RT60/EDT · C50/C80 · D50 · G · 扩声预测</small></a>
+          <a href="#/sim" data-route="sim"><span class="nm-t">室内音质模拟</span><small class="nm-d">平面光线追踪 · 声场彩图 · 粒子动画 · ISO 3382 估算</small></a>
         </div>
       </div>
 
@@ -122,7 +123,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 5 个分组、14 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 5 个分组、15 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -236,6 +237,19 @@
             <span class="mc-desc">由衰减曲线求 RT60／EDT，清晰度 C50／C80、明晰度 D50、中心时间 Ts、强度因子 G，以及房间常数、临界距离与直达+混响扩声级预测。</span>
           </span>
         </a>
+        <a class="module-card" href="#/sim">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="6" y="8" width="36" height="32" rx="3" />
+              <circle cx="16" cy="24" r="3" />
+              <path d="M16 24l16-10M16 24l18 8M34 14l-4 12M34 14l6 10" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">室内音质模拟（几何声学） <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">矩形房间平面二维光线追踪：声线往复反射并逐次被吸收的动态粒子动画，叠加声场彩图（相对声压级／C50／D50／Ts），并给出接收点 EDT／T30／C50／D50 与 Sabine RT60 估算。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -332,9 +346,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质</strong> 五个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
-        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 790+ 条断言）。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/sim</code> 室内音质模拟、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 910+ 条断言）。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -872,6 +886,87 @@
         <div class="field field-auto"><label>&nbsp;</label><button id="rqReinBtn" class="btn primary" type="button">预测</button></div>
       </div>
       <div id="rqReinOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-sim" data-view="sim" hidden>
+    <div class="page-head">
+      <h2>室内音质模拟（几何声学）</h2>
+      <p class="hint">矩形房间平面光线追踪：声线往复反射并逐次被吸收，输出声场彩图、粒子动画与接收点评价参数。几何声学估算，非验收级。</p>
+    </div>
+
+    <section class="card">
+      <h3>房间与吸声</h3>
+      <p class="hint">输入房间长（x 向）与宽（y 向，米），四面墙、地面与天花板统一取吸声系数 α；可另加一道竖向内隔墙。</p>
+      <div class="field-row">
+        <div class="field"><label for="simLen">房间长 L (m)</label><input id="simLen" type="number" step="0.1" value="12" /></div>
+        <div class="field"><label for="simWid">房间宽 W (m)</label><input id="simWid" type="number" step="0.1" value="8" /></div>
+        <div class="field"><label for="simHgt">层高 (m)</label><input id="simHgt" type="number" step="0.1" value="3" /></div>
+        <div class="field"><label for="simAlpha">吸声系数 α</label><input id="simAlpha" type="number" step="0.01" min="0.01" max="0.95" value="0.2" /></div>
+        <div class="field"><label for="simMat">按材料取值（中频）</label>
+          <select id="simMat"><option value="">— 手动输入 —</option></select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="simInner"><input id="simInner" type="checkbox" /> 启用竖向内隔墙</label></div>
+        <div class="field"><label for="simInnerX">隔墙位置 x (m)</label><input id="simInnerX" type="number" step="0.1" value="6" /></div>
+        <div class="field"><label for="simInnerY1">起 y (m)</label><input id="simInnerY1" type="number" step="0.1" value="2.4" /></div>
+        <div class="field"><label for="simInnerY2">止 y (m)</label><input id="simInnerY2" type="number" step="0.1" value="5.6" /></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>声源、接收点与模拟参数</h3>
+      <div class="field-row">
+        <div class="field"><label for="simSrcX">声源 x (m)</label><input id="simSrcX" type="number" step="0.1" value="2" /></div>
+        <div class="field"><label for="simSrcY">声源 y (m)</label><input id="simSrcY" type="number" step="0.1" value="4" /></div>
+        <div class="field"><label for="simRcvX">接收点 x (m)</label><input id="simRcvX" type="number" step="0.1" value="10" /></div>
+        <div class="field"><label for="simRcvY">接收点 y (m)</label><input id="simRcvY" type="number" step="0.1" value="4" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="simRays">光线数</label><input id="simRays" type="number" step="50" value="600" /></div>
+        <div class="field"><label for="simBounces">最大反射次数</label><input id="simBounces" type="number" step="5" value="60" /></div>
+        <div class="field"><label for="simGrid">网格分辨率</label>
+          <select id="simGrid"><option value="36">粗（36 列）</option><option value="56" selected>中（56 列）</option><option value="84">细（84 列）</option></select>
+        </div>
+        <div class="field"><label for="simMetric">彩图指标</label>
+          <select id="simMetric">
+            <option value="L">相对声压级 (dB)</option>
+            <option value="C50">清晰度 C50 (dB)</option>
+            <option value="D50">定义度 D50</option>
+            <option value="Ts">中心时间 Ts (ms)</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row toolbar">
+        <button id="simRun" class="btn primary" type="button">开始模拟</button>
+        <button id="simPlay" class="btn" type="button">暂停</button>
+        <button id="simPath" class="btn" type="button">显示 / 隐藏光路</button>
+        <button id="simPng" class="btn" type="button">导出 PNG</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>声场彩图与粒子动画</h3>
+      <div class="canvas-wrap"><canvas id="simCanvas" height="380" style="display:block;width:100%"></canvas></div>
+      <p class="hint" id="simLegend">点击「开始模拟」后在此显示彩图。</p>
+    </section>
+
+    <section class="card">
+      <h3>评价参数（接收点，ISO 3382 估算）</h3>
+      <p class="hint">由模拟能量时程经 Schroeder 反向积分得到，受光线数与模型简化影响，仅供方案比选。</p>
+      <div id="simMets" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px"></div>
+      <div class="canvas-wrap" style="margin-top:14px"><canvas id="simEcho" height="240" style="display:block;width:100%"></canvas></div>
+    </section>
+
+    <section class="card notes">
+      <h2>方法说明与限制</h2>
+      <ul>
+        <li>本模块基于<strong>几何声学</strong>（镜像声源法 + 二维光线追踪，方法源自 Allen &amp; Berkley、Kuttruff 等公开文献），与 Odeon / CATT / Raynoise 属同一类方法体系，为自研实现。</li>
+        <li>结果为<strong>平面切片估算</strong>：声源按线声源处理、忽略层高竖向反射与边缘衍射，低频与强扩散房间偏差较大，<strong>不可替代授权软件做正式验收</strong>。</li>
+        <li>彩图指标：相对声压级、C50、D50、Ts；颜色以分位区间归一化，图例给出当前指标区间。</li>
+        <li>「Sabine RT60 估算」由房间体积、总表面积与平均吸声系数按 <code>RT60 = 0.161V / A</code> 计算；接收点的 EDT/T30/C50/D50 则由模拟回波经 Schroeder 反向积分得到，二者可相互印证。</li>
+      </ul>
     </section>
   </section>
 
@@ -2484,6 +2579,7 @@
 <script src="js/psycho.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
+<script src="js/sim.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -2498,6 +2594,7 @@
 <script src="js/view-psycho.js"></script>
 <script src="js/view-vibeval.js"></script>
 <script src="js/view-roomq.js"></script>
+<script src="js/view-sim.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
