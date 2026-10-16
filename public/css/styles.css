@@ -1552,3 +1552,97 @@ select.btn:focus,
 .weight-table th, .weight-table td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); }
 .weight-table th:first-child, .weight-table td:first-child { text-align: left; }
 .weight-table thead th { background: var(--card-soft); color: var(--muted); font-weight: 600; }
+
+/* ------------------------------- 首页 hero banner 轮播 ------------------------------- */
+.hero-banner {
+  position: relative;
+  border-radius: var(--radius, 16px);
+  overflow: hidden;
+  margin: 6px 0 30px;
+  box-shadow: 0 18px 48px -22px rgba(20, 40, 90, 0.45);
+  background: var(--card-soft);
+  border: 1px solid var(--border);
+}
+.hero-banner .hb-track {
+  display: flex;
+  transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+.hero-banner .hb-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 100%;
+  margin: 0;
+}
+.hero-banner .hb-slide img {
+  display: block;
+  width: 100%;
+  height: clamp(190px, 27vw, 340px);
+  object-fit: cover;
+  object-position: center;
+}
+.hero-banner .hb-cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 26px 28px 30px;
+  background: linear-gradient(to top, rgba(7, 14, 28, 0.82) 0%, rgba(7, 14, 28, 0.35) 55%, rgba(7, 14, 28, 0) 100%);
+  color: #eaf1ff;
+}
+.hero-banner .hb-kicker {
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8fb6ff;
+  font-weight: 700;
+}
+.hero-banner .hb-title {
+  font-size: clamp(16px, 2.1vw, 23px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+  max-width: 70%;
+}
+.hero-banner .hb-cap .btn { margin-top: 4px; }
+.hero-banner .hb-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px; height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(10, 18, 34, 0.55);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  backdrop-filter: blur(4px);
+}
+.hero-banner .hb-arrow:hover { background: var(--primary, #1d4ed8); transform: translateY(-50%) scale(1.06); }
+.hero-banner .hb-arrow.prev { left: 14px; }
+.hero-banner .hb-arrow.next { right: 14px; }
+.hero-banner .hb-dots {
+  position: absolute;
+  right: 18px; bottom: 16px;
+  display: flex; gap: 8px;
+}
+.hero-banner .hb-dot {
+  width: 9px; height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.2s, width 0.25s;
+}
+.hero-banner .hb-dot.active { background: #fff; width: 22px; border-radius: 5px; }
+@media (max-width: 640px) {
+  .hero-banner .hb-title { max-width: 100%; font-size: 15px; }
+  .hero-banner .hb-cap { padding: 16px 16px 20px; }
+  .hero-banner .hb-arrow { width: 34px; height: 34px; font-size: 20px; }
+}
