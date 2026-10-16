@@ -79,12 +79,13 @@
   }
 
   // PRD：t_n = gⁿ mod N（g 为 N 的原根）
+  // 取 n = 0 … N−2，共 N−1 个井（g^(N−1) ≡ 1 会与 n=0 重复，不另设一井）
   function prdSeq(N) {
     if (!isPrime(N)) return null;
     var g = primitiveRoot(N);
     var s = [];
     var cur = 1;
-    for (var n = 0; n < N; n++) {
+    for (var n = 0; n < N - 1; n++) {
       s.push(cur);
       cur = (cur * g) % N;
     }
@@ -155,6 +156,7 @@
 
   // 裁切清单（按井深聚合）；wellWidth mm，density kg/m³
   function cutList(depthsMm, wellMm, density) {
+    density = num(density) > 0 ? num(density) : 600; // 默认按木材类板材 600 kg/m³
     var map = {};
     depthsMm.forEach(function (d) {
       var key = Math.round(d * 10) / 10;
@@ -207,7 +209,7 @@
     if (type === 'qrd') {
       seq = qrdSeq(N);
       depthsMm = depthsFromSeq(seq, lambda0, N);
-      notes.push('QRD 井深 d_n = (n² mod N)·λ₀/(2N)，n=0…N-1；最大井深≈λ₀/2。');
+      notes.push('QRD 井深 d_n = (n² mod N)·λ₀/(2N)，n=0…N−1，共 N 个井；最大井深 = max(sₙ)·λ₀/(2N)，N 越大越接近 λ₀/2。');
     } else if (type === 'prd') {
       seq = prdSeq(N);
       if (!seq) return { ok: false, error: 'PRD 要求 N 为素数' };

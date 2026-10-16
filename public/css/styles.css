@@ -1874,6 +1874,40 @@ select.btn:focus,
 }
 .xo-chip b { color: var(--primary-d); font-weight: 600; margin-right: 3px; }
 
+/* ==========================================================================
+   扩散体模块（#/diffuser）自建 DOM 使用的控件类
+   —— 与 .field input / .detail-table 保持同一视觉，避免另起一套样式
+   ========================================================================== */
+.text-input {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--field-bg);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+}
+.text-input:hover { border-color: color-mix(in srgb, var(--primary) 40%, var(--border-strong)); }
+.text-input:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.data-table {
+  margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.data-table th,
+.data-table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+.data-table th:first-child,
+.data-table td:first-child { text-align: left; }
+.data-table th { color: var(--muted); font-weight: 600; }
+.data-table tbody tr:nth-child(odd) { background: var(--card-soft); }
+
 /* 无障碍：仅供读屏/搜索引擎 */
 .sr-only {
   position: absolute;
