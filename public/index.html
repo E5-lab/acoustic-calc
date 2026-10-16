@@ -89,6 +89,7 @@
           <a href="#/env" data-route="env"><span class="nm-t">环境噪声评价</span><small class="nm-d">Leq/L10/L90 · Ldn/Lden · NR · 户外传播 · 交通噪声</small></a>
           <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
           <a href="#/hvacnoise" data-route="hvacnoise"><span class="nm-t">设备与管道声学</span><small class="nm-d">设备噪声→房间Lp · 风管衰减 · 声功率测定</small></a>
+          <a href="#/noisemap" data-route="noisemap"><span class="nm-t">环境噪声进阶</span><small class="nm-d">等值线图 · 交通噪声 · GB 3096/55016 判定</small></a>
         </div>
       </div>
 
@@ -99,6 +100,7 @@
         </button>
         <div class="nav-menu">
           <a href="#/psycho" data-route="psycho"><span class="nm-t">心理声学 / 声品质</span><small class="nm-d">响度 · 尖锐度 · 粗糙度/抖动度 · PNL · STIPA</small></a>
+          <a href="#/pasystem" data-route="pasystem"><span class="nm-t">电声与语言清晰度</span><small class="nm-d">覆盖临界距离 · 扩声增益 · STIPA · 扬声器功率</small></a>
         </div>
       </div>
     </nav>
@@ -185,7 +187,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 6 个分组、21 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 6 个分组、23 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -421,6 +423,18 @@
             <span class="mc-desc">设备声功率 → 房间声压级（直达+混响）、风管路径衰减（直管/弯头/末端反射逐频带叠加）、风管元件传声损失、ISO 3744/3746 声功率测定（测量面与背景/环境修正）。</span>
           </span>
         </a>
+        <a class="module-card" href="#/noisemap">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 36c4-10 8-16 12-16s8 6 12 0 6-12 12-12" stroke-linejoin="round" />
+              <path d="M6 42h36" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">环境噪声进阶 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">多点声源噪声等值线图（ISO 9613-2 传播 + marching squares 等值线，可导出 PNG）、道路交通噪声线声源模型、GB 3096 声环境功能区与 GB 55016 室内噪声限值达标判定。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -438,6 +452,17 @@
           <span class="mc-body">
             <span class="mc-title">心理声学 / 声品质 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">响度 phon↔sone（Stevens）、Bark 临界带映射、Zwicker 特征响度与尖锐度（DIN 45692），粗糙度／抖动度估算，PNL/Noy 总感觉噪声级与 STIPA 语言传输指数。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/pasystem">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 18v12M16 14v20M22 10v28M28 14v20M34 18v12" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">电声与语言清晰度 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">扬声器覆盖与临界距离（rc = 0.141√(QR)）、直达/混响声能与 D/R、扩声可用增益与声反馈稳定性、STIPA 语言清晰度预测（7 倍频带 × 2 调制频率）、扬声器电功率估算。</span>
           </span>
         </a>
       </div>
@@ -492,9 +517,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化</strong> 六个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 23 个文件 / 1230+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 25 个文件 / 1270+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -3280,6 +3305,146 @@
     </section>
   </section>
 
+  <section class="view" id="view-pasystem" data-view="pasystem" hidden>
+    <div class="page-head">
+      <h2>电声与语言清晰度</h2>
+      <p class="hint">扬声器覆盖与临界距离 · 扩声可用增益（声反馈）· STIPA 语言清晰度预测 · 扬声器电功率估算。工程估算，供扩声系统方案比选。</p>
+    </div>
+
+    <section class="card">
+      <h3>覆盖与声压级</h3>
+      <p class="hint">Lp = Lw + 10lg[Q/(4πr²) + 4/R]，按 1 kHz 频带计算；临界距离 rc = 0.141·√(Q·R)，r &lt; rc 直达占优、r &gt; rc 混响占优。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;"><label for="paLw">扬声器声功率谱 Lw（6 倍频带 dB，逗号分隔，125–4000 Hz）</label><input id="paLw" type="text" value="85,88,90,92,90,86" /></div>
+        <div class="field"><label for="paQ">指向性因数 Q</label><input id="paQ" type="number" step="0.5" value="1" /></div>
+        <div class="field"><label for="paR">房间常数 R (m²)</label><input id="paR" type="number" step="1" value="31.7" /></div>
+        <div class="field"><label for="paDist">测点距离 r (m)</label><input id="paDist" type="number" step="0.5" value="10" /></div>
+        <div class="field"><label for="paTarget">目标声压级 (dB，可空)</label><input id="paTarget" type="number" step="1" value="75" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="paCovBtn" class="btn primary" type="button">计算覆盖</button></div>
+      </div>
+      <div id="paCovOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>扩声可用增益与声反馈</h3>
+      <p class="hint">可用增益 ≈ 20lg(rc/r_mic) − 10lg(NOM) − 稳定裕量；所需增益 = 听众处所需声压级 − 讲话人在话筒处声压级。前者大于后者方可稳定不啸叫。</p>
+      <div class="field-row">
+        <div class="field"><label for="paQ2">指向性因数 Q</label><input id="paQ2" type="number" step="0.5" value="1" /></div>
+        <div class="field"><label for="paR2">房间常数 R (m²)</label><input id="paR2" type="number" step="1" value="31.7" /></div>
+        <div class="field"><label for="paMic">话筒至扬声器距离 (m)</label><input id="paMic" type="number" step="0.1" value="1" /></div>
+        <div class="field"><label for="paNom">同时开放话筒数 NOM</label><input id="paNom" type="number" step="1" value="1" /></div>
+        <div class="field"><label for="paMargin">稳定裕量 (dB)</label><input id="paMargin" type="number" step="1" value="6" /></div>
+        <div class="field"><label for="paTalker">讲话人声压级 @话筒 (dB)</label><input id="paTalker" type="number" step="1" value="60" /></div>
+        <div class="field"><label for="paNeed">听众所需声压级 (dB)</label><input id="paNeed" type="number" step="1" value="75" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="paGainBtn" class="btn primary" type="button">核算增益</button></div>
+      </div>
+      <div id="paGainOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>STIPA 语言清晰度预测</h3>
+      <p class="hint">7 倍频带 × 2 调制频率（IEC 60268-16）：MTF = MTF_SNR × MTF_rev，STI = Σlog2(1+MTF)/14（与「心理声学」模块同口径）。背景噪声谱可留空（按高信噪比处理）。</p>
+      <div class="field-row">
+        <div class="field" style="grid-column: 1 / -1;"><label for="paStLw">扬声器声功率谱 Lw（6 倍频带 dB，逗号分隔）</label><input id="paStLw" type="text" value="85,88,90,92,90,86" /></div>
+        <div class="field" style="grid-column: 1 / -1;"><label for="paStNoise">背景噪声谱（6 倍频带 dB，逗号分隔，可空）</label><input id="paStNoise" type="text" value="45,45,45,45,45,45" /></div>
+        <div class="field"><label for="paStQ">指向性因数 Q</label><input id="paStQ" type="number" step="0.5" value="1" /></div>
+        <div class="field"><label for="paStR">房间常数 R (m²)</label><input id="paStR" type="number" step="1" value="31.7" /></div>
+        <div class="field"><label for="paStDist">听点距离 r (m)</label><input id="paStDist" type="number" step="0.5" value="10" /></div>
+        <div class="field"><label for="paStRT">混响时间 RT (s)</label><input id="paStRT" type="number" step="0.1" value="0.8" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="paStiBtn" class="btn primary" type="button">预测 STIPA</button></div>
+      </div>
+      <div id="paStiOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>扬声器电功率估算</h3>
+      <p class="hint">由灵敏度（1 m / 1 W 声压级）与所需声功率级反算电功率：P = 10^((Lw − Ls − 11)/10)；建议再留约 3 dB 功率余量防削波。</p>
+      <div class="field-row">
+        <div class="field"><label for="paSens">灵敏度 Ls (dB @1m/1W)</label><input id="paSens" type="number" step="1" value="88" /></div>
+        <div class="field"><label for="paLwReq">所需声功率级 Lw (dB)</label><input id="paLwReq" type="number" step="1" value="100" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="paPowBtn" class="btn primary" type="button">估算电功率</button></div>
+      </div>
+      <div id="paPowOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-noisemap" data-view="noisemap" hidden>
+    <div class="page-head">
+      <h2>环境噪声进阶</h2>
+      <p class="hint">多点声源噪声等值线图（ISO 9613-2 传播，可导出 PNG）· 道路交通噪声线声源模型 · GB 3096 / GB 55016 限值达标判定。</p>
+    </div>
+
+    <section class="card">
+      <h3>噪声等值线图</h3>
+      <p class="hint">最多 3 个点声源（各填 6 倍频带声功率谱），按 ISO 9613-2 球面发散 + 大气吸收 + 地面效应计算网格声压级并绘制等值线（5 dB 间隔）。</p>
+      <div class="field-row">
+        <div class="field"><label for="nmS1X">S1 坐标 X (m)</label><input id="nmS1X" type="number" step="1" value="0" /></div>
+        <div class="field"><label for="nmS1Y">S1 坐标 Y (m)</label><input id="nmS1Y" type="number" step="1" value="0" /></div>
+        <div class="field"><label for="nmS1H">S1 声源高 (m)</label><input id="nmS1H" type="number" step="0.5" value="1.5" /></div>
+        <div class="field" style="grid-column: 1 / -1;"><label for="nmS1Lw">S1 声功率谱（6 倍频带 dB，逗号分隔，留空则不启用）</label><input id="nmS1Lw" type="text" value="95,96,96,95,92,88" /></div>
+        <div class="field"><label for="nmS2X">S2 坐标 X (m)</label><input id="nmS2X" type="number" step="1" value="-20" /></div>
+        <div class="field"><label for="nmS2Y">S2 坐标 Y (m)</label><input id="nmS2Y" type="number" step="1" value="10" /></div>
+        <div class="field"><label for="nmS2H">S2 声源高 (m)</label><input id="nmS2H" type="number" step="0.5" value="1.5" /></div>
+        <div class="field" style="grid-column: 1 / -1;"><label for="nmS2Lw">S2 声功率谱（可空）</label><input id="nmS2Lw" type="text" value="" /></div>
+        <div class="field"><label for="nmS3X">S3 坐标 X (m)</label><input id="nmS3X" type="number" step="1" value="20" /></div>
+        <div class="field"><label for="nmS3Y">S3 坐标 Y (m)</label><input id="nmS3Y" type="number" step="1" value="-10" /></div>
+        <div class="field"><label for="nmS3H">S3 声源高 (m)</label><input id="nmS3H" type="number" step="0.5" value="1.5" /></div>
+        <div class="field" style="grid-column: 1 / -1;"><label for="nmS3Lw">S3 声功率谱（可空）</label><input id="nmS3Lw" type="text" value="" /></div>
+        <div class="field"><label for="nmX0">范围 X 起 (m)</label><input id="nmX0" type="number" step="10" value="-60" /></div>
+        <div class="field"><label for="nmX1">范围 X 止 (m)</label><input id="nmX1" type="number" step="10" value="60" /></div>
+        <div class="field"><label for="nmY0">范围 Y 起 (m)</label><input id="nmY0" type="number" step="10" value="-40" /></div>
+        <div class="field"><label for="nmY1">范围 Y 止 (m)</label><input id="nmY1" type="number" step="10" value="40" /></div>
+        <div class="field"><label for="nmCols">网格列数</label><input id="nmCols" type="number" step="1" value="48" /></div>
+        <div class="field"><label for="nmRows">网格行数</label><input id="nmRows" type="number" step="1" value="32" /></div>
+        <div class="field"><label for="nmGround">地面类型</label><select id="nmGround"><option value="mixed">混合地面</option><option value="soft">软地面（吸声）</option><option value="hard">硬地面（反射）</option></select></div>
+        <div class="field"><label for="nmTc">气温 (℃)</label><input id="nmTc" type="number" step="1" value="10" /></div>
+        <div class="field"><label for="nmRh">相对湿度 (%)</label><input id="nmRh" type="number" step="5" value="70" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="nmMapBtn" class="btn primary" type="button">计算并绘图</button></div>
+      </div>
+      <div id="nmMapInfo" class="result-line" hidden></div>
+      <canvas id="nmCanvas" width="760" height="420" style="width:100%;max-width:760px;border:1px solid var(--border);border-radius:12px;margin-top:10px;display:block"></canvas>
+      <button id="nmDlBtn" class="btn" type="button" style="margin-top:10px" hidden>下载 PNG</button>
+    </section>
+
+    <section class="card">
+      <h3>道路交通噪声</h3>
+      <p class="hint">线声源模型：LwL = 10lg(Q/3600) + Lw_veh，Lp = LwL − 10lg(2πr) − A_atm − A_gr。单车声功率级随车速升高（car/truck/bus 分别 +10lg(v/50)）。</p>
+      <div class="field-row">
+        <div class="field"><label for="tnQ">车流量 Q (辆/h)</label><input id="tnQ" type="number" step="50" value="600" /></div>
+        <div class="field"><label for="tnV">平均车速 (km/h)</label><input id="tnV" type="number" step="5" value="60" /></div>
+        <div class="field"><label for="tnR">受声点距路中 (m)</label><input id="tnR" type="number" step="1" value="30" /></div>
+        <div class="field"><label for="tnCar">小型车比例 (%)</label><input id="tnCar" type="number" step="5" value="75" /></div>
+        <div class="field"><label for="tnTruck">卡车比例 (%)</label><input id="tnTruck" type="number" step="5" value="15" /></div>
+        <div class="field"><label for="tnBus">客车比例 (%)</label><input id="tnBus" type="number" step="5" value="10" /></div>
+        <div class="field"><label for="tnGround">地面类型</label><select id="tnGround"><option value="mixed">混合地面</option><option value="soft">软地面</option><option value="hard">硬地面</option></select></div>
+        <div class="field"><label for="tnTc">气温 (℃)</label><input id="tnTc" type="number" step="1" value="10" /></div>
+        <div class="field"><label for="tnRh">相对湿度 (%)</label><input id="tnRh" type="number" step="5" value="70" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="tnBtn" class="btn primary" type="button">计算交通噪声</button></div>
+      </div>
+      <div id="tnOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>限值达标判定</h3>
+      <p class="hint">GB 3096-2008 声环境功能区（室外）/ GB 55016-2021 表 2.1.3 外部噪声源传入室内 / 表 2.1.4 建筑内部设备传播至室内。2/3/4 类区建筑室内限值可放宽 5 dB。</p>
+      <div class="field-row">
+        <div class="field"><label for="nmTable">标准与表</label>
+          <select id="nmTable">
+            <option value="gb3096">GB 3096-2008 声环境功能区（室外）</option>
+            <option value="gb55016-out">GB 55016-2021 表 2.1.3 外部噪声源传入室内</option>
+            <option value="gb55016-eq">GB 55016-2021 表 2.1.4 内部设备传播至室内</option>
+          </select>
+        </div>
+        <div class="field"><label for="nmKey">类别 / 房间功能</label><select id="nmKey"></select></div>
+        <div class="field"><label for="nmPeriod">时段</label><select id="nmPeriod"><option value="day">昼间</option><option value="night">夜间</option></select></div>
+        <div class="field"><label for="nmLeq">LAeq (dB)</label><input id="nmLeq" type="number" step="0.5" value="58" /></div>
+        <div class="field" id="nmRelaxRow"><label for="nmRelax">位于 2/3/4 类区（放宽 5 dB）</label><input id="nmRelax" type="checkbox" style="width:18px;height:18px" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="nmChkBtn" class="btn primary" type="button">判定达标</button></div>
+      </div>
+      <div id="nmChkOut" class="result-line" hidden></div>
+    </section>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -3309,7 +3474,9 @@
 <script src="js/muffler.js"></script>
 <script src="js/dbcalc.js"></script>
 <script src="js/env.js"></script>
+<script src="js/noisemap.js"></script>
 <script src="js/psycho.js"></script>
+<script src="js/pasystem.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
 <script src="js/sim.js"></script>
@@ -3336,6 +3503,8 @@
 <script src="js/view-absdesign.js"></script>
 <script src="js/view-insdesign.js"></script>
 <script src="js/view-hvacnoise.js"></script>
+<script src="js/view-pasystem.js"></script>
+<script src="js/view-noisemap.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>

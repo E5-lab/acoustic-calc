@@ -40,6 +40,8 @@
     absdesign: 'view-absdesign',
     insdesign: 'view-insdesign',
     hvacnoise: 'view-hvacnoise',
+    pasystem: 'view-pasystem',
+    noisemap: 'view-noisemap',
     sim: 'view-sim',
     simfx: 'view-simfx',
     aural: 'view-aural'
@@ -65,6 +67,8 @@
     absdesign: '吸声结构设计 · 声学计算工具箱',
     insdesign: '隔声与撞击声进阶 · 声学计算工具箱',
     hvacnoise: '设备与管道声学 · 声学计算工具箱',
+    pasystem: '电声与语言清晰度 · 声学计算工具箱',
+    noisemap: '环境噪声进阶 · 声学计算工具箱',
     sim: '室内音质模拟彩图 · 声学计算工具箱',
     simfx: '声场粒子动画 · 声学计算工具箱',
     aural: '声学可听化 · 声学计算工具箱'
@@ -90,6 +94,8 @@
     { route: 'absdesign', get: function () { return window.AbsDesignView; } },
     { route: 'insdesign', get: function () { return window.InsDesignView; } },
     { route: 'hvacnoise', get: function () { return window.HvacNoiseView; } },
+    { route: 'pasystem', get: function () { return window.PaSystemView; } },
+    { route: 'noisemap', get: function () { return window.NoiseMapView; } },
     { route: 'sim', get: function () { return window.SimView; } },
     { route: 'simfx', get: function () { return window.SimFxView; } },
     { route: 'aural', get: function () { return window.AuralView; } }
