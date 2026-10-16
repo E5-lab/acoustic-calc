@@ -8,6 +8,7 @@
  *   #/absorber      多孔吸声材料阻抗
  *   #/rt60          室内混响时间
  *   #/stc           墙体隔声量
+ *   #/leakage       孔洞缝隙与门窗隔声
  *   #/barrier       声屏障衰减
  *   #/vibration     弹簧减振器隔振效率
  *   #/muffler       消声器计算
@@ -30,6 +31,7 @@
     absorber: 'view-absorber',
     rt60: 'view-rt60',
     stc: 'view-stc',
+    leakage: 'view-leakage',
     barrier: 'view-barrier',
     vibration: 'view-vibration',
     muffler: 'view-muffler',
@@ -76,6 +78,7 @@
     absorber: '多孔吸声材料阻抗 · 声学计算工具箱',
     rt60: '室内混响时间 RT60 · 声学计算工具箱',
     stc: '墙体隔声量 STC · 声学计算工具箱',
+    leakage: '孔洞缝隙与门窗隔声 · 声学计算工具箱',
     barrier: '声屏障衰减计算 · 声学计算工具箱',
     vibration: '弹簧减振（隔振效率计算书） · 声学计算工具箱',
     muffler: '消声器计算 · 声学计算工具箱',
@@ -122,6 +125,7 @@
     { route: 'absorber', get: function () { return window.AbsorberView; } },
     { route: 'rt60', get: function () { return window.Rt60View; } },
     { route: 'stc', get: function () { return window.StcView; } },
+    { route: 'leakage', get: function () { return window.LeakageView; } },
     { route: 'barrier', get: function () { return window.BarrierView; } },
     { route: 'vibration', get: function () { return window.VibrationView; } },
     { route: 'muffler', get: function () { return window.MufflerView; } },

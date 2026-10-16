@@ -104,8 +104,8 @@ var cre = /<a class="module-card" href="#\/([\w-]+)">([\s\S]*?)<\/a>/g, cm;
 while ((cm = cre.exec(home)) !== null) {
   cards.push({ route: cm[1], text: cm[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ') });
 }
-assert('总览卡片数 = 42 (实际 ' + cards.length + ')', cards.length === 42);
-['混响', '隔声', '穿孔率', '声屏障', '消声器', '响度', 'Leq', '声压级', '减振', 'GIF', '尖锐度', '简正', '传递矩阵', '微穿孔', '撞击声', '浮筑', '风管', '声功率', 'STIPA', '等值线', 'Thiele-Small', 'Qtc', 'Zobel', '线阵列', '栅瓣', '多普勒', '拍频', '声阻抗', 'dBFS', '2.83 V', '阻尼系数', 'NR 曲线', 'NC 曲线', '倍频程', 'QRD', '扩散体', '等响', '听阈', 'WHO', '临界带', 'ISO 3382', '明晰度', '中心时间', 'IACC', 'ITDG', '亥姆霍兹', 'FXLMS', '无人机', '波束', '吸声楔', '驻波', '回声测距', 'BPF'].forEach(function (kw) {
+assert('总览卡片数 = 43 (实际 ' + cards.length + ')', cards.length === 43);
+['混响', '隔声', '穿孔率', '声屏障', '消声器', '响度', 'Leq', '声压级', '减振', 'GIF', '尖锐度', '简正', '传递矩阵', '微穿孔', '撞击声', '浮筑', '风管', '声功率', 'STIPA', '等值线', 'Thiele-Small', 'Qtc', 'Zobel', '线阵列', '栅瓣', '多普勒', '拍频', '声阻抗', 'dBFS', '2.83 V', '阻尼系数', 'NR 曲线', 'NC 曲线', '倍频程', 'QRD', '扩散体', '等响', '听阈', 'WHO', '临界带', 'ISO 3382', '明晰度', '中心时间', 'IACC', 'ITDG', '亥姆霍兹', 'FXLMS', '无人机', '波束', '吸声楔', '驻波', '回声测距', 'BPF', '孔洞', '缝隙', '门窗', 'GB 55038'].forEach(function (kw) {
   var hit = cards.filter(function (c) { return c.text.indexOf(kw) >= 0; });
   assert('关键词「' + kw + '」命中 ' + hit.length + ' 个模块', hit.length >= 1);
 });
