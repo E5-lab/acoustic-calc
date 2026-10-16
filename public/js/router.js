@@ -15,6 +15,7 @@
  *   #/psycho        心理声学/声品质
  *   #/vibeval       振动评价
  *   #/roomq         厅堂与扩声音质
+ *   #/iso3382       厅堂音质参数量测（ISO 3382）
  *   #/sim           室内音质模拟（几何声学）
  */
 (function () {
@@ -36,6 +37,7 @@
     psycho: 'view-psycho',
     vibeval: 'view-vibeval',
     roomq: 'view-roomq',
+    iso3382: 'view-iso3382',
     smallroom: 'view-smallroom',
     absdesign: 'view-absdesign',
     insdesign: 'view-insdesign',
@@ -71,6 +73,7 @@
     psycho: '心理声学/声品质 · 声学计算工具箱',
     vibeval: '振动评价 · 声学计算工具箱',
     roomq: '厅堂与扩声音质 · 声学计算工具箱',
+    iso3382: '厅堂音质参数 · 声学计算工具箱',
     smallroom: '小房间与室内声场 · 声学计算工具箱',
     absdesign: '吸声结构设计 · 声学计算工具箱',
     insdesign: '隔声与撞击声进阶 · 声学计算工具箱',
@@ -106,6 +109,7 @@
     { route: 'psycho', get: function () { return window.PsyView; } },
     { route: 'vibeval', get: function () { return window.VibEvalView; } },
     { route: 'roomq', get: function () { return window.RoomQView; } },
+    { route: 'iso3382', get: function () { return window.Iso3382View; } },
     { route: 'smallroom', get: function () { return window.SmallRoomView; } },
     { route: 'absdesign', get: function () { return window.AbsDesignView; } },
     { route: 'insdesign', get: function () { return window.InsDesignView; } },
