@@ -472,7 +472,7 @@
 - `public/js/audio-io.js` — 浏览器共享音频 I/O（AudioContext 播放 / 麦克风采集 / WAV 解码 16-24-32bit PCM 与 float32）
 - `public/js/banner.js` — 首页 hero 轮播（纯 DOM，无依赖）；顶栏全局检索已并入 `ui-kit.js` 的命令面板（⌘K / Ctrl+K）
 - `tools/make-icons.js` — PWA 图标生成（纯 Node zlib 实现 PNG 编码，重绘 favicon.svg 设计；改品牌后运行 `node tools/make-icons.js` 重新生成）
-- `node tests/*.test.js` 共 53 个测试文件、**3706 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏操作区顺序 / 命令面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/ui-kit.test.js` 守护 UI 组件层（命令面板 / Toast / 实验室组件 / 主题揭示 / PWA 缓存）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
+- `node tests/*.test.js` 共 56 个测试文件、**3782 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏操作区顺序 / 命令面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/ui-kit.test.js` 守护 UI 组件层（命令面板 / Toast / 实验室组件 / 主题揭示 / PWA 缓存）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
 
 ## 目录结构
 
@@ -589,6 +589,8 @@ node tests/overview.test.js   # 首页总览一致性守护（新增模块后必
 5. 部署完成后获得 `acoustic-calc.<你的子域>.workers.dev`，可在 **Settings → Domains** 绑定自有域名。
 
 > 关键点：`wrangler.toml` 里 `[assets] directory = "./public"` 告诉 Wrangler 把 `public/` 当作站点根目录。若缺这一项或 `name` 不匹配，构建会失败（这正是之前报错的原因）。
+>
+> 资源体积：`public/` 约 **3.2 MB**（图片 0.6 MB / JS 2.0 MB / HTML+CSS 0.5 MB）。Cloudflare 边缘会对 HTML / CSS / JS 自动做 Brotli 压缩，实际传输约 500 KB；图片已是 WebP，不再压缩。
 
 ### 方式二：Cloudflare Pages 直接上传（无需 GitHub / CLI）
 
@@ -622,6 +624,7 @@ wrangler deploy          # 读取 wrangler.toml，将 public/ 作为资源发布
 
 ## 更新记录
 
+- v2.9.1：**静态资源瘦身，部署体积 11 MB → 3.2 MB（−71%）**——4 张 banner 配图由 PNG 改为 WebP（质量 84，分辨率仍为 1536×1024）：**7.97 MB → 0.61 MB（−92%）**，占原来已跟踪内容的 71%，是仓库里唯一的体积大头。同时把 `<img>` 的 `loading="lazy"` 换成 `decoding="async"`：轮播用横向位移切页，懒加载会把后三张推迟到切换瞬间才发请求，容易白屏一帧；四张合计仅 0.6 MB，一次载入更稳。`tests/home-ui.test.js` 增加两条守卫（不再保留 PNG 版 banner、banner 图总体积 < 1 MB）。`public/` 现为 **3.2 MB**：图片 0.6 MB + JS 2.0 MB + HTML/CSS 0.5 MB，远低于 Workers 静态资源单文件 25 MiB 的限制。
 - v2.9：**UI 组件层上线，顶栏检索并入命令面板**——新增零依赖交互层 `css/ui-kit.css` + `js/ui-kit.js`（`uik-` 前缀，复用既有设计令牌）：命令面板（⌘K / Ctrl+K，模糊 + 子序列匹配、分组高亮、`localStorage` 最近使用、完整 combobox/listbox 语义）、Toast 队列（进度条 / 悬停暂停）、tooltip、涟漪、3D 倾斜、数字滚动、滚动进度与入场、主题切换圆形揭示（View Transitions，不支持时降级）。顶栏独立的「检索功能模块」输入框与 `search.js` 已移除——其能力被命令面板完整覆盖（同样索引 `.module-card`、同样支持键盘操作），顶栏操作区改为「⌘K / 分享 / 主题」图标组 + 分隔线 + 友链 / 导出，友链与导出贴齐页面最右侧。新增 `ui-lab.html` 交互实验室（9 组组件演示，独立页面不进路由，不影响总览计数）。新增 `tests/ui-kit.test.js`（109 项）；`tests/home-ui.test.js` 同步改为守护「顶栏操作区顺序 + 命令面板 + 无独立检索栏」。全套单测 **53 个文件、3706 项断言全部通过**。
 - v2.8：**「声学模拟器」再增 4 个 + 补齐三大短板（工具 54 → 61 个）**：
   - **模拟器 ×4**：声呐方程（Thorp 海水吸收 + 主/被动声呐方程二分求解最大作用距离）、统计能量分析 SEA（η₁₂ = τcS/(4ωV₁)、互易性、功率平衡解声级差 D）、傅里叶合成与频谱泄漏（Gibbs 过冲 + 矩形/Hann/Hamming/Blackman 四窗对比 + 混叠）、超声脉冲回波测厚探伤（A 扫描三回波 + 近场长度 / 半扩散角 / −6 dB 缺陷当量）；各为 UMD 内核 + Canvas 动画视图，配套 4 个测试 / 501 项断言。

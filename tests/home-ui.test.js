@@ -62,12 +62,16 @@ console.log('\n[3] banner 轮播结构');
 assert('含 #heroBanner', html.indexOf('id="heroBanner"') >= 0);
 assert('含 #hbTrack / #hbDots / #hbPrev / #hbNext',
   ['hbTrack', 'hbDots', 'hbPrev', 'hbNext'].every(function (id) { return html.indexOf('id="' + id + '"') >= 0; }));
-var imgs = (html.match(/src="img\/banner-[\w-]+\.png"/g) || []);
-assert('banner 引用 4 张图片 (实际 ' + imgs.length + ')', imgs.length === 4);
+var imgs = (html.match(/src="img\/banner-[\w-]+\.webp"/g) || []);
+assert('banner 引用 4 张 WebP 图片 (实际 ' + imgs.length + ')', imgs.length === 4);
 imgs.forEach(function (s) {
   var f = s.slice(5, -1);
   assert('图片文件存在 ' + f, fs.existsSync(path.join(__dirname, '..', 'public', f)));
 });
+assert('不再保留 PNG 版本 banner 图', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
+  .filter(function (f) { return /^banner-.*\.png$/.test(f); }).length === 0);
+assert('banner 图总体积 < 1 MB', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
+  .reduce(function (sum, f) { return sum + fs.statSync(path.join(__dirname, '..', 'public', 'img', f)).size; }, 0) < 1024 * 1024);
 
 // ---- 4) 脚本加载顺序 ----
 console.log('\n[4] 脚本加载顺序');
