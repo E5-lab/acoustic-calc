@@ -202,10 +202,12 @@ var demoTags = (html.match(/class="mc-tag demo">演示/g) || []).length;
 var liveTags = (html.match(/class="mc-tag live">实测/g) || []).length;
 assert('演示徽标 21 个：模拟与可听化 3 + 声学模拟器 18 (实际 ' + demoTags + ')', demoTags === 21);
 assert('实测徽标 5 个：现场实测五件套 (实际 ' + liveTags + ')', liveTags === 5);
-assert('使用说明分组名与导航一致（电声与听觉）',
-  html.indexOf('电声与听觉 / 模拟与可听化 / 声学模拟器 / 现场实测') >= 0);
+assert('使用说明分组名与导航一致（电声与听觉，顺序同导航）',
+  html.indexOf('模拟与可听化 / 环境与振动 / 电声与听觉 / 声学模拟器 / 现场实测') >= 0);
 assert('使用说明不含旧分组名「心理与声品质」', html.indexOf('心理与声品质') < 0);
-assert('测试计数文案为「56 个测试文件」', html.indexOf('共 56 个测试文件全部通过') >= 0);
+var testFileCount = fs.readdirSync(__dirname).filter(function (f) { return /\.test\.js$/.test(f); }).length;
+assert('测试计数文案与 tests/ 实际文件数一致（' + testFileCount + '）',
+  html.indexOf('共 ' + testFileCount + ' 个测试文件全部通过') >= 0);
 
 // ---- 12) P2 结构改造：#/all 目录页 / 交叉链接 / 描述 clamp ----
 console.log('\n[12] P2 结构改造');
