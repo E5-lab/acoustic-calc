@@ -306,6 +306,11 @@ kbd {
   .brand { grid-column: 1; grid-row: 1; }
   .topbar-actions { grid-column: 2; grid-row: 1; }
   .mainnav { grid-column: 1 / -1; grid-row: 2; justify-self: center; margin-top: 2px; }
+  /* 触控目标 ≥ 44px（WCAG 2.5.5）：顶栏图标按钮与文字下拉按钮 */
+  .topbar-actions .theme-toggle { width: 44px; height: 44px; }
+  .topbar-actions .nav-parent { min-height: 44px; }
+  .mainnav > a,
+  .mainnav .nav-parent { min-height: 44px; display: inline-flex; align-items: center; }
 }
 
 /* --------------- 二级菜单（分组下拉） --------------- */
@@ -652,6 +657,11 @@ a.module-card:hover {
   color: var(--ok);
   background: var(--ok-soft);
   border-color: color-mix(in srgb, var(--ok) 35%, transparent);
+}
+.mc-tag.demo {
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-color: color-mix(in srgb, var(--warn) 35%, transparent);
 }
 .mc-desc { font-size: 12.5px; color: var(--muted); }
 

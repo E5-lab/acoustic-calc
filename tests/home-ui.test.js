@@ -185,5 +185,26 @@ assert('导出位于友链之后（页面最右侧）', iExport > iFriends);
 assert('导出之后无其它控件', actionsHtml.slice(iExport).indexOf('class="theme-toggle"') < 0);
 assert('操作区右对齐 justify-self:end', /\.topbar-actions\s*\{[\s\S]*?justify-self:\s*end/.test(css));
 
+// ---- 11) P1 结构修缮：模拟器归属 / 徽标区分 / 文案同步 ----
+console.log('\n[11] P1 结构修缮');
+var simGroupStart = home.indexOf('<div class="group-label">声学模拟器</div>');
+var simGroupEnd = home.indexOf('<div class="group-label">', simGroupStart + 10);
+var simGroupHtml = home.slice(simGroupStart, simGroupEnd);
+var liveGroupStart = home.indexOf('<div class="group-label">现场实测</div>');
+var liveGroupHtml = home.slice(liveGroupStart, home.indexOf('</section>', liveGroupStart));
+['sim-sonar', 'sim-sea', 'sim-fourier', 'sim-ut'].forEach(function (r) {
+  assert('「声学模拟器」分组含 ' + r + ' 卡片', simGroupHtml.indexOf('href="#/' + r + '"') >= 0);
+  assert('「现场实测」分组不含 ' + r + ' 卡片', liveGroupHtml.indexOf('href="#/' + r + '"') < 0);
+});
+assert('不再使用零信息量「可用」徽标', html.indexOf('>可用</span>') < 0);
+var demoTags = (html.match(/class="mc-tag demo">演示/g) || []).length;
+var liveTags = (html.match(/class="mc-tag live">实测/g) || []).length;
+assert('演示徽标 21 个：模拟与可听化 3 + 声学模拟器 18 (实际 ' + demoTags + ')', demoTags === 21);
+assert('实测徽标 5 个：现场实测五件套 (实际 ' + liveTags + ')', liveTags === 5);
+assert('使用说明分组名与导航一致（电声与听觉）',
+  html.indexOf('电声与听觉 / 模拟与可听化 / 声学模拟器 / 现场实测') >= 0);
+assert('使用说明不含旧分组名「心理与声品质」', html.indexOf('心理与声品质') < 0);
+assert('测试计数文案为「56 个测试文件」', html.indexOf('共 56 个测试文件全部通过') >= 0);
+
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
