@@ -2,11 +2,13 @@
  * view-leakage.js — 孔洞缝隙漏声与门窗隔声估算视图（#/leakage）
  * 依赖：window.Leakage（内核）、window.MiniChart（绘图）
  *
- * 四张卡片（DOM 由本视图自建，index.html 仅留空容器）：
+ * 五张卡片（DOM 由本视图自建，index.html 仅留空容器）：
  *   1) 孔洞缝隙漏声：小孔声质量模型 + 面积加权组合隔声曲线 + 缝隙 ΔR 速算
  *   2) 组合构件：墙+门+窗+孔洞面积加权、透射能占比与薄弱环节分析
  *   3) 门窗构件估算：单层/中空/夹层玻璃、轻质单板、双层板（含 f₀）
- *   4) 标准限值速查：GB 50118-2010 + GB 55038-2025
+ *   4) 常用门窗传声损失曲线数据表：单玻/中空/夹层/中空夹胶/整窗合成曲线，
+ *      Rw 锚点取自公开实测统计，可一键加入组合构件计算
+ *   5) 标准限值速查：GB 50118-2010 + GB 55038-2025
  */
 (function () {
   'use strict';
@@ -15,7 +17,7 @@
   var state = {
     holeKind: 'circle', wallMode: 'mass', winType: 'single-glass',
     req1: 'dwell-entry-door', req2: 'dwell-entry-door', req3: 'dwell-entry-door',
-    lastHole: null
+    lastHole: null, lastGlz: null
   };
   var inited = false;
 
@@ -216,7 +218,53 @@
         : '');
   }
 
-  // ---------------------------------------------------------------- 卡片 4
+  // ---------------------------------------------------------------- 卡片 4：常用门窗 TL 曲线数据表
+
+  function calcGlz() {
+    var e = E.glazingById($('lkGlzSel').value);
+    if (!e) return;
+    var c = E.glazingCurve(e);
+    if (!c.ok) { $('lkGlzSummary').innerHTML = line('计算失败：' + esc(c.error), 'warn'); return; }
+    state.lastGlz = c;
+    var dev = c.rw - e.rwRef;
+    $('lkGlzSummary').innerHTML =
+      line('<strong>' + esc(e.name) + '</strong>（' + esc(e.group) + '）：Rw 估算 <strong>' + num(c.rw, 1) +
+        ' dB</strong> vs 实测统计锚点 ' + num(e.rwRef, 0) + ' dB（偏差 ' + (dev >= 0 ? '+' : '') + num(dev, 1) +
+        '；统计离散 ±2~3 dB）' + (c.fr ? '；质量-空气-质量共振 f_r ≈ ' + num(c.fr, 0) + ' Hz' : '') +
+        '；吻合频率 f_c ≈ ' + c.fcs.map(function (fc) { return num(fc, 0); }).join(' / ') + ' Hz') +
+      line(esc(e.note || ''));
+    var rows = c.bands.map(function (f, i) {
+      return '<tr><td>' + fLabel(f) + '</td><td>' + num(c.R[i], 1) + '</td><td>' +
+        (c.penalty[i] > 0 ? '−' + c.penalty[i] : '—') + '</td></tr>';
+    }).join('');
+    $('lkGlzTable').innerHTML =
+      '<div class="table-wrap"><table class="data-table"><thead><tr><th>频带 (Hz)</th>' +
+      '<th>传声损失 R (dB)</th><th>整窗扣减 (dB)</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    drawGlz(c);
+  }
+
+  function drawGlz(c) {
+    Chart.draw($('lkGlzChart'), {
+      x: c.bands, xLog: true, yMin: 0, yTicks: 6, yDigits: 0,
+      series: [
+        { values: c.R, color: '#2563eb', width: 2, points: true, radius: 3 },
+        { values: c.bands.map(function () { return c.rw; }), color: '#94a3b8', width: 1.5, dash: [4, 3], points: false }
+      ]
+    });
+  }
+
+  function addGlzToParts() {
+    var e = E.glazingById($('lkGlzSel').value);
+    if (!e) return;
+    var c = E.glazingCurve(e);
+    if (!c.ok) return;
+    var ta = $('lkParts');
+    var name = e.name.replace(/[\s,;]+/g, '');     // 组合构件解析以空白分隔，名称去空格
+    ta.value = String(ta.value || '').replace(/\s+$/, '') + '\n' + name + ' 3.0 ' + num(c.rw, 1);
+    calcParts();
+  }
+
+  // ---------------------------------------------------------------- 卡片 5
 
   function fillLimits() {
     var groups = [], html = '';
@@ -344,6 +392,17 @@
       '<div id="lkWinSummary"></div>' +
       '</section>' +
 
+      '<section class="card"><h3>常用门窗传声损失曲线（数据表）</h3>' +
+      '<p class="hint">合成模型估算曲线：场入射质量定律 R = 20lg(m·f) − 50 叠加玻璃吻合谷（f_c ≈ 12800/t mm）；中空加质量-空气-质量共振谷（f_r = 60√[(m₁+m₂)/(m₁m₂d)]）与空气层附加 0.1·d(mm)；夹层 PVB 阻尼使吻合谷减半；整窗按开启方式扣减框/密封/安装损失（推拉 > 平开 > 固定，高频偏重）。Rw 锚点取自公开实测统计（离散 ±2~3 dB），供选型比选；正式设计以实验室检测报告为准。</p>' +
+      '<div class="field-row">' +
+      '<div class="field"><label for="lkGlzSel">常用配置</label><select id="lkGlzSel" class="text-input"></select></div>' +
+      '<div class="field field-auto"><label>&nbsp;</label><button id="lkBtnGlzAdd" class="btn" type="button">加入组合构件计算</button></div>' +
+      '</div>' +
+      '<div id="lkGlzSummary"></div>' +
+      '<div id="lkGlzTable"></div>' +
+      '<canvas id="lkGlzChart" height="260"></canvas>' +
+      '</section>' +
+
       '<section class="card notes"><h3>标准限值速查</h3>' +
       '<div id="lkLimitsTable"></div>' +
       '<p class="hint">GB 50118-2010《民用建筑隔声设计规范》表 4.2.5/4.2.6 等；GB 55038-2025《住宅项目规范》将卧室之间空气声隔声提高到 50 dB、其他分户构件 48 dB。C 为粉红噪声频谱修正量、Ctr 为交通噪声频谱修正量；本表为低限与高要求两档，评价量与修正量之和达标方可。</p>' +
@@ -397,6 +456,20 @@
     $('lkWinType').addEventListener('change', function () { state.winType = $('lkWinType').value; syncWinFields(); });
     $('lkReq3').addEventListener('change', function () { state.req3 = $('lkReq3').value; });
 
+    var glzGroups = [];
+    E.GLAZING.forEach(function (e) { if (glzGroups.indexOf(e.group) < 0) glzGroups.push(e.group); });
+    var glzHtml = '';
+    glzGroups.forEach(function (g) {
+      glzHtml += '<optgroup label="' + esc(g) + '">';
+      E.GLAZING.filter(function (e) { return e.group === g; }).forEach(function (e) {
+        glzHtml += '<option value="' + e.id + '">' + esc(e.name) + '（Rw ≈ ' + e.rwRef + '）</option>';
+      });
+      glzHtml += '</optgroup>';
+    });
+    $('lkGlzSel').innerHTML = glzHtml;
+    $('lkGlzSel').addEventListener('change', calcGlz);
+    $('lkBtnGlzAdd').addEventListener('click', addGlzToParts);
+
     fillLimits();
     syncHoleFields();
     syncWinFields();
@@ -410,6 +483,8 @@
 
   function onShow() {
     if (state.lastHole) drawHole(state.lastHole);
+    if (state.lastGlz) drawGlz(state.lastGlz);
+    else calcGlz();
   }
 
   window.LeakageView = { init: init, onShow: onShow };

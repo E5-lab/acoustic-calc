@@ -1,11 +1,13 @@
 /*
  * leakage.js — 孔洞缝隙漏声与门窗隔声估算内核（UMD，Node 可直接 require）
  *
- * 覆盖四类问题：
+ * 覆盖五类问题：
  *   1) 孔洞 / 缝隙漏声：小孔声质量模型 + 面积加权组合隔声（含倍频带曲线）
  *   2) 缝隙影响速算：ΔR = 10lg[(1 + (S₀/S_c)·10^(0.1R₀)) / (1 + S₀/S_c)]
  *   3) 组合构件隔声：墙 + 门 + 窗 + 孔洞的面积加权能量平均与薄弱环节分析
  *   4) 门窗构件估算：单层板质量定律 / 中空玻璃 / 夹层玻璃 / 双层板（含 f₀ 共振）
+ *   5) 常用门窗传声损失曲线数据表：单玻 / 中空 / 夹层 / 中空夹胶 / 整窗
+ *      （合成模型生成逐倍频带曲线，Rw 锚点取自公开实测统计）
  *
  * 公式出处（均经多源交叉核对）：
  *   - 单孔透射（声质量模型，穿孔板声学理论）：
@@ -287,6 +289,143 @@
     return s / pick.length;
   }
 
+  // ---------------------------------------------------------------- 门窗 TL 曲线数据表
+
+  /*
+   * 常用门窗构件传声损失曲线合成模型（125–4000 Hz 倍频带，工程估算）
+   *
+   * 单片玻璃：场入射质量定律 R₀ = 20lg(m·f) − 50（m = 2.5·t mm，玻璃 2500 kg/m³），
+   *   叠加吻合（临界）频率谷 f_c ≈ 12800/t(mm) Hz：
+   *   R(f) = R₀ − depth·exp[−½·(log₂(f/f_c)/σ)²]，倍频带平均 depth≈10 dB、σ≈0.8 倍频程；
+   *   PVB 夹层阻尼使谷深减半（吻合区实测曲线变浅变宽）。
+   *
+   * 中空（双片）：质量-空气-质量共振 f_r = 60√[(m₁+m₂)/(m₁m₂d)]（与双层板同式）；
+   *   f < f_r：两片耦合，按总面密度质量定律并在 f_r 处叠加共振谷（depth≈5 dB）；
+   *   f ≥ f_r：取两片各自质量定律（含各自吻合谷）的较高者 + 空气层附加 0.1·d(mm)
+   *   （与 glassIgu 同源，封顶 10 dB）。
+   *
+   * 高频上限：实验室构件口径经验上限 R_HF_CAP = 44 dB（残余透射/试件安装侧向）。
+   *
+   * 整窗（含框/密封/安装）：按开启方式逐频带扣减——漏声与孔缝频率特性一致，
+   * 高频损失更重：固定扇（连续打胶）< 平开（多点锁 + 胶条）< 推拉（搭接缝毛条）。
+   *
+   * Rw 为 500/1k/2k 平均估算（rwEstimate）；锚点取公开实测统计
+   * （6+12A+6 ≈ 30、5+12A+8 ≈ 33、5+0.76PVB+5 ≈ 34、8+1.52PVB+8 ≈ 38、
+   *   推拉整窗中位 ≈ 26、平开整窗 25~39、固定扇 36~44），
+   * 实测离散 ±2~3 dB，正式设计以实验室检测报告为准。
+   */
+  var GLASS_RHO = 2.5;       // 玻璃面密度 kg/(m²·mm)
+  var R_HF_CAP = 44;         // 高频经验上限（dB）
+  var DIP_DEPTH = 9;         // 吻合谷深（dB，倍频带平均）
+  var DIP_SIGMA = 0.8;       // 吻合谷宽（倍频程）
+  var RES_DEPTH = 5;         // 质量-空气-质量共振谷深（dB）
+  var RES_SIGMA = 0.5;       // 共振谷宽（倍频程）
+  var MOUNT_PENALTY = {
+    glazing: [0, 0, 0, 0, 0, 0],      // 构件/实验室口径（不扣减）
+    fixed:   [0, 0, 1, 1, 1, 2],       // 固定扇：连续打胶密封
+    casement:[0, 1, 1, 1, 2, 2],       // 平开：多点锁 + 胶条连续密封
+    slider:  [2, 3, 3, 4, 4, 5]        // 推拉：窗扇搭接缝毛条密封
+  };
+
+  function paneMassLaw(tMm, f) {
+    return 20 * Math.log10(GLASS_RHO * tMm * f) - 50;
+  }
+  function dipAt(f, fc, depth, sigma) {
+    var z = Math.log(f / fc) / Math.LN2 / sigma;
+    return depth * Math.exp(-z * z / 2);
+  }
+  function paneBands(pane) {
+    var fc = 12800 / pane.t;
+    var depth = pane.pvb > 0 ? DIP_DEPTH / 2 : DIP_DEPTH;
+    return OCTAVE_HZ.map(function (f) {
+      return paneMassLaw(pane.t, f) - dipAt(f, fc, depth, DIP_SIGMA);
+    });
+  }
+
+  /*
+   * 合成玻璃/整窗逐倍频带传声损失曲线
+   * o: { panes: [{ t: 玻璃厚度mm, pvb: PVB膜厚mm（0 或缺省为无） } ×1~2 片],
+   *      cavity: 空气层厚度 mm（双片时必填）,
+   *      mount: 'glazing'|'fixed'|'casement'|'slider'（缺省 glazing 构件口径） }
+   * 夹层玻璃按单片复合写：5+0.76PVB+5 → panes: [{ t: 10, pvb: 0.76 }]
+   * 返回 { ok, bands, R[], rw, fr, fcs[], mount, penalty[] }
+   */
+  function glazingCurve(o) {
+    o = o || {};
+    var panes = o.panes || [];
+    if (!panes.length) return { ok: false, error: '请给出玻璃片参数' };
+    var mount = MOUNT_PENALTY[o.mount] ? o.mount : 'glazing';
+    var R, fr = null, fcs = [];
+
+    if (panes.length === 1) {
+      R = paneBands(panes[0]);
+      fcs.push(12800 / panes[0].t);
+    } else {
+      var p1 = panes[0], p2 = panes[1];
+      var d = num(o.cavity);
+      if (d == null || d <= 0) return { ok: false, error: '双片构件请给出空气层厚度（mm）' };
+      var m1 = GLASS_RHO * p1.t, m2 = GLASS_RHO * p2.t;
+      fr = 60 * Math.sqrt((m1 + m2) / (m1 * m2 * (d / 1000)));
+      var bonus = Math.min(0.1 * d, 10);
+      var b1 = paneBands(p1), b2 = paneBands(p2);
+      fcs.push(12800 / p1.t, 12800 / p2.t);
+      R = OCTAVE_HZ.map(function (f, i) {
+        if (f < fr) {
+          return paneMassLaw(p1.t + p2.t, f) - dipAt(f, fr, RES_DEPTH, RES_SIGMA);
+        }
+        return Math.max(b1[i], b2[i]) + bonus;
+      });
+    }
+
+    var pen = MOUNT_PENALTY[mount];
+    var Rf = R.map(function (v, i) { return Math.min(v - pen[i], R_HF_CAP); });
+    return {
+      ok: true, bands: OCTAVE_HZ.slice(), R: Rf, rw: rwEstimate(Rf, OCTAVE_HZ),
+      fr: fr, fcs: fcs, mount: mount, penalty: pen.slice()
+    };
+  }
+
+  /* 常用配置数据表（rwRef 为公开实测统计锚点，供选型比选） */
+  var GLAZING = [
+    { id: 'g4',  group: '玻璃构件 · 实验室口径', name: '4 mm 单玻', mount: 'glazing', rwRef: 29,
+      panes: [{ t: 4 }], note: 'f_c ≈ 3.2 kHz，吻合谷落在 2~4 kHz' },
+    { id: 'g6',  group: '玻璃构件 · 实验室口径', name: '6 mm 单玻', mount: 'glazing', rwRef: 31,
+      panes: [{ t: 6 }], note: 'f_c ≈ 2.1 kHz，2 kHz 频带出现吻合谷' },
+    { id: 'g8',  group: '玻璃构件 · 实验室口径', name: '8 mm 单玻', mount: 'glazing', rwRef: 32,
+      panes: [{ t: 8 }], note: 'f_c ≈ 1.6 kHz，吻合谷向中频移动' },
+    { id: 'g10', group: '玻璃构件 · 实验室口径', name: '10 mm 单玻', mount: 'glazing', rwRef: 34,
+      panes: [{ t: 10 }], note: 'f_c ≈ 1.3 kHz，加厚不宜超过单层极限' },
+    { id: 'igu-5-12-5', group: '玻璃构件 · 实验室口径', name: '中空 5+12A+5', mount: 'glazing', rwRef: 29,
+      panes: [{ t: 5 }, { t: 5 }], cavity: 12, note: 'f_r ≈ 219 Hz，隔热为主、隔声提升有限' },
+    { id: 'igu-6-12-6', group: '玻璃构件 · 实验室口径', name: '中空 6+12A+6', mount: 'glazing', rwRef: 30,
+      panes: [{ t: 6 }, { t: 6 }], cavity: 12, note: 'f_r ≈ 200 Hz，最常用的隔声中空配置' },
+    { id: 'igu-6-20-6', group: '玻璃构件 · 实验室口径', name: '中空 6+20A+6', mount: 'glazing', rwRef: 32,
+      panes: [{ t: 6 }, { t: 6 }], cavity: 20, note: '大空腔使 f_r 下移、曲线更平整' },
+    { id: 'igu-5-12-8', group: '玻璃构件 · 实验室口径', name: '中空 5+12A+8（不等厚）', mount: 'glazing', rwRef: 33,
+      panes: [{ t: 5 }, { t: 8 }], cavity: 12, note: '两片吻合谷错开，共同薄弱点消失' },
+    { id: 'lam-5-076-5', group: '玻璃构件 · 实验室口径', name: '夹层 5+0.76PVB+5', mount: 'glazing', rwRef: 34,
+      panes: [{ t: 10, pvb: 0.76 }], note: 'PVB 阻尼填平吻合谷，低中频优于同厚中空' },
+    { id: 'lam-8-152-8', group: '玻璃构件 · 实验室口径', name: '夹层 8+1.52PVB+8', mount: 'glazing', rwRef: 38,
+      panes: [{ t: 16, pvb: 1.52 }], note: '1.52 mm 膜为夹层隔声甜点区' },
+    { id: 'igu-lam-5-12-6', group: '玻璃构件 · 实验室口径', name: '中空夹胶 5PVB5+12A+6', mount: 'glazing', rwRef: 36,
+      panes: [{ t: 10, pvb: 0.76 }, { t: 6 }], cavity: 12, note: '夹胶 + 不等厚组合，市场隔声主流方案' },
+    { id: 'win-slide', group: '整窗 · 工程典型值', name: '铝合金推拉窗 · 6+12A+6', mount: 'slider', rwRef: 26,
+      panes: [{ t: 6 }, { t: 6 }], cavity: 12, note: '搭接缝毛条密封是最薄弱环节，Rw 难破 29' },
+    { id: 'win-alu', group: '整窗 · 工程典型值', name: '断桥铝平开 · 6+12A+6', mount: 'casement', rwRef: 30,
+      panes: [{ t: 6 }, { t: 6 }], cavity: 12, note: '多点锁 + 胶条连续密封；优秀样本 31~35（型材腔体与密封状态贡献）' },
+    { id: 'win-pvc', group: '整窗 · 工程典型值', name: '塑钢平开 · 5+12A+5', mount: 'casement', rwRef: 30,
+      panes: [{ t: 5 }, { t: 5 }], cavity: 12, note: '多腔体型材对高频略优；胶条翻新后优秀样本可达 33' },
+    { id: 'win-lam', group: '整窗 · 工程典型值', name: '断桥铝平开 · 中空夹胶 5PVB5+12A+6', mount: 'casement', rwRef: 36,
+      panes: [{ t: 10, pvb: 0.76 }, { t: 6 }], cavity: 12, note: '临街降噪主流配置，实测 35~39' },
+    { id: 'win-fixed', group: '整窗 · 工程典型值', name: '固定扇 · 8PVB8+12A+8PVB8', mount: 'fixed', rwRef: 40,
+      panes: [{ t: 16, pvb: 1.52 }, { t: 16, pvb: 1.52 }], cavity: 12, note: '无开启缝、连续打胶，实测 36~44，需配新风' }
+  ];
+
+  function glazingById(id) {
+    for (var i = 0; i < GLAZING.length; i++) if (GLAZING[i].id === id) return GLAZING[i];
+    return null;
+  }
+
   // ---------------------------------------------------------------- 标准限值
 
   /*
@@ -395,7 +534,10 @@
     findLimit: findLimit,
     checkLimit: checkLimit,
     exampleParts: exampleParts,
-    exampleCombination: exampleCombination
+    exampleCombination: exampleCombination,
+    GLAZING: GLAZING, glazingCurve: glazingCurve, glazingById: glazingById,
+    GLASS_RHO: GLASS_RHO, R_HF_CAP: R_HF_CAP,
+    MOUNT_PENALTY: MOUNT_PENALTY
   };
 
   return API;

@@ -156,5 +156,57 @@ ok('限值表覆盖 6 类建筑', ['住宅', '学校', '医院', '办公', '旅�
 }));
 ok('每条限值均有正限值', L.LIMITS.every(function (r) { return r.limit > 0 && (r.corr === 'C' || r.corr === 'Ctr'); }));
 
+console.log('\n[13] 门窗 TL 曲线合成模型');
+function dip(f, fc, depth, sigma) {
+  var z = Math.log(f / fc) / Math.LN2 / sigma;
+  return depth * Math.exp(-z * z / 2);
+}
+function pml(t, f) { return 20 * Math.log10(2.5 * t * f) - 50; }   // 场入射质量定律
+var g4c = L.glazingCurve(L.glazingById('g4'));
+ok('4mm 125 Hz = 场入射质量定律（吻合谷未及低频）', close(g4c.R[0], pml(4, 125), 0.01), g4c.R[0]);
+var g6c = L.glazingCurve(L.glazingById('g6'));
+ok('6mm 吻合频率 f_c = 12800/t ≈ 2133 Hz', close(g6c.fcs[0], 12800 / 6, 0.01), g6c.fcs[0]);
+ok('6mm 2 kHz 被吻合谷压低（较质量定律低 ≥ 5 dB）', g6c.R[4] < pml(6, 2000) - 5, g6c.R[4] + ' vs ' + pml(6, 2000).toFixed(2));
+ok('6mm 4 kHz 谷后回升（≥ +3 dB）', g6c.R[5] > g6c.R[4] + 3);
+var g10c = L.glazingCurve(L.glazingById('g10'));
+var lamc = L.glazingCurve(L.glazingById('lam-5-076-5'));
+ok('PVB 阻尼使同厚（10mm）吻合谷减半：夹层 2k 高于单玻 ≥ 2 dB', lamc.R[4] > g10c.R[4] + 2, lamc.R[4] + ' vs ' + g10c.R[4]);
+var iguc = L.glazingCurve(L.glazingById('igu-6-12-6'));
+ok('6+12A+6 质量-空气-质量共振 f_r = 200 Hz', close(iguc.fr, 200, 0.01), iguc.fr);
+ok('125 Hz 低于 f_r：总面密度质量定律 − 共振谷', close(iguc.R[0], pml(12, 125) - dip(125, 200, 5, 0.5), 0.01), iguc.R[0]);
+ok('500 Hz 高于 f_r：单片质量定律（含吻合谷）+ 空气层附加 1.2 dB', close(iguc.R[2], pml(6, 500) - dip(500, 12800 / 6, 9, 0.8) + 1.2, 0.01), iguc.R[2]);
+ok('高频经验上限 44 dB（win-fixed 4k 触顶）', close(L.glazingCurve(L.glazingById('win-fixed')).R[5], L.R_HF_CAP, 1e-9));
+var slide = L.glazingCurve(L.glazingById('win-slide'));
+var alu = L.glazingCurve(L.glazingById('win-alu'));
+ok('同配置 Rw：构件（实验室） > 平开整窗 > 推拉整窗', iguc.rw > alu.rw && alu.rw > slide.rw, iguc.rw + '/' + alu.rw + '/' + slide.rw);
+ok('整窗扣减高频偏重（推拉 4k 扣 5 dB > 125 Hz 扣 2 dB）', slide.penalty[5] === 5 && slide.penalty[0] === 2);
+ok('缺玻璃片报错', L.glazingCurve({}).ok === false);
+ok('双片缺空腔报错', L.glazingCurve({ panes: [{ t: 6 }, { t: 6 }] }).ok === false);
+ok('非法开启方式回退构件口径', L.glazingCurve({ panes: [{ t: 6 }], mount: 'nope' }).mount === 'glazing');
+
+console.log('\n[14] 数据表锚点校准（公开实测统计，离散 ±2~3 dB）');
+var GL = L.GLAZING;
+ok('数据表 16 条配置、2 个分组', GL.length === 16 && GL.filter(function (e) { return GL[0].group === e.group; }).length === 11);
+ok('全部条目 |Rw 估算 − 锚点| ≤ 2.5 dB', GL.every(function (e) { return Math.abs(L.glazingCurve(e).rw - e.rwRef) <= 2.5; }),
+  GL.map(function (e) { var d = L.glazingCurve(e).rw - e.rwRef; return e.id + ':' + (d >= 0 ? '+' : '') + d.toFixed(1); }).join(' '));
+ok('每条含 id/名称/玻璃片/锚点/口径', GL.every(function (e) { return e.id && e.name && e.panes && e.panes.length >= 1 && e.rwRef > 0 && e.mount; }));
+ok('glazingById 命中与未知返回 null', L.glazingById('igu-6-12-6').name === '中空 6+12A+6' && L.glazingById('nope') === null);
+ok('不等厚中空优于等厚（吻合谷错开）', L.glazingCurve(L.glazingById('igu-5-12-8')).rw > L.glazingCurve(L.glazingById('igu-5-12-5')).rw);
+ok('大空腔（20mm）优于小空腔（12mm）', L.glazingCurve(L.glazingById('igu-6-20-6')).rw > iguc.rw);
+ok('同厚夹层比中空高 ≥ 4 dB（PVB 阻尼）', lamc.rw - L.glazingCurve(L.glazingById('igu-5-12-5')).rw >= 4);
+ok('整窗不高于同配置构件口径', slide.rw < iguc.rw && alu.rw < iguc.rw);
+
+console.log('\n[15] 数据表界面守护');
+(function () {
+  var fs = require('fs'), pathMod = require('path');
+  var vjs = fs.readFileSync(pathMod.join(__dirname, '..', 'public', 'js', 'view-leakage.js'), 'utf8');
+  ok('视图含曲线数据表卡片', vjs.indexOf('常用门窗传声损失曲线') >= 0);
+  ['lkGlzSel', 'lkBtnGlzAdd', 'lkGlzChart', 'lkGlzSummary', 'lkGlzTable'].forEach(function (id) {
+    ok('视图含 #' + id, vjs.indexOf('id="' + id + '"') >= 0);
+  });
+  ok('下拉切换与加入按钮已绑定', vjs.indexOf("addEventListener('change', calcGlz)") >= 0 && vjs.indexOf("addEventListener('click', addGlzToParts)") >= 0);
+  ok('加入组合构件时名称去空格（解析格式兼容）', vjs.indexOf("replace(/[\\s,;]+/g, '')") >= 0);
+})();
+
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
