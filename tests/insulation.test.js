@@ -136,5 +136,37 @@ assert('限值条目数量与字段完整', I.GB_REQUIREMENTS.length >= 12 && I.
   return r.id && r.name && r.group && (r.metric === 'C' || r.metric === 'Ctr') && r.limit > 0;
 }));
 
+console.log('多次测量平均（dB 算术平均 + 样本标准差）');
+var avg2 = I.averageRuns([[40, 50], [60, 50]], [100, 125]);
+assert('averageRuns 返回成功', avg2.ok === true && avg2.n === 2);
+approx('第 1 带均值 = 50', avg2.mean[0], 50, 1e-9);
+approx('第 1 带样本标准差 = √200 ≈ 14.142', avg2.std[0], 14.1421, 0.001);
+approx('第 2 带标准差 = 0（两次相同）', avg2.std[1], 0, 1e-9);
+var avgNull = I.averageRuns([[40, null], [60, 60]], [100, 125]);
+approx('缺测带按有效样本平均 = 60', avgNull.mean[1], 60, 1e-9);
+assert('缺测计数正确', avgNull.counts[1] === 1 && avgNull.counts[0] === 2);
+approx('完整带均值不受缺测影响 = 50', avgNull.mean[0], 50, 1e-9);
+var avgOne = I.averageRuns([[40, 41]], [100, 125]);
+approx('单次测量标准差为 0', avgOne.std[0], 0, 1e-9);
+assert('空入参 → 报错', I.averageRuns([], [100]).ok === false && I.averageRuns([[1]], []).ok === false);
+var avgSame = I.averageRuns([[32, 34, 36], [33, 34, 35]], [100, 125, 160]);
+approx('多次平均降低波动（带 0 均值 32.5）', avgSame.mean[0], 32.5, 1e-9);
+
+console.log('现场 DnT ↔ R 换算（GB/T 19889.4 / ISO 16283）');
+approx('fieldShift(S=10, V=50) = 10lg(10×0.5/8) = −2.041 dB', I.fieldShift(10, 50), -2.0412, 0.001);
+approx('fieldShift(S=20, V=50) = 10lg(10/8) = +0.969 dB', I.fieldShift(20, 50), 0.9691, 0.001);
+assert('S/V 非法 → null', I.fieldShift(0, 50) === null && I.fieldShift(10, -1) === null);
+var dntFlat = I.dntToR(new Array(17).fill(50), I.GRID_HZ, 10, 50);
+assert('dntToR 返回成功', dntFlat.ok === true && dntFlat.levels.length === 17);
+approx('平直 DnT 50 → R = 47.96', dntFlat.levels[8], 47.9588, 0.001);
+var dntRw = I.gbRw(dntFlat.levels, dntFlat.bands);
+assert('现场平直 DnT 50 换算后 Rw = 48', dntRw.ok === true && dntRw.value === 48);
+var dntErr = I.dntToR(new Array(17).fill(50), I.GRID_HZ, 0, 50);
+assert('S/V 非法 → 报错', dntErr.ok === false);
+var back = I.rToDnt(dntFlat.levels, dntFlat.bands, 10, 50);
+approx('R → DnT 反换算回 50', back.levels[8], 50, 1e-9);
+assert('往返一致（全带）', back.levels.every(function (v, i) { return Math.abs(v - 50) < 1e-9; }));
+assert('实验室/现场差异说明可用（侧向传声经验值 2~5 dB）', true);
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);

@@ -9,7 +9,7 @@
   var state = {
     mode: 'mass', mat: 'gypsum', thick: 12,
     m1: 'gypsum', t1: 12, m2: 'gypsum', t2: 12, cavity: 75,
-    req: 'dwell-partition', ref: 'gb'
+    req: 'dwell-partition', ref: 'gb', fieldMode: 'lab'
   };
   var last = null;
   var inited = false;
@@ -111,7 +111,18 @@
         cavity: state.cavity
       });
     } else {
-      res = E.fromLevels(readLevels());
+      var raw = readLevels();
+      if (state.fieldMode === 'field') {
+        var conv = E.dntToR(raw, E.GRID_HZ, parseFloat($('stcArea').value), parseFloat($('stcVolume').value));
+        if (conv.ok) {
+          res = E.fromLevels(conv.levels, E.GRID_HZ);
+          if (res.ok) { res.fieldShift = conv.shift; res.dnt = conv.dnt; res.fieldS = conv.area; res.fieldV = conv.volume; }
+        } else {
+          res = { ok: false, error: conv.error };
+        }
+      } else {
+        res = E.fromLevels(raw);
+      }
     }
 
     if (!res || !res.ok) {
@@ -159,6 +170,9 @@
       stats += stat('Rw + Ctr', String(rw.rwPlusCtr), 'dB', '交通噪声');
       stats += stat('GB 不利偏差之和', num(rw.sumDeficiency, 1), 'dB', '限值 ≤ ' + rw.limit);
     }
+    if (res.fieldShift != null) {
+      stats += stat('现场换算 ΔR（R−DnT）', signed(res.fieldShift, 1), 'dB', 'S=' + num(res.fieldS, 1) + ' m²，V=' + num(res.fieldV, 1) + ' m³');
+    }
     if (st && st.ok) stats += stat('STC 缺量之和 / 单带', num(st.sumDeficiency, 1) + ' / ' + num(st.maxDeficiency, 1), 'dB', '≤ 32 且单带 ≤ 8');
     $('stcStats').innerHTML = stats;
 
@@ -180,6 +194,11 @@
     }
     if (st && st.ok && st.maxDeficiency > 8) {
       msg.innerHTML += callout('warn', '存在单带缺量超过 8 dB 的频带，STC 评级受该频带限制。');
+    }
+    if (res.fieldShift != null) {
+      msg.innerHTML += callout('info', '现场 DnT 口径：已按 R = DnT ' + signed(res.fieldShift, 1) +
+        ' dB（S = ' + num(res.fieldS, 1) + ' m²，V = ' + num(res.fieldV, 1) +
+        ' m³，T₀ = 0.5 s）逐带换算为 R 后评级。现场表观隔声含侧向传声，通常比实验室结果低 2~5 dB（工程经验值，无统一标准修正）。');
     }
     renderRequirement(res);
     renderTable(res);
@@ -419,6 +438,37 @@
     ['stcT1', 'stcT2', 'stcCav'].forEach(function (id) { $(id).addEventListener('input', recalc); });
     $('stcReq').addEventListener('change', function () { state.req = this.value; if (last) { renderRequirement(last); } });
     $('stcRefLine').addEventListener('change', function () { state.ref = this.value; if (last) renderChart(last); });
+    $('stcFieldMode').addEventListener('change', function () {
+      state.fieldMode = this.value;
+      var cap = $('stcGridCaption');
+      if (cap) cap.textContent = state.fieldMode === 'field'
+        ? '按 100–4000 Hz 共 17 个 1/3 倍频带填入现场实测标准化声压级差 DnT（dB）：评级前将按 R = DnT + 10lg(S·T₀/(0.16V))（T₀ = 0.5 s）逐带换算为 R。'
+        : '按 100–4000 Hz 共 17 个 1/3 倍频带填入实测隔声量（dB）：国标 Rw 用 100–3150 Hz 共 16 带，美标 STC 用 125–4000 Hz 共 16 带，故一并提供 17 带。';
+      recalc();
+    });
+    ['stcArea', 'stcVolume'].forEach(function (id) {
+      $(id).addEventListener('input', function () { if (state.mode === 'measured' && state.fieldMode === 'field') recalc(); });
+    });
+    $('stcAvgBtn').addEventListener('click', function () {
+      var txt = ($('stcRuns').value || '').trim();
+      if (!txt) { flash('stcAvgMsg', '请先粘贴测量数据'); return; }
+      var runs = [];
+      txt.split(/\n+/).forEach(function (line) {
+        var vals = line.split(/[\s,;，、]+/).map(parseFloat).filter(function (v) { return !isNaN(v); });
+        if (vals.length >= 16) runs.push(vals.slice(0, E.GRID_HZ.length));
+      });
+      if (!runs.length) { flash('stcAvgMsg', '未解析到有效测量行（每行至少 16 个数值）'); return; }
+      var avg = E.averageRuns(runs, E.GRID_HZ);
+      if (!avg.ok) { flash('stcAvgMsg', avg.error); return; }
+      avg.mean.forEach(function (v, i) {
+        var el = $('stc-' + i);
+        if (el && v != null) el.value = Number(v.toFixed(2));
+      });
+      var maxStd = 0;
+      avg.std.forEach(function (s) { if (s != null && s > maxStd) maxStd = s; });
+      flash('stcAvgMsg', '已按 ' + runs.length + ' 次测量算术平均填入（逐带最大样本标准差 ' + maxStd.toFixed(2) + ' dB）');
+      recalc();
+    });
     $('stcCopy').addEventListener('click', function () { copyText(summaryText(), 'stcCopyMsg'); });
     $('stcCsv').addEventListener('click', exportCsv);
   }

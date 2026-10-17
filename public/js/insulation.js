@@ -339,6 +339,69 @@
     return build({ bands: bands, levels: vals });
   }
 
+  // ---------------------------------------------------------------------------
+  // 多次测量平均（dB 算术平均 + 样本标准差）
+  //   runs：N 次测量，每次为与 bands 对齐的隔声量数组（可含 null 缺测）。
+  //   重复测量取算术平均（ISO 10140 / GB/T 19889 报告重复测量均值的通行做法）；
+  //   std 为样本标准差（n−1 分母，单次为 0），用于重复性评估。
+  // ---------------------------------------------------------------------------
+  function averageRuns(runs, bands) {
+    if (!runs || !runs.length || !bands || !bands.length) return { ok: false, error: '缺少测量数据或频带' };
+    var n = runs.length, mean = [], std = [], counts = [];
+    for (var j = 0; j < bands.length; j++) {
+      var vals = [];
+      for (var i = 0; i < n; i++) {
+        var v = num(runs[i] != null ? runs[i][j] : null);
+        if (v != null) vals.push(v);
+      }
+      if (!vals.length) { mean.push(null); std.push(null); counts.push(0); continue; }
+      var m = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+      var s2 = 0;
+      if (vals.length > 1) {
+        for (var k = 0; k < vals.length; k++) s2 += (vals[k] - m) * (vals[k] - m);
+        s2 /= (vals.length - 1);
+      }
+      mean.push(m);
+      std.push(vals.length > 1 ? Math.sqrt(s2) : 0);
+      counts.push(vals.length);
+    }
+    return { ok: true, bands: bands, mean: mean, std: std, counts: counts, n: n };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 现场 DnT ↔ R 换算（GB/T 19889.4 / ISO 16283 现场测量）
+  //   现场标准化声压级差 DnT = L1 − L2 + 10lg(T/T0)（T0 = 0.5 s）；
+  //   隔声量 R = L1 − L2 + 10lg(S/A)，A = 0.16V/T（赛宾）。
+  //   两式相减 T 抵消：R = DnT + 10lg(S·T0/(0.16V)) —— 只与试件面积 S、
+  //   接收室容积 V 和参考混响时间 T0 有关，逐带为同一常量。
+  //   注：现场表观隔声 R' 含侧向传声，通常比实验室 R 低 2~5 dB
+  //   （工程经验值，无统一标准修正量，仅供参考）。
+  // ---------------------------------------------------------------------------
+  function fieldShift(area, volume, t0) {
+    var S = num(area), V = num(volume);
+    var T0 = num(t0); if (T0 == null || T0 <= 0) T0 = 0.5;
+    if (S == null || S <= 0 || V == null || V <= 0) return null;
+    return 10 * Math.log10(S * T0 / (0.16 * V));   // dB，即 R − DnT
+  }
+  function dntToR(levels, bands, area, volume, t0) {
+    var sh = fieldShift(area, volume, t0);
+    if (sh == null) return { ok: false, error: '现场换算需要有效的试件面积 S（m²）与接收室容积 V（m³）' };
+    if (!levels || !levels.length) return { ok: false, error: '缺少 DnT 数据' };
+    var want = bands || GRID_HZ;
+    var vals = align(levels, bands, want);
+    var out = vals.map(function (v) { return v == null ? null : v + sh; });
+    return { ok: true, bands: want, levels: out, dnt: vals, shift: sh, area: num(area), volume: num(volume) };
+  }
+  function rToDnt(levels, bands, area, volume, t0) {
+    var sh = fieldShift(area, volume, t0);
+    if (sh == null) return { ok: false, error: '现场换算需要有效的试件面积 S（m²）与接收室容积 V（m³）' };
+    if (!levels || !levels.length) return { ok: false, error: '缺少 R 数据' };
+    var want = bands || GRID_HZ;
+    var vals = align(levels, bands, want);
+    var out = vals.map(function (v) { return v == null ? null : v - sh; });
+    return { ok: true, bands: want, levels: out, r: vals, shift: sh, area: num(area), volume: num(volume) };
+  }
+
   var API = {
     GRID_HZ: GRID_HZ,
     CONTOUR_HZ: CONTOUR_HZ,
@@ -362,7 +425,11 @@
     checkRequirement: checkRequirement,
     fromMass: fromMass,
     fromLevels: fromLevels,
-    doubleLeaf: doubleLeaf
+    doubleLeaf: doubleLeaf,
+    averageRuns: averageRuns,
+    fieldShift: fieldShift,
+    dntToR: dntToR,
+    rToDnt: rToDnt
   };
 
   if (typeof module !== 'undefined' && module.exports) {
