@@ -13,6 +13,7 @@
  *   #/vibration     弹簧减振器隔振效率
  *   #/muffler       消声器计算
  *   #/env           环境声学评价
+ *   #/exposure      职业噪声暴露量
  *   #/psycho        心理声学/声品质
  *   #/vibeval       振动评价
  *   #/roomq         厅堂与扩声音质
@@ -37,6 +38,7 @@
     muffler: 'view-muffler',
     db: 'view-db',
     env: 'view-env',
+    exposure: 'view-exposure',
     psycho: 'view-psycho',
     vibeval: 'view-vibeval',
     roomq: 'view-roomq',
@@ -84,6 +86,7 @@
     muffler: '消声器计算 · 声学计算工具箱',
     db: '单位与换算 · 声学计算工具箱',
     env: '环境声学评价 · 声学计算工具箱',
+    exposure: '职业噪声暴露量 · 声学计算工具箱',
     psycho: '心理声学/声品质 · 声学计算工具箱',
     vibeval: '振动评价 · 声学计算工具箱',
     roomq: '厅堂与扩声音质 · 声学计算工具箱',
@@ -131,6 +134,7 @@
     { route: 'muffler', get: function () { return window.MufflerView; } },
     { route: 'db', get: function () { return window.DbCalcView; } },
     { route: 'env', get: function () { return window.EnvView; } },
+    { route: 'exposure', get: function () { return window.ExposureView; } },
     { route: 'psycho', get: function () { return window.PsyView; } },
     { route: 'vibeval', get: function () { return window.VibEvalView; } },
     { route: 'roomq', get: function () { return window.RoomQView; } },

@@ -91,6 +91,7 @@
           <a href="#/barrier" data-route="barrier"><span class="nm-t">声屏障衰减</span><small class="nm-d">菲涅尔数法 · 插入损失 · 所需高度反算</small></a>
           <a href="#/vibration" data-route="vibration"><span class="nm-t">弹簧减振</span><small class="nm-d">隔振效率计算书 · 静变形法 / 频率比法</small></a>
           <a href="#/env" data-route="env"><span class="nm-t">环境噪声评价</span><small class="nm-d">Leq/L10/L90 · Ldn/Lden · NR · 户外传播 · 交通噪声</small></a>
+          <a href="#/exposure" data-route="exposure"><span class="nm-t">职业噪声暴露量</span><small class="nm-d">L_EX,8h · NIOSH/OSHA 剂量 · 脉冲限值 · 护听器选型</small></a>
           <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
           <a href="#/hvacnoise" data-route="hvacnoise"><span class="nm-t">设备与管道声学</span><small class="nm-d">设备噪声→房间Lp · 风管衰减 · 声功率测定</small></a>
           <a href="#/noisemap" data-route="noisemap"><span class="nm-t">环境噪声进阶</span><small class="nm-d">等值线图 · 交通噪声 · GB 3096/55016 判定</small></a>
@@ -216,7 +217,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 7 个分组、43 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 7 个分组、44 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -463,6 +464,19 @@
           <span class="mc-body">
             <span class="mc-title">环境噪声评价 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">由实测序列求 Leq 与 L5/L10/L50/L90/L95 统计声级、昼夜等效 Ldn/Lden、NPL/TNI，NR 曲线反查，ISO 9613 户外传播与道路交通线声源预测，附 GB 3096 对照。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/exposure">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="24" cy="24" r="14" />
+              <path d="M24 14v10l7 5" stroke-linecap="round" />
+              <path d="M10 38c2-3 6-4 9-2M29 36c3-2 7-1 9 2" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">职业噪声暴露量 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">分段暴露求 8 h 等效连续 A 声级 L_EX,8h，对照 GBZ 2.2-2007 限值 85 dB(A) 与 GBZ/T 229.4 作业分级；NIOSH 3 dB / OSHA 5 dB 剂量与 TWA、延长班次调整、脉冲噪声峰值限值，以及护听器配备选型与 NRR/SNR 折算。</span>
           </span>
         </a>
         <a class="module-card" href="#/vibeval">
@@ -815,7 +829,7 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器</strong> 七个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 34 个文件 / 2130+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
@@ -1147,6 +1161,9 @@
       <div id="wvOutDop" class="result-line" hidden></div>
     </section>
   </section>
+
+  <!-- ====================== 职业噪声暴露量 ====================== -->
+  <section class="view" id="view-exposure" data-view="exposure" hidden></section>
 
   <section class="view" id="view-env" data-view="env" hidden>
     <div class="page-head">
@@ -4571,6 +4588,7 @@
 <script src="js/hearing.js"></script>
 <script src="js/iso3382.js"></script>
 <script src="js/leakage.js"></script>
+<script src="js/exposure.js"></script>
 <script src="js/wave.js"></script>
 <script src="js/vibeval.js"></script>
 <script src="js/roomq.js"></script>
@@ -4583,6 +4601,7 @@
 <script src="js/view-rt60.js"></script>
 <script src="js/view-stc.js"></script>
 <script src="js/view-leakage.js"></script>
+<script src="js/view-exposure.js"></script>
 <script src="js/view-barrier.js"></script>
 <script src="js/view-levels.js"></script>
 <script src="js/view-vibration.js"></script>
