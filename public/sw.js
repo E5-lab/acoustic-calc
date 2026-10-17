@@ -11,7 +11,7 @@
  */
 'use strict';
 
-var CACHE = 'acoustic-calc-v1.4.0';
+var CACHE = 'acoustic-calc-v1.4.1';
 
 var CORE = [
   './',

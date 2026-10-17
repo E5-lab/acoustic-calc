@@ -107,5 +107,14 @@ assert('全站无零信息量「可用」徽标', html.indexOf('>可用</span>')
 assert('准入清单文档存在', fs.existsSync(path.join(__dirname, '..', 'MODULE-ADMISSION.md')));
 assert('README 链接准入清单', readme.indexOf('MODULE-ADMISSION.md') >= 0);
 
+// ---- 5) #/all 目录页不嵌套在其他视图内 ----
+console.log('\n[5] 目录页结构');
+// view-all 开始标签之前 <section 与 </section> 必须平衡（否则被包进 view-home 等父视图，
+// 父视图非激活 display:none 时目录页整棵子树不可见——P4 曾因此返工）
+var head = html.slice(0, html.indexOf('<section class="view" id="view-all"'));
+var secOpens = (head.match(/<section[\s>]/g) || []).length;
+var secCloses = (head.match(/<\/section>/g) || []).length;
+assert('view-all 不嵌套在其他视图内（section 平衡 ' + secOpens + '/' + secCloses + '）', secOpens === secCloses);
+
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
