@@ -38,9 +38,8 @@ var hint = html.match(/共 (\d+) 个分组、(\d+) 个模块/);
 assert('总览 hint 模块数 = 卡片数 (文案 ' + (hint ? hint[2] : '缺失') + ' / 实际 ' + cards + ')',
   !!hint && parseInt(hint[2], 10) === cards);
 assert('总览 hint 分组数 = 8', !!hint && parseInt(hint[1], 10) === 8);
-var hero = html.match(/(\d+) 个声学计算器，输入即算/);
-assert('hero 计数 = 卡片数 (文案 ' + (hero ? hero[1] : '缺失') + ')',
-  !!hero && parseInt(hero[1], 10) === cards);
+var slides = (home.match(/class="hb-slide"/g) || []).length;
+assert('首页 banner 轮播张数 = 4 (实际 ' + slides + ')', slides === 4);
 
 // ---- 2) 三处分组名一致 ----
 console.log('\n[2] 分组名一致性');

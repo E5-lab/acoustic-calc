@@ -57,22 +57,27 @@ assert('命令面板按钮带 data-cmdk-open', /id="cmdkBtn"[\s\S]{0,120}data-cm
 assert('首页不再保留旧检索栏 .home-search', html.indexOf('class="home-search"') < 0);
 assert('样式表已清理 .ts- 规则', fs.readFileSync(path.join(__dirname, '..', 'public', 'css', 'styles.css'), 'utf8').indexOf('.ts-wrap') < 0);
 
-// ---- 3) 首页 hero：命令面板即入口 ----
-console.log('\n[3] 首页 hero（命令面板即入口）');
-assert('含 .home-hero 区块', html.indexOf('class="home-hero"') >= 0);
-assert('hero 大搜索按钮 #hhSearch 带 data-cmdk-open',
-  /id="hhSearch"[^>]*data-cmdk-open/.test(html));
-assert('hero 含常用工具直达（背景噪声评价等）', html.indexOf('href="#/noise"') >= 0 && html.indexOf('href="#/perforation"') >= 0);
-assert('hero 含「全部工具」入口', html.indexOf('href="#/all"') >= 0);
-assert('轮播结构 #heroBanner 已移除', html.indexOf('id="heroBanner"') < 0);
+// ---- 3) 首页 hero：banner 轮播（v2.9 视觉基线，v2.12 恢复） ----
+console.log('\n[3] 首页 hero：banner 轮播');
+assert('含 #heroBanner 轮播容器', html.indexOf('id="heroBanner"') >= 0);
 ['hbTrack', 'hbDots', 'hbPrev', 'hbNext'].forEach(function (id) {
-  assert('轮播 #' + id + ' 已移除', html.indexOf('id="' + id + '"') < 0);
+  assert('含轮播 #' + id, html.indexOf('id="' + id + '"') >= 0);
 });
-assert('js/banner.js 引用已移除', html.indexOf('js/banner.js') < 0);
+assert('轮播脚本 js/banner.js 已加载', html.indexOf('js/banner.js') >= 0);
+assert('banner.js 在 nav.js 之前', html.indexOf('js/banner.js') < html.indexOf('js/nav.js'));
+var imgs = (html.match(/src="img\/banner-[\w-]+\.webp"/g) || []);
+assert('banner 引用 4 张 WebP 图片 (实际 ' + imgs.length + ')', imgs.length === 4);
+imgs.forEach(function (s) {
+  var f = s.slice(5, -1);
+  assert('图片文件存在 ' + f, fs.existsSync(path.join(__dirname, '..', 'public', f)));
+});
 assert('不再保留 PNG 版本 banner 图', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
   .filter(function (f) { return /^banner-.*\.png$/.test(f); }).length === 0);
 assert('img/ 目录总体积 < 1 MB（防大图回归）', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
   .reduce(function (sum, f) { return sum + fs.statSync(path.join(__dirname, '..', 'public', 'img', f)).size; }, 0) < 1024 * 1024);
+assert('首页不再使用文字版 .home-hero', html.indexOf('class="home-hero"') < 0);
+assert('「全部工具」入口仍在（section-head 内 #/all）',
+  /class="section-head"[\s\S]{0,400}href="#\/all"/.test(html));
 
 // ---- 4) 脚本加载顺序 ----
 console.log('\n[4] 脚本加载顺序');
@@ -227,8 +232,8 @@ assert('8 个模块页含「相关模块」交叉链接 (实际 ' + relatedRows 
 });
 assert('卡片描述 clamp 两行（-webkit-line-clamp:2）',
   /-webkit-line-clamp:\s*2/.test(css));
-assert('hero 标题与计数文案同源（61 个）',
-  html.indexOf('61 个声学计算器，输入即算') >= 0 && html.indexOf('61 个模块') >= 0);
+assert('总览计数文案与卡片数同源（61 个模块）',
+  html.indexOf('61 个模块') >= 0);
 
 // ---- 13) P4 打磨：命令面板别名索引 + 动效分级 ----
 console.log('\n[13] P4 命令面板增强');

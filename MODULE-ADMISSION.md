@@ -48,8 +48,10 @@
 
 ## 三、改版约束（P1/P2 已建立的约定）
 
-- 首页 hero 为「命令面板即入口」（`data-cmdk-open` 大搜索按钮 + 常用直达），
-  **不再回退为营销轮播**（`tests/home-ui.test.js` [3] 守护）；
+- 首页 hero 为 **banner 轮播**（`#heroBanner` + `banner.js`：4 张 WebP、圆点 / 箭头 / 自动播放），
+  文字版 `.home-hero`（大搜索按钮 + 常用直达）已下线，**不要再改回文字 hero**；
+  命令面板入口保留在顶栏 `#cmdkBtn`（⌘K / Ctrl+K）与页脚提示，`#/all` 全部工具入口
+  放在首页 `section-head` 右侧的 `.sh-all`（`tests/home-ui.test.js` [3] 守护）；
 - 卡片描述 clamp 两行，公式细节一律放模块页（`[12]` 守护）；
 - 「可用」徽标已废弃，只用「演示 / 实测」语义徽标（`[11]` 守护计数 21 / 5）；
 - 使用说明分组名 = 顶栏导航分组名 = README 描述分组名（structure.test.js 守护）；

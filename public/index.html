@@ -212,28 +212,50 @@
   <section class="view" id="view-home" data-view="home">
     <h1 class="sr-only">声学计算工具箱 · 建筑与材料声学计算工具集</h1>
 
-    <div class="home-hero" id="homeHero">
-      <p class="hh-kicker">纯本地运行 · 零依赖 · 按标准方法实现</p>
-      <h2 class="hh-title">61 个声学计算器，输入即算</h2>
-      <button class="hh-search" id="hhSearch" type="button" data-cmdk-open aria-label="打开命令面板，搜索模块、公式或执行操作">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
-        <span>搜索模块、公式或执行操作…</span>
-        <kbd>Ctrl K</kbd>
-      </button>
-      <p class="hh-quick">
-        <span class="hh-quick-label">常用</span>
-        <a href="#/noise">背景噪声评价</a>
-        <a href="#/levels">声压级叠加</a>
-        <a href="#/perforation">穿孔率</a>
-        <a href="#/rt60">混响时间 RT60</a>
-        <a href="#/handbook">公式手册</a>
-        <a href="#/all" class="hh-all">全部工具 →</a>
-      </p>
+    <div class="hero-banner" id="heroBanner">
+      <div class="hb-track" id="hbTrack">
+        <figure class="hb-slide">
+          <img src="img/banner-room.webp" alt="室内音质模拟：声场彩图与混响时间" decoding="async" />
+          <figcaption class="hb-cap">
+            <span class="hb-kicker">室内音质模拟</span>
+            <span class="hb-title">声场彩图 · 逐倍频带混响时间 · ISO 3382 评价</span>
+            <a class="btn primary" href="#/sim">进入模块</a>
+          </figcaption>
+        </figure>
+        <figure class="hb-slide">
+          <img src="img/banner-aural.webp" alt="声学可听化：波形与频谱" decoding="async" />
+          <figcaption class="hb-cap">
+            <span class="hb-kicker">声学可听化</span>
+            <span class="hb-title">不同混响 / 隔声前后的声音对比试听</span>
+            <a class="btn primary" href="#/aural">进入模块</a>
+          </figcaption>
+        </figure>
+        <figure class="hb-slide">
+          <img src="img/banner-insulation.webp" alt="建筑隔声：墙体阻隔声能" decoding="async" />
+          <figcaption class="hb-cap">
+            <span class="hb-kicker">材料与构件</span>
+            <span class="hb-title">穿孔率 · 吸声阻抗 · 墙体隔声量 Rw</span>
+            <a class="btn primary" href="#/stc">进入模块</a>
+          </figcaption>
+        </figure>
+        <figure class="hb-slide">
+          <img src="img/banner-environment.webp" alt="环境噪声：声屏障降噪" decoding="async" />
+          <figcaption class="hb-cap">
+            <span class="hb-kicker">环境与振动</span>
+            <span class="hb-title">环境噪声评价 · 声屏障 · 弹簧减振 · 消声器</span>
+            <a class="btn primary" href="#/env">进入模块</a>
+          </figcaption>
+        </figure>
+      </div>
+      <button class="hb-arrow prev" id="hbPrev" aria-label="上一张">&#8249;</button>
+      <button class="hb-arrow next" id="hbNext" aria-label="下一张">&#8250;</button>
+      <div class="hb-dots" id="hbDots" aria-label="轮播指示器"></div>
     </div>
 
     <div class="section-head">
       <h2>功能模块</h2>
 <p class="hint">共 8 个分组、61 个模块，与顶栏二级菜单一一对应</p>
+          <a class="sh-all" href="#/all">全部工具 →</a>
     </div>
 
     <div class="module-group">
@@ -5474,6 +5496,7 @@
 <script src="js/view-sim-fourier.js"></script>
 <script src="js/sim-ut.js"></script>
 <script src="js/view-sim-ut.js"></script>
+<script src="js/banner.js"></script>
 <script src="js/site-stats.js"></script>
 <script src="https://events.vercount.one/js" async></script>
 <script src="js/urlstate.js"></script>
