@@ -443,7 +443,7 @@
 - `public/js/audio-io.js` — 浏览器共享音频 I/O（AudioContext 播放 / 麦克风采集 / WAV 解码 16-24-32bit PCM 与 float32）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
 - `tools/make-icons.js` — PWA 图标生成（纯 Node zlib 实现 PNG 编码，重绘 favicon.svg 设计；改品牌后运行 `node tools/make-icons.js` 重新生成）
-- `node tests/*.test.js` 共 48 个测试文件、**2800+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
+- `node tests/*.test.js` 共 48 个测试文件、**2200+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
 
 ## 目录结构
 
