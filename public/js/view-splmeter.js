@@ -185,8 +185,9 @@
     st.running = false;
     if (mic) mic.stop();
     refresh();
+    var s = M.leqSummary(st.leq, { A: M.octaveWeights('A') }, st.calib);
     setStatus('已停止。累计 ' + fmt(st.leq.seconds, 1) + ' s，Leq(A) = ' +
-      fmt(M.leqSummary(st.leq, { A: M.octaveWeights('A') }, st.calib).LA, 1) + ' dB');
+      fmt(s ? s.LA : null, 1) + ' dB');
   }
 
   function reset() {

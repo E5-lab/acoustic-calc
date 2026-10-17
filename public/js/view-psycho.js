@@ -11,11 +11,21 @@
 
   // 读取一组倍频带输入（前缀 + 频率），返回 {频率: 数值}
   var BANDS = [31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000];
+  function bandId(prefix, f) {
+    if (f === 1000) return prefix + '1k';
+    if (f === 2000) return prefix + '2k';
+    if (f === 4000) return prefix + '4k';
+    if (f === 8000) return prefix + '8k';
+    if (f === 31.5) return prefix + '31';   // HTML 中 31.5 Hz 输入框 id 不含小数点
+    return prefix + f;
+  }
   function readBands(prefix) {
     var s = {};
     BANDS.forEach(function (f) {
-      var id = prefix + (f === 1000 ? '1k' : f === 2000 ? '2k' : f === 4000 ? '4k' : f === 8000 ? '8k' : f);
-      var v = parseFloat($(id).value); if (!isNaN(v)) s[f] = v;
+      var id = bandId(prefix, f);
+      var el = $(id);
+      if (!el) return;
+      var v = parseFloat(el.value); if (!isNaN(v)) s[f] = v;
     });
     return s;
   }

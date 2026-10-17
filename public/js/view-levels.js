@@ -239,7 +239,7 @@
     var n = state.eq.count;
     box.innerHTML =
       kv('叠加总声级', num(r.total, 1), 'dB', n + ' 个 ' + num(state.eq.level, 1) + ' dB 声源') +
-      kv('相对单台增加', num(r.incrementOverMax, 2), 'dB', '理论值 10·lg n = ' + num(10 * Math.log10(n), 2) + ' dB') +
+      kv('相对单台增加', num(r.total - state.eq.level, 2), 'dB', '理论值 10·lg n = ' + num(10 * Math.log10(n), 2) + ' dB') +
       kv('声级相同数量加倍', '3.01', 'dB', '2 台 +3.0、4 台 +6.0、8 台 +9.0');
   }
 
