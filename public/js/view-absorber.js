@@ -64,15 +64,17 @@
     var grade = s.nrc >= 0.8 ? '强吸声' : (s.nrc >= 0.6 ? '较好吸声' : (s.nrc >= 0.4 ? '中等吸声' : (s.nrc >= 0.2 ? '弱吸声' : '几乎不吸声')));
     var grade = s.nrc >= 0.8 ? '强吸声' : (s.nrc >= 0.6 ? '较好吸声' : (s.nrc >= 0.4 ? '中等吸声' : (s.nrc >= 0.2 ? '弱吸声' : '几乎不吸声')));
     $('absVerdict').innerHTML = grade + '（NRC ' + (s.nrc == null ? '—' : s.nrc.toFixed(2)) +
+      ' · 漫射 NRC ' + (s.nrcDiff == null ? '—' : s.nrcDiff.toFixed(2)) +
       '）　材料：σ = ' + grouped(state.sigma, 0) + ' Pa·s/m²，d = ' + num(state.thickness, 0) +
       ' mm' + (state.airGap > 0 ? '，空腔 ' + num(state.airGap, 0) + ' mm' : '，贴刚性壁');
 
     var p500 = s.points[E.BANDS.indexOf(500)];
     var p1k = s.points[E.BANDS.indexOf(1000)];
     $('absStats').innerHTML =
-      stat('α @500 Hz', num(p500.alpha, 2), '') +
-      stat('α @1 kHz', num(p1k.alpha, 2), '') +
-      stat('全频平均 α', num(s.avg, 2), '') +
+      stat('α @500 Hz（法向）', num(p500.alpha, 2), '') +
+      stat('α @500 Hz（漫射）', num(p500.alphaDiff, 2), '') +
+      stat('NRC（法向）', s.nrc == null ? '—' : s.nrc.toFixed(2), '') +
+      stat('NRC（漫射）', s.nrcDiff == null ? '—' : s.nrcDiff.toFixed(2), '', 'RT60 / 混响室口径') +
       stat('特征阻抗 @500 Hz', num(p500.zcRatio, 2), '× ρ₀c₀', '|Zc|');
 
     // 适用性提示
@@ -89,13 +91,13 @@
     // 明细表
     var rows = s.bands.map(function (f, i) {
       var p = s.points[i];
-      return '<tr><td>' + f + ' Hz</td><td>' + num(p.alpha, 3) + '</td><td>' + num(p.X, 3) +
+      return '<tr><td>' + f + ' Hz</td><td>' + num(p.alpha, 3) + '</td><td>' + num(p.alphaDiff, 3) + '</td><td>' + num(p.X, 3) +
         '</td><td>' + num(p.zcRatio, 2) + '</td><td>' + num(p.zsAbs, 2) +
         '</td><td>' + num(p.attenuation, 1) + '</td><td class="' + (p.valid ? 'ok' : 'warn') + '">' +
         (p.valid ? '适用' : '超范围') + '</td></tr>';
     }).join('');
     $('absTable').innerHTML = '<table class="detail-table wide"><thead><tr>' +
-      '<th>频带</th><th>α（法向）</th><th>X = ρ₀f/σ</th><th>|Zc|/ρ₀c₀</th><th>|Zs|/ρ₀c₀</th><th>衰减 Np/m</th><th>模型适用性</th>' +
+      '<th>频带</th><th>α（法向）</th><th>α（漫射）</th><th>X = ρ₀f/σ</th><th>|Zc|/ρ₀c₀</th><th>|Zs|/ρ₀c₀</th><th>衰减 Np/m</th><th>模型适用性</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table>';
 
     Chart.draw($('absChart'), {
@@ -107,7 +109,8 @@
       yDigits: 1,
       series: [
         { name: 'NRC', color: '#f97316', values: s.bands.map(function () { return s.nrc; }), dash: [6, 4], width: 1.4, points: false },
-        { name: 'α', color: '#2563eb', values: s.alphas, width: 2.2, radius: 3.4 }
+        { name: 'α', color: '#2563eb', values: s.alphas, width: 2.2, radius: 3.4 },
+        { name: 'α（漫射）', color: '#16a34a', values: s.alphasDiff, width: 2.2, radius: 3.4 }
       ]
     });
   }
@@ -142,9 +145,13 @@
     var out = ['多孔吸声材料阻抗 · 结果摘要'];
     out.push('流阻率 σ = ' + grouped(state.sigma, 0) + ' Pa·s/m²；厚度 d = ' + num(state.thickness, 0) +
       ' mm；空腔 D = ' + num(state.airGap, 0) + ' mm');
-    out.push('NRC = ' + (last.nrc == null ? '—' : last.nrc.toFixed(2)) + '（250/500/1k/2k 平均）');
+    out.push('NRC = ' + (last.nrc == null ? '—' : last.nrc.toFixed(2)) + '（250/500/1k/2k 平均）；漫射 NRC = ' +
+      (last.nrcDiff == null ? '—' : last.nrcDiff.toFixed(2)));
     out.push('倍频带法向吸声系数：' + last.bands.map(function (f, i) {
       return f + 'Hz=' + last.alphas[i].toFixed(2);
+    }).join('，'));
+    out.push('倍频带漫射吸声系数：' + last.bands.map(function (f, i) {
+      return f + 'Hz=' + last.alphasDiff[i].toFixed(2);
     }).join('，'));
     var p = last.points[3];
     out.push('500 Hz：α = ' + p.alpha.toFixed(3) + '，|Zc|/ρ₀c₀ = ' + p.zcRatio.toFixed(2) +
@@ -161,10 +168,10 @@
     rows.push(['空腔 (mm)', String(state.airGap), '']);
     rows.push(['NRC', last.nrc == null ? '' : last.nrc.toFixed(2), '']);
     rows.push([]);
-    rows.push(['频率 (Hz)', '吸声系数 α', 'X', '|Zc|/ρ0c0', '|Zs|/ρ0c0', '衰减 (Np/m)', '适用性']);
+    rows.push(['频率 (Hz)', '吸声系数 α（法向）', '吸声系数 α（漫射）', 'X', '|Zc|/ρ0c0', '|Zs|/ρ0c0', '衰减 (Np/m)', '适用性']);
     last.bands.forEach(function (f, i) {
       var p = last.points[i];
-      rows.push([f, p.alpha.toFixed(4), p.X.toFixed(4), p.zcRatio.toFixed(3), p.zsAbs.toFixed(3), p.attenuation.toFixed(2), p.valid ? '适用' : '超范围']);
+      rows.push([f, p.alpha.toFixed(4), p.alphaDiff.toFixed(4), p.X.toFixed(4), p.zcRatio.toFixed(3), p.zsAbs.toFixed(3), p.attenuation.toFixed(2), p.valid ? '适用' : '超范围']);
     });
     download(rows, 'absorber-result.csv');
   }

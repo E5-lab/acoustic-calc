@@ -80,5 +80,20 @@ assert('厚度 0 → 报错', A.point({ sigma: 9000, f: 500, thickness: 0 }).ok 
 assert('空腔为负 → 报错', A.point({ sigma: 9000, f: 500, thickness: 50, airGap: -10 }).ok === false);
 assert('谱计算参数错误时返回错误对象', A.spectrum({ sigma: null, thickness: 50 }).ok === false);
 
+console.log('漫射（无规入射）吸声系数');
+approx('纯阻 ζ=1 → α_diff = 8(3/2−2ln2) ≈ 0.9096', A.randomIncidence({ re: 1, im: 0 }), 0.909645, 0.001);
+approx('纯阻 ζ=3 → α_diff = 24∫₀¹u²/(1+3u)²du ≈ 0.8688', A.randomIncidence({ re: 3, im: 0 }), 0.868810, 0.001);
+assert('兼容 point() 结果入参（自动取 zsRatio）', A.randomIncidence(A.point({ sigma: 9000, f: 500, thickness: 50 })) != null);
+assert('非法输入 → null', A.randomIncidence(null) === null);
+assert('point().alphaDiff 存在且在 0–1', thick.alphaDiff != null && thick.alphaDiff >= 0 && thick.alphaDiff <= 1);
+assert('厚层 200mm@500Hz 漫射 α > 0.85（实测 ≈ 0.90）', thick.alphaDiff > 0.85);
+assert('厚层漫射 ≥ 法向（−0.02 容差）', thick.alphaDiff >= thick.alpha - 0.02);
+assert('spectrum().alphasDiff 与逐点一致', spec.alphasDiff[3] === spec.points[3].alphaDiff);
+assert('漫射值全部在 0–1', spec.alphasDiff.every(function (a) { return a >= 0 && a <= 1; }));
+assert('高频漫射略低于法向（掠入射损失，4 kHz）', spec.alphasDiff[6] < spec.alphas[6]);
+assert('nrcDiff 存在且按 0.05 取整', spec.nrcDiff != null && Math.abs(spec.nrcDiff * 100) % 5 === 0);
+assert('50 mm 玻璃棉（σ=20000）漫射 NRC ≥ 0.65（实测 ≈ 0.70）', spec.nrcDiff >= 0.65);
+assert('avgDiff / alphaDiff500 字段存在', spec.avgDiff != null && spec.alphaDiff500 != null);
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);

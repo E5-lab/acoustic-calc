@@ -2538,7 +2538,7 @@
   <section class="view" id="view-absorber" data-view="absorber">
     <div class="page-head">
       <h2>多孔吸声材料阻抗</h2>
-      <p class="hint">由流阻率推算特征阻抗与表面阻抗，得到倍频带法向吸声系数（Delany–Bazley 模型）</p>
+      <p class="hint">由流阻率推算特征阻抗与表面阻抗，得到倍频带法向与漫射（无规入射）吸声系数（Delany–Bazley 模型；漫射值按局部反应假设对 0–90° 入射角能量加权积分，供 RT60 选用）</p>
     </div>
 
     <div class="split">
@@ -2571,6 +2571,7 @@
           <div class="canvas-wrap"><canvas id="absChart" height="300"></canvas></div>
           <div class="legend">
             <span><i style="background:#2563eb"></i>法向入射吸声系数 α</span>
+            <span><i style="background:#16a34a"></i>漫射（无规入射）吸声系数 α_diff</span>
             <span><i style="background:#f97316"></i>NRC 中频均值</span>
           </div>
         </section>
@@ -2618,6 +2619,7 @@
         <li><strong>特征阻抗</strong>：Zc/(ρ₀c₀) = 1 + 0.0571X<sup>−0.754</sup> − j0.087X<sup>−0.732</sup>；<strong>复波数</strong>：k/k₀ = 1 + 0.0978X<sup>−0.700</sup> − j0.189X<sup>−0.595</sup>（Delany–Bazley 经验模型，Bies &amp; Hansen 系数）。</li>
         <li><strong>表面阻抗</strong>：刚性背衬 Zs = Zc·coth(γd)；带空腔时按空气层阻抗 Z<sub>gap</sub> = −jρ₀c₀cot(k₀D) 做层状介质传递，γ = jk。</li>
         <li><strong>吸声系数</strong>：法向入射 α = 1 − |(Zs − ρ₀c₀)/(Zs + ρ₀c₀)|²，即阻抗管（驻波管）测得的量；扩散场（混响室）吸声系数通常高于此值。</li>
+        <li><strong>漫射吸声系数</strong>：α_diff = 2∫₀^{π/2} α(θ)·cosθ·sinθ dθ，其中 α(θ) = 1 − |(ζ·cosθ − 1)/(ζ·cosθ + 1)|²、ζ = Zs/ρ₀c₀（局部反应假设，Simpson 数值积分）。这是混响室（无规入射）口径，<strong>RT60 / 混响时间计算应优先采用漫射值</strong>；纯阻 ζ=1 的解析锚点为 8(3/2 − 2ln2) ≈ 0.910 —— 即使阻抗完全匹配，掠入射仍近乎全反射，故漫射峰值总低于 1。</li>
         <li><strong>NRC</strong>：250 / 500 / 1000 / 2000 Hz 四个倍频带吸声系数的算术平均，按 0.05 取整。</li>
         <li><strong>适用范围</strong>：0.01 ≤ X ≤ 1。超出范围时结果仅供数量级参考（本页会给出提示）。</li>
         <li><strong>厚度建议</strong>：由 βd + k₀D ≈ π/2 的条件反解层厚 d，即让目标频率大致落在 1/4 波长共振点附近。实际构造还需考虑护面层、流阻与安装方式。</li>

@@ -11,7 +11,11 @@
  *   - 空气层背衬（空腔 D + 刚性壁）：Z_gap = −j ρ0 c0 cot(k0 D)，
  *     Zs = Zc (Z_gap cosh(γd) + Zc sinh(γd)) / (Zc cosh(γd) + Z_gap sinh(γd))
  *   其中 γ = j k = α + jβ
- * 法向入射吸声系数：α = 1 − |(Zs − ρ0c0)/(Zs + ρ0c0)|²
+ *  法向入射吸声系数：α = 1 − |(Zs − ρ0c0)/(Zs + ρ0c0)|²
+ *  漫射（无规入射）吸声系数：局部反应假设下对入射角能量加权积分
+ *      α(θ) = 1 − |(ζ·cosθ − 1)/(ζ·cosθ + 1)|²，ζ = Zs/ρ0c0
+ *      α_diff = 2∫₀^{π/2} α(θ)·cosθ·sinθ dθ（Simpson 数值积分）
+ *    —— 混响室（Sabine/RT60）口径即漫射值，与法向（阻抗管）值互为补充。
  *
  * 适用条件：0.01 ≤ X ≤ 1（超出范围结果仅供参考，模型自身不保证精度）。
  */
@@ -71,6 +75,31 @@
     };
   }
 
+  // ---------------- 漫射（无规入射 / 统计）吸声系数 ----------------
+  // 局部反应（locally reacting）假设：表面阻抗不随入射角变化。
+  // α(θ) = 1 − |(ζ·cosθ − 1)/(ζ·cosθ + 1)|²，能量按 cosθ 分布加权：
+  //   α_diff = 2∫₀^{π/2} α(θ)·cosθ·sinθ dθ（Simpson，N=180，步长 0.5°）
+  // 解析锚点（纯阻 ζ=x 实数）：α_diff(x=1) = 8(3/2 − 2ln2) ≈ 0.9096。
+  // 入参 zn：{re, im} 归一化阻抗，或直接传 point() 结果（自动取 zsRatio）。
+  function randomIncidence(zn) {
+    var z = (zn && typeof zn === 'object' && zn.zsRatio) ? zn.zsRatio : zn;
+    var re = num(z && z.re), im = num(z && z.im);
+    if (re == null || im == null) return null;
+    var N = 180, h = Math.PI / 2 / N, sum = 0;
+    for (var i = 0; i <= N; i++) {
+      var ct = Math.cos(i * h);
+      var ar = re * ct - 1, ai = im * ct;
+      var br = re * ct + 1, bi = im * ct;
+      var nr2 = (ar * ar + ai * ai) / (br * br + bi * bi);
+      var a = 1 - nr2;
+      if (a < 0) a = 0;
+      var f = 2 * ct * Math.sin(i * h) * a;
+      sum += (i === 0 || i === N ? 1 : (i % 2 ? 4 : 2)) * f;
+    }
+    var v = sum * h / 3;
+    return Math.max(0, Math.min(1, v));
+  }
+
   // 单频点：特征阻抗、复波数、表面阻抗、法向吸声系数
   function point(o) {
     var sigma = num(o.sigma), f = num(o.f);
@@ -102,6 +131,7 @@
 
     var refl = cdiv(csub(Zs, c(RC, 0)), cadd(Zs, c(RC, 0)));
     var alpha = 1 - cabs(refl) * cabs(refl);
+    var zsNorm = { re: Zs.re / RC, im: Zs.im / RC };
 
     return {
       ok: true,
@@ -114,16 +144,17 @@
       kRatio: cabs(k) / k0,
       attenuation: -k.im,                                   // Np/m
       Zs: Zs,
-      zsRatio: { re: Zs.re / RC, im: Zs.im / RC },
+      zsRatio: zsNorm,
       zsAbs: cabs(Zs) / RC,
-      alpha: Math.max(0, Math.min(1, alpha))
+      alpha: Math.max(0, Math.min(1, alpha)),
+      alphaDiff: randomIncidence(zsNorm)                     // 漫射（无规入射）
     };
   }
 
   // 倍频带吸声谱
   function spectrum(o) {
     var bands = o.bands || BANDS;
-    var out = [], alphas = [], invalid = 0;
+    var out = [], alphas = [], alphasDiff = [], invalid = 0;
     for (var i = 0; i < bands.length; i++) {
       var r = point({
         sigma: o.sigma, f: bands[i], thickness: o.thickness, airGap: o.airGap
@@ -132,16 +163,21 @@
       if (!r.valid) invalid++;
       out.push(r);
       alphas.push(r.alpha);
+      alphasDiff.push(r.alphaDiff);
     }
     return {
       ok: true,
       bands: bands,
       points: out,
       alphas: alphas,
+      alphasDiff: alphasDiff,
       nrc: nrc(bands, alphas),
+      nrcDiff: nrc(bands, alphasDiff),
       invalidCount: invalid,
       avg: alphas.reduce(function (a, b) { return a + b; }, 0) / alphas.length,
-      alpha500: pick(bands, alphas, 500)
+      avgDiff: alphasDiff.reduce(function (a, b) { return a + b; }, 0) / alphasDiff.length,
+      alpha500: pick(bands, alphas, 500),
+      alphaDiff500: pick(bands, alphasDiff, 500)
     };
   }
 
@@ -182,6 +218,7 @@
     BANDS: BANDS,
     PRESETS: PRESETS,
     dbProps: dbProps,
+    randomIncidence: randomIncidence,
     point: point,
     spectrum: spectrum,
     nrc: nrc,
