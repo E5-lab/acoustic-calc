@@ -399,20 +399,25 @@ kbd {
   font-size: 11px;
   font-weight: 400;
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 .nav-menu a.active .nav-sub { color: var(--primary-d); opacity: 0.7; }
 
 /* --------------- 「更多」收纳分组：分栏 Mega 面板 --------------- */
+/* 宽度必须确定（不能用 max-content）：收纳分组较多时 max-content 会把所有
+   分组排成一行，超出 max-width 后轨道被钳制、内容水平溢出面板外。
+   固定宽度上限后 auto-fit 按实际宽度分列并自动换行，纵向滚动已有 max-height。 */
 .nav-menu-mega {
   grid-template-columns: repeat(auto-fit, minmax(214px, 1fr));
   gap: 2px 8px;
-  width: max-content;
+  width: min(920px, calc(100vw - 40px));
   max-width: calc(100vw - 40px);
   padding: 10px 12px 12px;
   max-height: min(72vh, 580px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
-.nm-col { display: flex; flex-direction: column; gap: 1px; }
+.nm-col { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .nm-col-h {
   margin: 8px 0 3px;
   padding: 0 12px;
