@@ -36,6 +36,7 @@
           <a href="#/levels" data-route="levels"><span class="nm-t">声压级叠加</span><small class="nm-d">多声源合成 · 相干叠加 · 背景噪声修正</small></a>
           <a href="#/noise" data-route="noise"><span class="nm-t">背景噪声评价</span><small class="nm-d">A 声级 · NC / NR / RC Mark II</small></a>
           <a href="#/db" data-route="db"><span class="nm-t">单位与换算</span><small class="nm-d">声压级加减 · 声压/声强/声功率 · 距离衰减</small></a>
+          <a href="#/handbook" data-route="handbook"><span class="nm-t">公式与术语手册</span><small class="nm-d">关键词检索 · 十个分类 · 深链分享</small></a>
           <a href="#/wave" data-route="wave"><span class="nm-t">波动与乐音计算</span><small class="nm-d">声速/波长 · 声阻抗 · 音名音分 · 多普勒</small></a>
         </div>
       </div>
@@ -165,6 +166,9 @@
           <a href="https://nav.124365.xyz" target="_blank" rel="noopener noreferrer"><span class="nm-t">导航站</span><small class="nm-d">nav.124365.xyz</small></a>
         </div>
       </div>
+      <button id="shareBtn" class="theme-toggle" type="button" aria-label="复制本页分享链接" title="复制本页分享链接（含当前参数）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.5l3-3a5 5 0 0 0-7.1-7.1L11.6 4.8"/><path d="M14 11a5 5 0 0 0-7.1-.5l-3 3a5 5 0 0 0 7.1 7.1l1.4-1.4"/></svg>
+      </button>
       <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换日间/夜间模式" aria-pressed="false" title="切换日间/夜间模式">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>
@@ -221,7 +225,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 7 个分组、48 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 7 个分组、49 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -260,6 +264,19 @@
           <span class="mc-body">
             <span class="mc-title">单位与换算 <span class="mc-tag live">可用</span></span>
             <span class="mc-desc">声压级加减（含相干与非相干合成、背景噪声修正）、声压／声强／声功率级换算、距离衰减与指向性、A/B/C 计权网络换算。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/handbook">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 7h18a4 4 0 014 4v26a4 4 0 00-4-4H12z" stroke-linejoin="round" />
+              <path d="M12 7a3 3 0 00-3 3v28a3 3 0 013 3h22" stroke-linejoin="round" />
+              <path d="M17 16h11M17 22h11M17 28h7" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">公式与术语手册 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">汇总全站核心公式、符号与术语定义，按基础与单位／吸声／隔声／房间／音质／环境／心理／振动／电声／职业健康十类组织，支持关键词检索、分类筛选与深链分享。</span>
           </span>
         </a>
         <a class="module-card" href="#/wave">
@@ -887,7 +904,7 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器</strong> 七个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 40 个文件 / 2526 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
@@ -2375,6 +2392,7 @@
 
   <!-- ====================== 孔洞缝隙与门窗隔声 ====================== -->
   <section class="view" id="view-leakage" data-view="leakage" hidden></section>
+  <section class="view" id="view-handbook" data-view="handbook" hidden></section>
 
   <!-- ====================== 声屏障衰减计算 ====================== -->
   <section class="view" id="view-barrier" data-view="barrier">
@@ -4637,6 +4655,7 @@
 <script src="js/vibration.js"></script>
 <script src="js/muffler.js"></script>
 <script src="js/dbcalc.js"></script>
+<script src="js/handbook.js"></script>
 <script src="js/env.js"></script>
 <script src="js/noisemap.js"></script>
 <script src="js/psycho.js"></script>
@@ -4669,6 +4688,7 @@
 <script src="js/view-vibration.js"></script>
 <script src="js/view-muffler.js"></script>
 <script src="js/view-dbcalc.js"></script>
+<script src="js/view-handbook.js"></script>
 <script src="js/view-env.js"></script>
 <script src="js/view-psycho.js"></script>
 <script src="js/view-vibeval.js"></script>
@@ -4723,8 +4743,10 @@
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
 <script src="https://events.vercount.one/js" async></script>
+<script src="js/urlstate.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
+<script src="js/share.js"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@
  *   #/stc           墙体隔声量
  *   #/leakage       孔洞缝隙与门窗隔声
  *   #/barrier       声屏障衰减
+ *   #/handbook      公式与术语手册（#/handbook?q=…&cat=…）
  *   #/vibration     弹簧减振器隔振效率
  *   #/muffler       消声器计算
  *   #/env           环境声学评价
@@ -19,7 +20,11 @@
  *   #/roomq         厅堂与扩声音质
  *   #/iso3382       厅堂音质参数量测（ISO 3382）
  *   #/sim           室内音质模拟（几何声学）
- *   #/sim-*         声学模拟器（10 个动态演示：共鸣器/行波/频谱/消声/FXLMS 等）
+ *   #/sim-*         声学模拟器（14 个动态演示：共鸣器/行波/频谱/消声/FXLMS/干涉/气泡等）
+ *
+ * 深链参数：任何路由都可追加 query，如 #/leakage?wall=3&hole=1
+ *   - 参数由 window.UrlState 解析（urlstate.js），以 params 对象交给 view.init(mode, params) 与 view.onShow(params)
+ *   - 视图可调用 window.AppRouter.hash(route, params) / .link(route, params) / .go(route, params) 生成或跳转分享链接
  */
 (function () {
   'use strict';
@@ -37,6 +42,7 @@
     vibration: 'view-vibration',
     muffler: 'view-muffler',
     db: 'view-db',
+    handbook: 'view-handbook',
     env: 'view-env',
     exposure: 'view-exposure',
     psycho: 'view-psycho',
@@ -89,6 +95,7 @@
     vibration: '弹簧减振（隔振效率计算书） · 声学计算工具箱',
     muffler: '消声器计算 · 声学计算工具箱',
     db: '单位与换算 · 声学计算工具箱',
+    handbook: '公式与术语手册 · 声学计算工具箱',
     env: '环境声学评价 · 声学计算工具箱',
     exposure: '职业噪声暴露量 · 声学计算工具箱',
     psycho: '心理声学/声品质 · 声学计算工具箱',
@@ -141,6 +148,7 @@
     { route: 'vibration', get: function () { return window.VibrationView; } },
     { route: 'muffler', get: function () { return window.MufflerView; } },
     { route: 'db', get: function () { return window.DbCalcView; } },
+    { route: 'handbook', get: function () { return window.HandbookView; } },
     { route: 'env', get: function () { return window.EnvView; } },
     { route: 'exposure', get: function () { return window.ExposureView; } },
     { route: 'psycho', get: function () { return window.PsyView; } },
@@ -180,11 +188,24 @@
     { route: 'sim-radiation', get: function () { return window.SimRadiationView; } }
   ];
 
+  // 解析当前 hash → { route, mode?, params }
+  // 深链形如 #/leakage?wall=3&hole=1，参数解析委托给 UrlState（未加载时降级为忽略参数）
   function parse() {
-    var raw = (location.hash || '').replace(/^#\/?/, '').replace(/\/+$/, '');
-    if (raw === 'third' || raw === 'noise-third') return { route: 'noise', mode: 'third' };
-    if (Object.prototype.hasOwnProperty.call(VIEWS, raw)) return { route: raw };
-    return { route: 'home' };
+    var U = window.UrlState;
+    var path, params = {};
+    if (U && typeof U.parseHash === 'function') {
+      var r = U.parseHash(location.hash);
+      path = r.path;
+      params = r.params || {};
+    } else {
+      var raw = (location.hash || '').replace(/^#\/?/, '');
+      var qi = raw.indexOf('?');
+      if (qi >= 0) { raw = raw.slice(0, qi); }
+      path = raw.replace(/\/+$/, '');
+    }
+    if (path === 'third' || path === 'noise-third') { return { route: 'noise', mode: 'third', params: params }; }
+    if (Object.prototype.hasOwnProperty.call(VIEWS, path)) { return { route: path, params: params }; }
+    return { route: 'home', params: params };
   }
 
   function show(route, first) {
@@ -202,20 +223,20 @@
     if (!first) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function activate(route, mode) {
+  function activate(route, mode, params) {
     MOUNTS.forEach(function (m) {
       if (m.route !== route) return;
       var view = m.get();
       if (!view) return;
-      view.init(mode);
-      view.onShow();
+      view.init(mode, params);
+      view.onShow(params);
     });
   }
 
   function apply(first) {
     var r = parse();
     show(r.route, first);
-    activate(r.route, r.mode);
+    activate(r.route, r.mode, r.params);
     // 同路由下模式变化（#/noise → #/noise-third）
     if (!first && r.route === 'noise' && r.mode === 'third' && window.NoiseView) {
       window.NoiseView.setMode('third');
@@ -233,5 +254,30 @@
     boot();
   }
 
-  window.AppRouter = { apply: apply, parse: parse, routes: Object.keys(VIEWS) };
+  // 构造深链：AppRouter.hash('leakage', { wall: 3 }) → '#/leakage?wall=3'
+  function hash(route, params) {
+    var U = window.UrlState;
+    if (U && typeof U.buildHash === 'function') { return U.buildHash(route, params); }
+    var q = [];
+    if (params) { Object.keys(params).forEach(function (k) { if (params[k] != null && params[k] !== '') { q.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k])); } }); }
+    return '#/' + route + (q.length ? '?' + q.join('&') : '');
+  }
+
+  // 当前页完整可分享链接
+  function link(route, params) {
+    var base = location.origin + location.pathname + location.search;
+    var U = window.UrlState;
+    if (U && typeof U.buildLink === 'function') { return U.buildLink(base, route, params); }
+    return { url: base + hash(route, params), tooLong: false };
+  }
+
+  // 跳到某路由并带上参数（会触发 hashchange → apply）
+  function go(route, params) {
+    location.hash = hash(route, params);
+  }
+
+  window.AppRouter = {
+    apply: apply, parse: parse, routes: Object.keys(VIEWS), titles: TITLES,
+    hash: hash, link: link, go: go, current: function () { return parse(); }
+  };
 })();
