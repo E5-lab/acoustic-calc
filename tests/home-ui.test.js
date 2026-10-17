@@ -57,29 +57,30 @@ assert('命令面板按钮带 data-cmdk-open', /id="cmdkBtn"[\s\S]{0,120}data-cm
 assert('首页不再保留旧检索栏 .home-search', html.indexOf('class="home-search"') < 0);
 assert('样式表已清理 .ts- 规则', fs.readFileSync(path.join(__dirname, '..', 'public', 'css', 'styles.css'), 'utf8').indexOf('.ts-wrap') < 0);
 
-// ---- 3) banner 轮播结构 ----
-console.log('\n[3] banner 轮播结构');
-assert('含 #heroBanner', html.indexOf('id="heroBanner"') >= 0);
-assert('含 #hbTrack / #hbDots / #hbPrev / #hbNext',
-  ['hbTrack', 'hbDots', 'hbPrev', 'hbNext'].every(function (id) { return html.indexOf('id="' + id + '"') >= 0; }));
-var imgs = (html.match(/src="img\/banner-[\w-]+\.webp"/g) || []);
-assert('banner 引用 4 张 WebP 图片 (实际 ' + imgs.length + ')', imgs.length === 4);
-imgs.forEach(function (s) {
-  var f = s.slice(5, -1);
-  assert('图片文件存在 ' + f, fs.existsSync(path.join(__dirname, '..', 'public', f)));
+// ---- 3) 首页 hero：命令面板即入口 ----
+console.log('\n[3] 首页 hero（命令面板即入口）');
+assert('含 .home-hero 区块', html.indexOf('class="home-hero"') >= 0);
+assert('hero 大搜索按钮 #hhSearch 带 data-cmdk-open',
+  /id="hhSearch"[^>]*data-cmdk-open/.test(html));
+assert('hero 含常用工具直达（背景噪声评价等）', html.indexOf('href="#/noise"') >= 0 && html.indexOf('href="#/perforation"') >= 0);
+assert('hero 含「全部工具」入口', html.indexOf('href="#/all"') >= 0);
+assert('轮播结构 #heroBanner 已移除', html.indexOf('id="heroBanner"') < 0);
+['hbTrack', 'hbDots', 'hbPrev', 'hbNext'].forEach(function (id) {
+  assert('轮播 #' + id + ' 已移除', html.indexOf('id="' + id + '"') < 0);
 });
+assert('js/banner.js 引用已移除', html.indexOf('js/banner.js') < 0);
 assert('不再保留 PNG 版本 banner 图', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
   .filter(function (f) { return /^banner-.*\.png$/.test(f); }).length === 0);
-assert('banner 图总体积 < 1 MB', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
+assert('img/ 目录总体积 < 1 MB（防大图回归）', fs.readdirSync(path.join(__dirname, '..', 'public', 'img'))
   .reduce(function (sum, f) { return sum + fs.statSync(path.join(__dirname, '..', 'public', 'img', f)).size; }, 0) < 1024 * 1024);
 
 // ---- 4) 脚本加载顺序 ----
 console.log('\n[4] 脚本加载顺序');
-var iBannerJs = html.indexOf('js/banner.js');
 var iNavJs = html.indexOf('js/nav.js');
+var iAllToolsJs = html.indexOf('js/all-tools.js');
 var iUiKitJs = html.indexOf('js/ui-kit.js');
 var iExportJs = html.indexOf('js/export.js');
-assert('banner.js 在 nav.js 之前', iBannerJs > 0 && iBannerJs < iNavJs);
+assert('all-tools.js 在 nav.js 之后（依赖 window.NavSub）', iAllToolsJs > iNavJs && iNavJs > 0);
 assert('ui-kit.js（命令面板）在 export.js 之后', iUiKitJs > iExportJs && iExportJs > 0);
 assert('命令面板索引 .module-card', uiKitJs.indexOf(".module-card") >= 0);
 assert('命令面板支持 ⌘K / Ctrl+K', /metaKey/.test(uiKitJs) && /ctrlKey/.test(uiKitJs));
@@ -205,6 +206,27 @@ assert('使用说明分组名与导航一致（电声与听觉）',
   html.indexOf('电声与听觉 / 模拟与可听化 / 声学模拟器 / 现场实测') >= 0);
 assert('使用说明不含旧分组名「心理与声品质」', html.indexOf('心理与声品质') < 0);
 assert('测试计数文案为「56 个测试文件」', html.indexOf('共 56 个测试文件全部通过') >= 0);
+
+// ---- 12) P2 结构改造：#/all 目录页 / 交叉链接 / 描述 clamp ----
+console.log('\n[12] P2 结构改造');
+var routerJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'router.js'), 'utf8');
+assert('router 注册 all → view-all', /all:\s*'view-all'/.test(routerJs));
+assert('router TITLES 含「全部工具」', /all:\s*'全部工具/.test(routerJs));
+assert('index.html 含 #view-all 视图', html.indexOf('id="view-all"') >= 0);
+assert('all-tools.js 文件存在', fs.existsSync(path.join(__dirname, '..', 'public', 'js', 'all-tools.js')));
+assert('nav.js 暴露 window.NavSub', navJs.indexOf('window.NavSub') >= 0);
+var relatedRows = (html.match(/class="related-row"/g) || []).length;
+assert('8 个模块页含「相关模块」交叉链接 (实际 ' + relatedRows + ')', relatedRows === 8);
+// iso3382 为动态挂载视图（空壳 section），其互链经 roomq 单向指向，不静态注入
+['noise', 'spectrum', 'env', 'levels', 'db', 'roomq', 'pasystem', 'stipa'].forEach(function (id) {
+  var s = html.indexOf('id="view-' + id + '"');
+  var e = html.indexOf('</section>', s);
+  assert('view-' + id + ' 含 related-row', html.slice(s, e).indexOf('class="related-row"') >= 0);
+});
+assert('卡片描述 clamp 两行（-webkit-line-clamp:2）',
+  /-webkit-line-clamp:\s*2/.test(css));
+assert('hero 标题与计数文案同源（61 个）',
+  html.indexOf('61 个声学计算器，输入即算') >= 0 && html.indexOf('61 个模块') >= 0);
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);

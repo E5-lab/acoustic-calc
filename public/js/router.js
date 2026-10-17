@@ -91,7 +91,8 @@
     'sim-sonar': 'view-sim-sonar',
     'sim-sea': 'view-sim-sea',
     'sim-fourier': 'view-sim-fourier',
-    'sim-ut': 'view-sim-ut'
+    'sim-ut': 'view-sim-ut',
+    all: 'view-all'
   };
 
   var TITLES = {
@@ -156,7 +157,8 @@
     'sim-sonar': '声呐方程模拟器 · 声学计算工具箱',
     'sim-sea': '统计能量分析模拟器 · 声学计算工具箱',
     'sim-fourier': '傅里叶合成与频谱泄漏模拟器 · 声学计算工具箱',
-    'sim-ut': '超声脉冲回波测厚模拟器 · 声学计算工具箱'
+    'sim-ut': '超声脉冲回波测厚模拟器 · 声学计算工具箱',
+    all: '全部工具 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）

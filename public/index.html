@@ -212,44 +212,23 @@
   <section class="view" id="view-home" data-view="home">
     <h1 class="sr-only">声学计算工具箱 · 建筑与材料声学计算工具集</h1>
 
-    <div class="hero-banner" id="heroBanner">
-      <div class="hb-track" id="hbTrack">
-        <figure class="hb-slide">
-          <img src="img/banner-room.webp" alt="室内音质模拟：声场彩图与混响时间" decoding="async" />
-          <figcaption class="hb-cap">
-            <span class="hb-kicker">室内音质模拟</span>
-            <span class="hb-title">声场彩图 · 逐倍频带混响时间 · ISO 3382 评价</span>
-            <a class="btn primary" href="#/sim">进入模块</a>
-          </figcaption>
-        </figure>
-        <figure class="hb-slide">
-          <img src="img/banner-aural.webp" alt="声学可听化：波形与频谱" decoding="async" />
-          <figcaption class="hb-cap">
-            <span class="hb-kicker">声学可听化</span>
-            <span class="hb-title">不同混响 / 隔声前后的声音对比试听</span>
-            <a class="btn primary" href="#/aural">进入模块</a>
-          </figcaption>
-        </figure>
-        <figure class="hb-slide">
-          <img src="img/banner-insulation.webp" alt="建筑隔声：墙体阻隔声能" decoding="async" />
-          <figcaption class="hb-cap">
-            <span class="hb-kicker">材料与构件</span>
-            <span class="hb-title">穿孔率 · 吸声阻抗 · 墙体隔声量 Rw</span>
-            <a class="btn primary" href="#/stc">进入模块</a>
-          </figcaption>
-        </figure>
-        <figure class="hb-slide">
-          <img src="img/banner-environment.webp" alt="环境噪声：声屏障降噪" decoding="async" />
-          <figcaption class="hb-cap">
-            <span class="hb-kicker">环境与振动</span>
-            <span class="hb-title">环境噪声评价 · 声屏障 · 弹簧减振 · 消声器</span>
-            <a class="btn primary" href="#/env">进入模块</a>
-          </figcaption>
-        </figure>
-      </div>
-      <button class="hb-arrow prev" id="hbPrev" aria-label="上一张">&#8249;</button>
-      <button class="hb-arrow next" id="hbNext" aria-label="下一张">&#8250;</button>
-      <div class="hb-dots" id="hbDots" aria-label="轮播指示器"></div>
+    <div class="home-hero" id="homeHero">
+      <p class="hh-kicker">纯本地运行 · 零依赖 · 按标准方法实现</p>
+      <h2 class="hh-title">61 个声学计算器，输入即算</h2>
+      <button class="hh-search" id="hhSearch" type="button" data-cmdk-open aria-label="打开命令面板，搜索模块、公式或执行操作">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
+        <span>搜索模块、公式或执行操作…</span>
+        <kbd>Ctrl K</kbd>
+      </button>
+      <p class="hh-quick">
+        <span class="hh-quick-label">常用</span>
+        <a href="#/noise">背景噪声评价</a>
+        <a href="#/levels">声压级叠加</a>
+        <a href="#/perforation">穿孔率</a>
+        <a href="#/rt60">混响时间 RT60</a>
+        <a href="#/handbook">公式手册</a>
+        <a href="#/all" class="hh-all">全部工具 →</a>
+      </p>
     </div>
 
     <div class="section-head">
@@ -1091,6 +1070,23 @@
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
+
+  <!-- ============================ 全部工具目录 ============================ -->
+  <section class="view" id="view-all" data-view="all">
+    <div class="page-head">
+      <h2>全部工具</h2>
+      <p class="hint">61 个模块的分组目录与三级子功能清单；数据取自顶栏导航，结构自动保持同步</p>
+    </div>
+    <section class="card">
+      <div class="field">
+        <label for="allFilter">按名称 / 说明 / 子功能过滤</label>
+        <input id="allFilter" type="search" autocomplete="off" spellcheck="false" placeholder="例：混响、NC、穿孔、波束、SEA…" />
+      </div>
+      <p class="hint" id="allCount" style="margin: 8px 0 0;"></p>
+    </section>
+    <div id="allTools"></div>
+  </section>
+
   </section>
 
   <!-- ========================= 背景噪声评价 ========================= -->
@@ -1098,7 +1094,8 @@
     <div class="page-head">
       <h2>背景噪声评价</h2>
       <p class="hint">输入倍频带声压级，得到 A 声级、NC、NR、RC Mark II 评价结果与房间目标值对照</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/spectrum">频谱归并与 A/C/Z 计权</a><span class="rl-sep"> · </span><a href="#/env">环境噪声统计评价</a><span class="rl-sep"> · </span><a href="#/emission">厂界排放限值判定</a></p>
+</div>
 
     <section class="card">
       <div class="mode-row">
@@ -1193,7 +1190,8 @@
     <div class="page-head">
       <h2>单位与换算</h2>
       <p class="hint">声压级能量加减、声压 / 声强 / 声功率互转、点 / 线 / 面声源距离衰减，以及 A / C / Z 计权网络速查</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/levels">多声源叠加与背景修正（权威入口）</a><span class="rl-sep"> · </span><a href="#/wave">波长 / 声阻抗基础</a></p>
+</div>
 
     <section class="card">
       <h3>声级相加 / 相减（背景修正）</h3>
@@ -1672,7 +1670,8 @@
     <div class="page-head">
       <h2>语言传输指数 STIPA 实测</h2>
       <p class="hint">按 IEC 60268-16 播放 STIPA 合成信号（7 个倍频带噪声载波 × 2 个低频调制）并录音：各带带通 → Hilbert 包络 → 调制频率精确投影得 MTF → 视在 SNR → 男声计权 STI 与五级评级。</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/pasystem">STIPA 预测</a><span class="rl-sep"> · </span><a href="#/psycho">声品质评价</a></p>
+</div>
 
     <section class="card">
       <h3>测量参数</h3>
@@ -1729,7 +1728,8 @@
     <div class="page-head">
       <h2>环境声学评价</h2>
       <p class="hint">等效声级 · 统计声级 · 昼夜声级 Ldn/Lden · 噪声污染级 · 噪声评价数 NR · 户外声传播 · 交通噪声</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/noise">NC / NR / RC 评价（权威入口）</a><span class="rl-sep"> · </span><a href="#/noisemap">噪声等值线图</a><span class="rl-sep"> · </span><a href="#/traffic">交通与航空噪声预测</a></p>
+</div>
 
     <section class="card">
       <h3>等效声级 Leq 与统计声级</h3>
@@ -2014,7 +2014,8 @@
     <div class="page-head">
       <h2>厅堂与扩声音质</h2>
       <p class="hint">混响/早期衰减(RT60/EDT) · 清晰度(C50/C80) · 定义度(D50) · 中心时间(Ts) · 强度因子(G) · 扩声系统预测</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/iso3382">ISO 3382 参数量测（权威入口）</a><span class="rl-sep"> · </span><a href="#/pasystem">扩声系统设计</a></p>
+</div>
 
     <section class="card">
       <h3>混响时间 RT60 与早期衰减 EDT</h3>
@@ -2999,7 +3000,8 @@
     <div class="page-head">
       <h2>声压级叠加计算</h2>
       <p class="hint">dB 不能直接相加 —— 能量叠加、增量速算、相干叠加、背景修正与常用换算</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/db">声级换算速查</a><span class="rl-sep"> · </span><a href="#/noise">频谱评价</a></p>
+</div>
 
     <div class="mode-row">
       <span class="mode-label">工具</span>
@@ -4372,7 +4374,8 @@
     <div class="page-head">
       <h2>电声与语言清晰度</h2>
       <p class="hint">扬声器覆盖与临界距离 · 扩声可用增益（声反馈）· STIPA 语言清晰度预测 · 扬声器电功率估算。工程估算，供扩声系统方案比选。</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/stipa">STIPA 实测对照</a><span class="rl-sep"> · </span><a href="#/roomq">厅堂与扩声音质</a></p>
+</div>
 
     <section class="card">
       <h3>覆盖与声压级</h3>
@@ -5001,7 +5004,7 @@
     <div class="page-head">
       <h2>环境噪声排放限值对照</h2>
       <p class="hint">GB 12348 工业企业厂界 · GB 22337 社会生活噪声 · GB 12523 施工场界 · GB 3096 功能区；限值库内置 + data/limits.json 可外部配置</p>
-    </div>
+</div>
 
     <section class="card">
       <h3>标准与实测输入</h3>
@@ -5074,7 +5077,8 @@
     <div class="page-head">
       <h2>频谱分析与计权</h2>
       <p class="hint">把测得的窄带数据整理成能下结论的形式：归并到倍频程、施加 A/C/Z 计权、对照 NR / NC 曲线评级。全部按能量运算，归并前后总能量守恒。</p>
-    </div>
+          <p class="related-row">相关模块：<a href="#/noise">NC / NR / RC 评级（权威入口）</a><span class="rl-sep"> · </span><a href="#/db">声级与单位换算</a></p>
+</div>
 
     <section class="card">
       <h3>频带归并</h3>
@@ -5366,11 +5370,11 @@
 <script src="js/view-sim-fourier.js"></script>
 <script src="js/sim-ut.js"></script>
 <script src="js/view-sim-ut.js"></script>
-<script src="js/banner.js"></script>
 <script src="js/site-stats.js"></script>
 <script src="https://events.vercount.one/js" async></script>
 <script src="js/urlstate.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/all-tools.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/router.js"></script>
 <script src="js/share.js"></script>

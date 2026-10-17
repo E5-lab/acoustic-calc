@@ -37,7 +37,8 @@ if (viewsBlock) {
   while ((m = re.exec(body)) !== null) routes.push(m[1]);
 }
 assert('VIEWS 路由数量 >= 10', routes.length >= 10);
-var moduleRoutes = routes.filter(function (r) { return r !== 'home'; });
+// home 是总览、all 是「全部工具」目录页（非功能模块，不进导航/卡片/地址清单）
+var moduleRoutes = routes.filter(function (r) { return r !== 'home' && r !== 'all'; });
 
 // ---- 提取首页总览区块（#view-home 到下一个顶级 view 之间的内容） ----
 var homeStart = html.indexOf('id="view-home"');

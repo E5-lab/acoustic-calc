@@ -92,6 +92,9 @@
     'sim-ut': ['A 扫描波形', '声束剖面', '缺陷定位']
   };
 
+  // 暴露给「全部工具」目录页（all-tools.js）使用，只读
+  window.NavSub = NAV_SUB;
+
   function groups() {
     return Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
   }
