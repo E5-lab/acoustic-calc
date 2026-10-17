@@ -14,6 +14,7 @@
   'use strict';
 
   var M = window.Muffler;
+  var MS = window.MaterialStore;
   var BANDS = M.BANDS;
 
   var state = { panel: 'res' };
@@ -72,17 +73,37 @@
   }
 
   function readAlpha() {
-    if ($('mfMaterial').value !== 'custom') {
+    var v = $('mfMaterial').value;
+    if (v !== 'custom') {
+      if (MS) {
+        var c = MS.get('muffler', v);
+        if (c) return c.alpha.slice();
+      }
       var mat = null;
-      M.MATERIALS.forEach(function (m) { if (m.id === $('mfMaterial').value) mat = m; });
+      M.MATERIALS.forEach(function (m) { if (m.id === v) mat = m; });
       return mat ? mat.alpha.slice() : null;
     }
     var out = [];
     for (var i = 0; i < BANDS.length; i++) {
-      var v = pf('mfAlpha' + i);
-      out.push(v == null ? 0 : v);
+      var a = pf('mfAlpha' + i);
+      out.push(a == null ? 0 : a);
     }
     return out;
+  }
+
+  /* 材料下拉：内置 + 本机自定义 + 手动逐频带输入 */
+  function fillMaterialSelect() {
+    var html = M.MATERIALS.map(function (m) {
+      return '<option value="' + m.id + '">' + esc(m.name) + '</option>';
+    }).join('');
+    var customs = MS ? MS.list('muffler') : [];
+    if (customs.length) {
+      html += '<optgroup label="自定义材料">' + customs.map(function (m) {
+        return '<option value="' + esc(m.id) + '">' + esc(m.name) + '</option>';
+      }).join('') + '</optgroup>';
+    }
+    html += '<option value="custom">自定义（逐频带输入 α₀）</option>';
+    $('mfMaterial').innerHTML = html;
   }
 
   // ------------------------------ 面板 1：阻性 ------------------------------
@@ -444,10 +465,8 @@
     if (inited) return;
     inited = true;
 
-    // 材料下拉
-    $('mfMaterial').innerHTML = M.MATERIALS.map(function (m) {
-      return '<option value="' + m.id + '">' + esc(m.name) + '</option>';
-    }).join('') + '<option value="custom">自定义（逐频带输入 α₀）</option>';
+    // 材料下拉（内置 + 本机自定义 + 手动输入）
+    fillMaterialSelect();
 
     // 声源下拉
     $('mfSource').innerHTML = M.SOURCES.map(function (s) {
@@ -474,6 +493,21 @@
     $('mfSource').addEventListener('change', recalcCombo);
     $('mfWeighted').addEventListener('change', recalcCombo);
     $('mfComboRecalc').addEventListener('click', recalcCombo);
+
+    // 自定义衬里材料管理（本机保存 + 导出/导入）
+    if (MS && $('mfMatStore')) {
+      MS.renderManager($('mfMatStore'), {
+        scope: 'muffler',
+        title: '自定义衬里材料（本机保存，下拉随选随用）',
+        onChange: function () {
+          var cur = $('mfMaterial').value;
+          fillMaterialSelect();
+          $('mfMaterial').value = (cur === 'custom' || (MS.get('muffler', cur))) ? cur : M.MATERIALS[0].id;
+          syncMaterial();
+          recalcRes();
+        }
+      });
+    }
 
     // 面板 4（反算选型）：下拉与目标值即改即算，按钮亦可手动触发
     var bandOpts = BANDS.map(function (f) {

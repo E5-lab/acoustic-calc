@@ -1066,7 +1066,7 @@
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 模拟与可听化 / 环境与振动 / 电声与听觉 / 声学模拟器 / 现场实测</strong> 八个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
 <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/impact</code> 撞击声隔声评价、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/emission</code> 排放限值对照、<code>#/traffic</code> 交通与航空噪声、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/sim-sonar</code> 声呐方程、<code>#/sim-sea</code> 统计能量分析、<code>#/sim-fourier</code> 傅里叶合成、<code>#/sim-ut</code> 超声测厚、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。现场实测分组内部即可闭环：<code>#/siggen</code> 产生扫频 → <code>#/irt60</code> 播放并录音得 RT60；<code>#/stipa</code> 实测语言传输指数，与 <code>#/pasystem</code> 的预测值互相印证；<code>#/rta</code> 看频谱形态，<code>#/splmeter</code> 读总声级与 Leq。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 57 个测试文件全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 58 个测试文件全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -2679,6 +2679,12 @@
           </div>
           <div id="rtMsg" class="callout-row"></div>
         </section>
+
+        <section class="card">
+          <h3><span class="step">3</span> 自定义材料库 <span class="hint">(本机保存)</span></h3>
+          <p class="hint">内置库没有的专用材料（按检测报告逐倍频带录入），保存后出现在上方表面材料下拉中；数据仅存本机 localStorage、不上传，支持导出/导入 JSON 备份。分享链接会携带自定义材料的吸声系数，接收方无需再录。</p>
+          <div id="rtMatStore"></div>
+        </section>
       </div>
 
       <div class="split-col">
@@ -3904,6 +3910,7 @@
             <input id="mfAlpha6" type="number" step="0.05" min="0" max="1" value="0.9" />
           </div>
         </div>
+        <div id="mfMatStore"></div>
       </section>
 
       <section class="card">
@@ -5344,6 +5351,7 @@
 
 <script src="js/chart-util.js"></script>
 <script src="js/acoustics.js"></script>
+<script src="js/material-store.js"></script>
 <script src="js/perforation.js"></script>
 <script src="js/absorber.js"></script>
 <script src="js/room.js"></script>

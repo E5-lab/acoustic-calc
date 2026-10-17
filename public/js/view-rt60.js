@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  var E = window.Room, Chart = window.MiniChart;
+  var E = window.Room, Chart = window.MiniChart, MS = window.MaterialStore;
 
   var AUTO = { floor: 'l*w', ceiling: 'l*w', walls: '2*h*(l+w)' };
   var state = {
@@ -39,6 +39,25 @@
   }
 
   function materialOptions(selected) {
+    var html = E.MATERIALS.map(function (m) {
+      return '<option value="' + m.id + '"' + (m.id === selected ? ' selected' : '') + '>' + esc(m.name) + '</option>';
+    }).join('');
+    var customs = MS ? MS.list('rt60') : [];
+    var tail = '';
+    customs.forEach(function (m) {
+      tail += '<option value="' + esc(m.id) + '"' + (m.id === selected ? ' selected' : '') + '>' + esc(m.name) + '</option>';
+    });
+    // 分享链接带来的自定义材料 id（本机没有）→ 占位显示，计算沿用链接携带的 alpha
+    if (selected && String(selected).indexOf('c_') === 0 &&
+        !customs.some(function (m) { return m.id === selected; })) {
+      tail += '<option value="' + esc(selected) + '" selected>（自定义材料 · 分享载入）</option>';
+    }
+    if (tail) html += '<optgroup label="自定义材料">' + tail + '</optgroup>';
+    return html;
+  }
+
+  /* 填充材料下拉仅用内置库（内核按 materialId 解析） */
+  function builtinOptions(selected) {
     return E.MATERIALS.map(function (m) {
       return '<option value="' + m.id + '"' + (m.id === selected ? ' selected' : '') + '>' + esc(m.name) + '</option>';
     }).join('');
@@ -64,6 +83,7 @@
       });
       row.querySelector('select').addEventListener('change', function () {
         r.materialId = this.value;
+        r.alpha = null;                 // 换材料后废弃分享链接携带的旧 alpha
         recalc();
       });
       row.querySelector('button').addEventListener('click', function () {
@@ -97,9 +117,20 @@
     refreshAutoAreas();
     syncAreaInputs();
 
+    // 自定义材料（本机库）→ 直接以 alpha 数组参与计算（内核支持）；
+    // 分享链接载入的行自带 alpha，接收方无该材料也能算
+    var surfaces = state.rows.map(function (r) {
+      var c = MS ? MS.get('rt60', r.materialId) : null;
+      if (c) return { name: r.name, area: r.area, alpha: c.alpha.slice() };
+      if (Array.isArray(r.alpha) && r.alpha.length === E.BANDS.length) {
+        return { name: r.name, area: r.area, alpha: r.alpha };
+      }
+      return r;
+    });
+
     var calc = E.compute({
       length: state.dims.l, width: state.dims.w, height: state.dims.h,
-      surfaces: state.rows,
+      surfaces: surfaces,
       fillerMaterialId: state.filler,
       airAbsorption: state.air
     });
@@ -269,7 +300,7 @@
     if (inited) return;
     inited = true;
 
-    $('rtFiller').innerHTML = materialOptions(state.filler);
+    $('rtFiller').innerHTML = builtinOptions(state.filler);
     $('rtUse').innerHTML = E.ROOM_USES.map(function (u) {
       return '<option value="' + u.id + '"' + (u.id === state.use ? ' selected' : '') + '>' +
         u.name + '（' + u.rt[0] + '–' + u.rt[1] + ' s）</option>';
@@ -296,7 +327,11 @@
       return {
         L: $('rtL').value, W: $('rtW').value, H: $('rtH').value,
         air: $('rtAir').value, filler: state.filler, use: state.use,
-        rows: JSON.stringify(state.rows)
+        rows: JSON.stringify(state.rows.map(function (r) {
+          // 自定义材料随链接携带 alpha，接收方无需录入
+          var c = MS ? MS.get('rt60', r.materialId) : null;
+          return c ? { name: r.name, area: r.area, auto: r.auto || undefined, materialId: r.materialId, alpha: c.alpha } : r;
+        }))
       };
     }
     function applyRows(rowsJson) {
@@ -308,6 +343,7 @@
       }).map(function (r) {
         var row = { name: String(r.name || '表面'), area: parseFloat(r.area) || 0, materialId: String(r.materialId || 'glass') };
         if (r.auto === 'floor' || r.auto === 'ceiling') row.auto = r.auto;
+        if (Array.isArray(r.alpha) && r.alpha.length === E.BANDS.length) row.alpha = r.alpha.map(Number);
         return row;
       });
       renderRows();
@@ -334,6 +370,14 @@
       });
     }
     if (params) applyParams(params);
+
+    // 自定义材料管理（本机保存 + 导出/导入）
+    if (MS && $('rtMatStore')) {
+      MS.renderManager($('rtMatStore'), {
+        scope: 'rt60',
+        onChange: function () { renderRows(); recalc(); }
+      });
+    }
   }
 
   function onShow() { recalc(); }
