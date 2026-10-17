@@ -345,7 +345,7 @@
 - **低音比 BR**：BR = (RT₁₂₅ + RT₂₅₀) / (2·RT₅₀₀)，≥1.1 偏暖、≥1.0 平衡、否则偏瘦。
 - 内置三套例题（双折线衰减曲线 / 双耳脉冲响应 / 单耳脉冲响应）由内核同一生成器产出，页面默认值与测试锚点永不漂移；72 项内核单测，全部指标经纯指数衰减解析值交叉验证（T = 2 s 时 T30 = EDT = 2.00 s、C80 = −1.321 dB、D50 = 29.2%、Ts = 144.8 ms）。
 
-### ㉜ 声学模拟器（`#/sim-*` · 十四个动态演示）
+### ㉜ 声学模拟器（`#/sim-*` · 十八个动态演示）
 
 > 浏览器端纯前端 Canvas 动画模拟器，与上面的计算器互补——不输出计算书，而是把公式「演出来」。每个模拟器均为「UMD 计算内核 + 自包含动画视图」，视图 `init()` 自行注入 DOM。
 
@@ -363,6 +363,10 @@
 - **`#/sim-bubble` 水下气泡共鸣（Minnaert）**：f₀ = (1/2πr)·√(3γP₀/ρ) 的气泡脉动与辐射动画，f₀ ∝ 1/r 实时重算；Lorentz 扫频响应 H(f) = 1/√(1+[2Q(f−f₀)/f₀]²)，半功率带宽 Δf = f₀/Q（忽略表面张力，适用 r ≳ 0.1 mm）。
 - **`#/sim-refraction` 温度梯度声折射**：c(z) = c₀ + g·z 分层介质中的射线追踪动画，Snell 不变量 cosθ/c = 常数；g>0（逆温）声线折返、折返点 z_tp = c₀(secθ₀−1)/g，g<0（正常递减）地面附近形成声影区。
 - **`#/sim-radiation` 声源辐射指向性**：单极子（全指向）/ 偶极子（|cosθ|，8 字形）/ 四极子（|cos2θ|，四叶草）的极坐标指向图与径向扩散动画，指向性指数 DI = 0 / 4.77 / 3.31 dB（与图样严格一致），探测点时域波形 p = D(θ)·sin(2πft−kr)/r。
+- **`#/sim-sonar` 声呐方程**：主动 / 被动声呐方程求解最大作用距离；海水吸收用 Thorp 经验式 α(f)（f 单位 kHz、dB/km），传播损失 TL = 20lg r + αr/1000；主动 SL−2TL+TS−(NL−DI) ≥ DT、被动 SL−TL−(NL−DI) ≥ DT，二分法解 r_max，并给出信号级 / 噪声级随距离曲线（未建模混响限制）。
+- **`#/sim-sea` 统计能量分析（SEA）**：两个房间经隔墙耦合的稳态功率流——内损耗因子 ηᵢ = 2.2/(f·T60ᵢ)、耦合损耗因子 η₁₂ = τcS/(4ωV₁)（Craik）、互易 η₁₂N₁ = η₂₁N₂，解功率平衡方程组得 E₁/E₂ 与声级差 D = 10lg[(E₁/V₁)/(E₂/V₂)]；模态数 N < 3 时给出「SEA 不适用」告警。
+- **`#/sim-fourier` 傅里叶合成与频谱泄漏**：方波 / 锯齿 / 三角波的谐波逐次叠加动画（方波过冲自 4/π 单调下降趋近 Gibbs 极限 1.17898）；矩形 / Hann / Hamming / Blackman 四种窗的 DFT 谱对比，给出主瓣宽度（2/4/4/6 bin）与最高旁瓣电平，含混叠频率与折叠提示。
+- **`#/sim-ut` 超声脉冲回波测厚与探伤**：A 扫描（始波 / 缺陷波 / 底波高斯包络脉冲）与工件剖面声束传播动画；d = c·t/2、λ = c/f、近场长度 N = D²/(4λ)、半扩散角 arcsin(1.22λ/D)、回波幅度 −2αd − 20lg(2d/mm)、−6 dB 法缺陷当量尺寸；内置 8 种材料声速表。
 
 ### ㉝ 孔洞缝隙与门窗隔声（`#/leakage`）
 
@@ -431,7 +435,7 @@
 - `public/js/diffuser.js` — 扩散体设计内核（UMD，mm 制；QRD/PRD/MLS/2D QRD/Skyline/Binary/Wave/Fractal 八类几何与裁切清单）
 - `public/js/hearing.js` — 听觉与听阈内核（UMD，ISO 226 等响曲线/ISO 7029 年龄阈移/WHO 2021 分级/RETSPL/Zwicker 临界带与掩蔽）
 - `public/js/iso3382.js` — 厅堂音质参数量测内核（UMD，衰减曲线拟合 EDT/T20/T30/C50/C80/D50/Ts/强度因子 G/侧向 LF/LJ/IACC/ITDG/低音比，含 Table A.1 与厅种目标值表）
-- `public/js/sim-helmholtz.js` `sim-impedance.js` `sim-octave.js` `sim-hvac.js` `sim-fxlms.js` `sim-drone.js` `sim-micarray.js` `sim-wedge.js` `sim-tube.js` `sim-echo.js` `sim-interference.js` `sim-bubble.js` `sim-refraction.js` `sim-radiation.js` — 声学模拟器内核（均为 UMD，配套自包含 Canvas 动画视图 `view-sim-*.js`）
+- `public/js/sim-helmholtz.js` `sim-impedance.js` `sim-octave.js` `sim-hvac.js` `sim-fxlms.js` `sim-drone.js` `sim-micarray.js` `sim-wedge.js` `sim-tube.js` `sim-echo.js` `sim-interference.js` `sim-bubble.js` `sim-refraction.js` `sim-radiation.js` `sim-sonar.js` `sim-sea.js` `sim-fourier.js` `sim-ut.js` — 声学模拟器内核（均为 UMD，配套自包含 Canvas 动画视图 `view-sim-*.js`）
 - `public/js/chart-util.js` — 轻量 Canvas 图表工具（对数轴/参考带/多序列）
 - `public/js/sim.js` — 室内音质模拟内核（几何声学：房间几何/Sabine/Eyring+空气吸收、三维光线追踪（俄罗斯轮盘赌 + 朗伯散射）、逐带网格指标、接收点 ISO 3382、Lundeby 截断补偿；含轴测投影 `isoFit/isoProject` 与色标刻度 `niceRange/scaleTicks`）
 - `public/js/aural.js` — 声学可听化内核（迭代基-2 FFT、倍频带频谱整形、由回波/RT 合成脉冲响应、FFT 快速卷积、A 计权降噪量、16 bit WAV 编码）
@@ -443,7 +447,7 @@
 - `public/js/audio-io.js` — 浏览器共享音频 I/O（AudioContext 播放 / 麦克风采集 / WAV 解码 16-24-32bit PCM 与 float32）
 - `public/js/banner.js`、`search.js` — 首页 hero 轮播 与 总览页功能检索栏（纯 DOM，无依赖）
 - `tools/make-icons.js` — PWA 图标生成（纯 Node zlib 实现 PNG 编码，重绘 favicon.svg 设计；改品牌后运行 `node tools/make-icons.js` 重新生成）
-- `node tests/*.test.js` 共 48 个测试文件、**2200+ 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
+- `node tests/*.test.js` 共 52 个测试文件、**3590 项断言全部通过**（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏检索 / 悬浮面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
 
 ## 目录结构
 
@@ -593,6 +597,7 @@ wrangler deploy          # 读取 wrangler.toml，将 public/ 作为资源发布
 
 ## 更新记录
 
+- v2.8：**「声学模拟器」分组再增 4 个动态演示（工具 54 → 58 个）**——声呐方程（Thorp 海水吸收 + 主/被动声呐方程二分求解最大作用距离）、统计能量分析 SEA（η₁₂ = τcS/(4ωV₁)、互易性 η₁₂N₁ = η₂₁N₂、功率平衡解声级差 D）、傅里叶合成与频谱泄漏（谐波叠加 Gibbs 过冲 + 矩形/Hann/Hamming/Blackman 四种窗的泄漏与主瓣对比 + 混叠）、超声脉冲回波测厚探伤（A 扫描三回波 + 近场长度 / 半扩散角 / −6 dB 缺陷当量）。各为 UMD 计算内核 + 自包含 Canvas 动画视图，配套 4 个测试文件 / 501 项断言（全套单测扩至 **52 个文件、3590 项断言全部通过**）。六处登记同步（router 三表、nav.js、index.html 五处、home-ui 卡片数 54 → 58、README），现校验 **58 模块 / 8 分组**。
 - v2.7：**现场实测五件套 + PWA（工具 49 → 54 个、分组 7 → 8 个）**：
   - **现场实测五件套**（浏览器麦克风 / 扬声器，样点不出本机）：**声级计实测（`#/splmeter`）**——宽带 LA/LC/LZ、F/S 时间计权、Leq 能量累积、帧最大 Lmax、十倍频带「当前帧 + Leq」双读数、60 s 滚动曲线、94 dB 声校准器定标偏移；**实时频谱分析 RTA（`#/rta`）**——1/1 与 1/3 倍频带、Z/A/C 计权、指数平均与最大值保持、对数频率轴条形图；**测量信号发生器（`#/siggen`）**——白噪 / 粉噪 / 正弦 / 对数扫频 ESS / 倍频带限噪，播放或下载 16-bit WAV；**混响时间 RT60 实测（`#/irt60`）**——扫频播放 + 同步录音 → 互相关 → Farina 反卷积 → 带限 → Schroeder 积分 + Lundeby 补偿 → T20/T30/EDT，支持上传 WAV 离线分析；**语言传输指数 STIPA 实测（`#/stipa`）**——IEC 60268-16 信号 → Hilbert 解析包络 → MTF 精确投影 → 男声计权 STI 五级评级，上传录音直接分析。
   - **测量内核**（均 UMD、Node 可 require）：`measure.js`（FFT 分带/Leq/计权）、`siggen.js`（五类信号，带限噪带外 < −100 dB）、`irt60.js`（Farina/Schroeder/Lundeby）、`stipa.js`（信号合成/Hilbert 解析包络/MTF）、`audio-io.js`（共享播放/录音/WAV 解码）。期间修复两个内核真 bug：粉噪带限 skirt 外以 edge 为地板导致 −40 dB 底噪漏入相邻带（改硬置零，带内外比 14.7 → 258.7 dB）；Hilbert 包络未做正频率 ×2（得到的是纯 Hilbert 变换，包络绝对值低 3.9 dB，改真解析信号）。

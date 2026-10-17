@@ -138,6 +138,10 @@
           <a href="#/sim-bubble" data-route="sim-bubble"><span class="nm-t">水下气泡共鸣</span><small class="nm-d">Minnaert · 脉动辐射 · 扫频响应</small></a>
           <a href="#/sim-refraction" data-route="sim-refraction"><span class="nm-t">温度梯度声折射</span><small class="nm-d">声线弯曲 · 折返点 · 声影区</small></a>
           <a href="#/sim-radiation" data-route="sim-radiation"><span class="nm-t">声源辐射指向性</span><small class="nm-d">单极子/偶极子/四极子 · DI</small></a>
+          <a href="#/sim-sonar" data-route="sim-sonar"><span class="nm-t">声呐方程</span><small class="nm-d">传播损失 · 作用距离 · 余量</small></a>
+          <a href="#/sim-sea" data-route="sim-sea"><span class="nm-t">统计能量分析</span><small class="nm-d">耦合损耗 · 功率流 · 声级差</small></a>
+          <a href="#/sim-fourier" data-route="sim-fourier"><span class="nm-t">傅里叶与频谱泄漏</span><small class="nm-d">谐波合成 · Gibbs · 窗函数</small></a>
+          <a href="#/sim-ut" data-route="sim-ut"><span class="nm-t">超声脉冲回波</span><small class="nm-d">A 扫描 · 测厚 · 缺陷定位</small></a>
         </div>
       </div>
 
@@ -255,7 +259,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 8 个分组、54 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 8 个分组、58 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -933,6 +937,63 @@
     <div class="module-group">
       <div class="group-label">现场实测</div>
       <div class="module-grid">
+        <a class="module-card" href="#/sim-sonar">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12h40" opacity="0.5" />
+              <path d="M24 12v6" stroke-linecap="round" />
+              <circle cx="24" cy="22" r="3" fill="currentColor" stroke="none" />
+              <path d="M17 32a9 9 0 0114 0M12 38a16 16 0 0124 0" opacity="0.55" />
+              <path d="M34 30c3 2 5 5 5 8" stroke-dasharray="2 3" opacity="0.6" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声呐方程 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">主动 / 被动声呐方程求解最大作用距离：Thorp 海水吸收 α(f)、传播损失 TL = 20lg r + αr，信号级曲线与噪声底线交点即 r_max。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-sea">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="12" width="18" height="24" rx="1" />
+              <rect x="26" y="12" width="18" height="24" rx="1" />
+              <path d="M22 12v24" opacity="0.7" />
+              <path d="M26 24h-8M18 20l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">统计能量分析 SEA <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">两个耦合房间的 SEA 功率流：内损耗因子 η = 2.2/(f·T60)、耦合损耗因子 η₁₂ = τcS/(4ωV₁)，解功率平衡方程得能级与声级差 D。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-fourier">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 32h10v-16h10v16h10v-16h10" stroke-linejoin="round" />
+              <path d="M24 8v32" stroke-dasharray="2 3" opacity="0.4" />
+              <path d="M8 40v-8M16 40v-12M28 40v-14M36 40v-10" opacity="0.55" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">傅里叶与频谱泄漏 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">谐波逐次叠加逼近方波 / 锯齿 / 三角波的动画（含 Gibbs 过冲读值），对比矩形 / Hann / Hamming / Blackman 窗的泄漏与主瓣宽度。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-ut">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="8" y="26" width="32" height="14" rx="1" />
+              <rect x="10" y="14" width="14" height="8" rx="1" opacity="0.8" />
+              <path d="M17 22v4" stroke-linecap="round" />
+              <path d="M14 34v-6M20 34v-10M26 34v-4M32 34v-8" stroke-linecap="round" />
+              <rect x="24" y="31" width="4" height="4" opacity="0.7" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">超声脉冲回波测厚 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">A 扫描动画演示始波 / 缺陷波 / 底波：d = c·t/2 测厚、近场长度 N = D²/(4λ)、半扩散角 arcsin(1.22λ/D)、材料衰减与 −6 dB 缺陷当量。</span>
+          </span>
+        </a>
         <a class="module-card" href="#/splmeter">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
@@ -1005,7 +1066,7 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器 / 现场实测</strong> 八个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/sim-sonar</code> 声呐方程、<code>#/sim-sea</code> 统计能量分析、<code>#/sim-fourier</code> 傅里叶合成、<code>#/sim-ut</code> 超声测厚、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。现场实测分组内部即可闭环：<code>#/siggen</code> 产生扫频 → <code>#/irt60</code> 播放并录音得 RT60；<code>#/stipa</code> 实测语言传输指数，与 <code>#/pasystem</code> 的预测值互相印证；<code>#/rta</code> 看频谱形态，<code>#/splmeter</code> 读总声级与 Leq。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 40 个文件 / 2526 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
@@ -1583,6 +1644,11 @@
   </section>
 
   <!-- ========================= 现场实测 · STIPA ========================= -->
+  <section class="view" id="view-sim-sonar" data-view="sim-sonar" hidden></section>
+  <section class="view" id="view-sim-sea" data-view="sim-sea" hidden></section>
+  <section class="view" id="view-sim-fourier" data-view="sim-fourier" hidden></section>
+  <section class="view" id="view-sim-ut" data-view="sim-ut" hidden></section>
+
   <section class="view" id="view-stipa" data-view="stipa" hidden>
     <div class="page-head">
       <h2>语言传输指数 STIPA 实测</h2>
@@ -5152,6 +5218,14 @@
 <script src="js/view-siggen.js"></script>
 <script src="js/view-irt60.js"></script>
 <script src="js/view-stipa.js"></script>
+<script src="js/sim-sonar.js"></script>
+<script src="js/view-sim-sonar.js"></script>
+<script src="js/sim-sea.js"></script>
+<script src="js/view-sim-sea.js"></script>
+<script src="js/sim-fourier.js"></script>
+<script src="js/view-sim-fourier.js"></script>
+<script src="js/sim-ut.js"></script>
+<script src="js/view-sim-ut.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>

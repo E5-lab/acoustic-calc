@@ -84,7 +84,11 @@
     rta: 'view-rta',
     siggen: 'view-siggen',
     irt60: 'view-irt60',
-    stipa: 'view-stipa'
+    stipa: 'view-stipa',
+    'sim-sonar': 'view-sim-sonar',
+    'sim-sea': 'view-sim-sea',
+    'sim-fourier': 'view-sim-fourier',
+    'sim-ut': 'view-sim-ut'
   };
 
   var TITLES = {
@@ -142,7 +146,11 @@
     rta: '实时频谱分析 RTA · 声学计算工具箱',
     siggen: '测量信号发生器 · 声学计算工具箱',
     irt60: '混响时间 RT60 实测 · 声学计算工具箱',
-    stipa: '语言传输指数 STIPA 实测 · 声学计算工具箱'
+    stipa: '语言传输指数 STIPA 实测 · 声学计算工具箱',
+    'sim-sonar': '声呐方程模拟器 · 声学计算工具箱',
+    'sim-sea': '统计能量分析模拟器 · 声学计算工具箱',
+    'sim-fourier': '傅里叶合成与频谱泄漏模拟器 · 声学计算工具箱',
+    'sim-ut': '超声脉冲回波测厚模拟器 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -200,7 +208,11 @@
     { route: 'rta', get: function () { return window.RtaView; } },
     { route: 'siggen', get: function () { return window.SigGenView; } },
     { route: 'irt60', get: function () { return window.IrT60View; } },
-    { route: 'stipa', get: function () { return window.StipaView; } }
+    { route: 'stipa', get: function () { return window.StipaView; } },
+    { route: 'sim-sonar', get: function () { return window.SimSonarView; } },
+    { route: 'sim-sea', get: function () { return window.SimSeaView; } },
+    { route: 'sim-fourier', get: function () { return window.SimFourierView; } },
+    { route: 'sim-ut', get: function () { return window.SimUtView; } }
   ];
 
   // 解析当前 hash → { route, mode?, params }
