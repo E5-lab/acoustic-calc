@@ -6,7 +6,7 @@
   'use strict';
 
   var E = window.Barrier;
-  var state = { hs: 1, hr: 1.5, hb: 3, d1: 10, d2: 20, sourceId: 'road', formula: 'kurzeAnderson', limit: 24 };
+  var state = { hs: 1, hr: 1.5, hb: 3, d1: 10, d2: 20, sourceId: 'road', formula: 'kurzeAnderson', limit: 24, length: undefined, ground: 'none' };
   var last = null;
   var inited = false;
 
@@ -27,6 +27,9 @@
     state.sourceId = $('barSource').value;
     state.formula = $('barFormula').value;
     state.limit = parseFloat($('barLimit').value) || 24;
+    var len = parseFloat($('barLen').value);
+    state.length = (isNaN(len) || len <= 0) ? undefined : len;
+    state.ground = $('barGround').value;
   }
 
   function recalc() {
@@ -36,7 +39,8 @@
 
     var r = E.spectrum({
       hs: state.hs, hr: state.hr, hb: state.hb, d1: state.d1, d2: state.d2,
-      sourceId: state.sourceId, formula: state.formula, maxLimit: state.limit
+      sourceId: state.sourceId, formula: state.formula, maxLimit: state.limit,
+      length: state.length, ground: state.ground
     });
 
     if (!r.ok) {
@@ -62,11 +66,18 @@
 
     var p500 = r.rows[E.BANDS.indexOf(500)] || r.rows[0];
     var g = r.geometric;
-    $('barStats').innerHTML =
+    var statsHtml =
       stat('程差 δ', num(g.delta, 3), 'm') +
       stat('菲涅尔数 N @500 Hz', num(p500.N, 2), '') +
       stat('屏障顶超出视线', num(g.hEffective, 2), 'm') +
       stat('屏障后总声级', num(r.overallAfter, 1), r.weighted ? 'dBA' : 'dB');
+    if (r.finite && r.plan) {
+      statsHtml += stat('左端绕射 δ', num(r.plan.deltaLeft, 2), 'm') + stat('右端绕射 δ', num(r.plan.deltaRight, 2), 'm');
+    }
+    if (r.groundRho > 0 && r.image) {
+      statsHtml += stat('镜像程差 δ′', num(r.image.delta, 3), 'm') + stat('地面能量反射 ρ²', num(r.groundRho * r.groundRho, 2), '');
+    }
+    $('barStats').innerHTML = statsHtml;
 
     var limited = r.rows.some(function (x) { return x.limited; });
     if (limited) {
@@ -78,20 +89,29 @@
     }
 
     var rows = r.rows.map(function (x) {
+      function ilCell(v) {
+        if (v == null) return '<td class="mut">—</td>';
+        var capped = Math.min(v, state.limit);
+        return '<td class="' + (v > state.limit ? 'warn' : 'ok') + '">' + num(capped, 1) + (v > state.limit ? '*' : '') + '</td>';
+      }
       return '<tr><td>' + x.f + ' Hz</td><td>' + num(x.source, 0) + '</td><td>' + num(x.N, 2) +
         '</td><td>' + num(x.kurzeAnderson, 1) + '</td><td>' + num(x.maekawa, 1) +
-        '</td><td class="' + (x.limited ? 'warn' : 'ok') + '">' + num(x.deltaL, 1) +
+        '</td>' + ilCell(x.ilLeft) + ilCell(x.ilRight) + ilCell(x.ilImage) +
+        '<td class="' + (x.limited ? 'warn' : 'ok') + '">' + num(x.deltaL, 1) +
         (x.limited ? '（截断）' : '') + '</td></tr>';
     }).join('');
     $('barTable').innerHTML = '<table class="detail-table wide"><thead><tr><th>频带</th><th>声源级 (dB)</th>' +
-      '<th>N</th><th>Kurze–Anderson</th><th>Maekawa</th><th>采用 ΔL (dB)</th></tr></thead><tbody>' +
+      '<th>N(顶)</th><th>Kurze–Anderson</th><th>Maekawa</th><th>左端 ΔL</th><th>右端 ΔL</th><th>镜像 ΔL</th><th>合成 ΔL (dB)</th></tr></thead><tbody>' +
       rows + '</tbody></table>';
 
     drawDiagram(r);
+    var noteTail = r.finite
+      ? '；有限长屏障 L = ' + num(r.plan.length, 0) + ' m（轴线过中点），端部绕射 δ左 = ' + num(r.plan.deltaLeft, 2) + ' m、δ右 = ' + num(r.plan.deltaRight, 2) + ' m，三路径能量合成'
+      : '；按无限长屏障计算，未计入两端绕射';
+    if (r.groundRho > 0) noteTail += '；地面反射按镜像声源法修正（ρ = ' + num(r.groundRho, 1) + '）';
     $('barNote').textContent = '几何：声源高 ' + num(state.hs, 2) + ' m，屏障顶 ' + num(state.hb, 2) +
       ' m，接收点高 ' + num(state.hr, 2) + ' m；水平距离 d1 = ' + num(state.d1, 1) + ' m、d2 = ' +
-      num(state.d2, 1) + ' m。视线在屏障处高度 ' + num(g.hLOS, 2) + ' m，程差 δ = ' + num(g.delta, 3) +
-      ' m；按无限长屏障计算，未计入两端绕射。';
+      num(state.d2, 1) + ' m。视线在屏障处高度 ' + num(g.hLOS, 2) + ' m，程差 δ = ' + num(g.delta, 3) + ' m' + noteTail + '。';
   }
 
   function stat(label, value, unit) {
@@ -288,7 +308,8 @@
     var target = parseFloat($('barTarget').value);
     var res = E.requiredHeight({
       hs: state.hs, hr: state.hr, d1: state.d1, d2: state.d2,
-      sourceId: state.sourceId, targetIL: target, formula: state.formula, maxLimit: state.limit
+      sourceId: state.sourceId, targetIL: target, formula: state.formula, maxLimit: state.limit,
+      length: state.length, ground: state.ground
     });
     if (!res.ok) {
       $('barSolveResult').innerHTML = '<div class="callout error" style="grid-column:1/-1"><span class="dot"></span><span>' + esc(res.error) + '</span></div>';
@@ -312,7 +333,10 @@
       '；实用上限 ' + num(state.limit, 0) + ' dB');
     out.push('A 计权插入损失 ΔL = ' + last.insertionLoss.toFixed(1) + ' dB（屏障前 ' + num(last.overallBefore, 1) +
       ' → 屏障后 ' + num(last.overallAfter, 1) + (last.weighted ? ' dBA' : ' dB') + '）');
-    out.push('逐带 ΔL：' + last.rows.map(function (x) { return x.f + 'Hz=' + num(x.deltaL, 1); }).join('，'));
+    if (last.finite) out.push('有限长屏障：L = ' + num(last.plan.length, 0) + ' m，端部绕射 δ左 = ' + num(last.plan.deltaLeft, 2) +
+      ' m、δ右 = ' + num(last.plan.deltaRight, 2) + ' m（三路径能量合成）');
+    if (last.groundRho > 0) out.push('地面反射：镜像声源法，能量反射系数 ρ = ' + num(last.groundRho, 1));
+    out.push('逐带合成 ΔL：' + last.rows.map(function (x) { return x.f + 'Hz=' + num(x.deltaL, 1); }).join('，'));
     out.push('工具：声学计算工具箱 · 声屏障衰减');
     return out.join('\n');
   }
@@ -327,10 +351,14 @@
     rows.push(['d2 (m)', num(state.d2, 2), '']);
     rows.push(['程差 δ (m)', num(last.geometric.delta, 4), '']);
     rows.push(['A 计权插入损失 (dB)', last.insertionLoss.toFixed(2), '']);
+    if (last.finite) rows.push(['屏障长度 L (m)', num(last.plan.length, 0), '端部绕射 δ左 ' + num(last.plan.deltaLeft, 2) + ' m / δ右 ' + num(last.plan.deltaRight, 2) + ' m']);
+    if (last.groundRho > 0) rows.push(['地面反射 ρ', num(last.groundRho, 1), '镜像声源法']);
     rows.push([]);
-    rows.push(['倍频带 (Hz)', '声源级 (dB)', 'N', 'Kurze-Anderson (dB)', 'Maekawa (dB)', '采用 ΔL (dB)']);
+    rows.push(['倍频带 (Hz)', '声源级 (dB)', 'N', 'Kurze-Anderson (dB)', 'Maekawa (dB)', '左端 ΔL (dB)', '右端 ΔL (dB)', '镜像 ΔL (dB)', '合成 ΔL (dB)']);
     last.rows.forEach(function (x) {
-      rows.push([x.f, num(x.source, 1), num(x.N, 4), num(x.kurzeAnderson, 2), num(x.maekawa, 2), num(x.deltaL, 2)]);
+      rows.push([x.f, num(x.source, 1), num(x.N, 4), num(x.kurzeAnderson, 2), num(x.maekawa, 2),
+        x.ilLeft == null ? '' : num(x.ilLeft, 2), x.ilRight == null ? '' : num(x.ilRight, 2),
+        x.ilImage == null ? '' : num(x.ilImage, 2), num(x.deltaL, 2)]);
     });
     var csv = '\ufeff' + rows.map(function (r) {
       return r.map(function (c) { return '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"'; }).join(',');
@@ -374,11 +402,12 @@
 
     recalc();
 
-    ['barHs', 'barHr', 'barHb', 'barD1', 'barD2', 'barLimit'].forEach(function (id) {
+    ['barHs', 'barHr', 'barHb', 'barD1', 'barD2', 'barLimit', 'barLen'].forEach(function (id) {
       $(id).addEventListener('input', recalc);
     });
     $('barSource').addEventListener('change', recalc);
     $('barFormula').addEventListener('change', recalc);
+    $('barGround').addEventListener('change', recalc);
     $('barSolve').addEventListener('click', solveHeight);
     $('barCopy').addEventListener('click', function () { copyText(summaryText(), 'barCopyMsg'); });
     $('barCsv').addEventListener('click', exportCsv);

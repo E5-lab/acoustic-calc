@@ -75,5 +75,48 @@ assert('建议高度满足目标', need.achieved >= 10);
 assert('目标过高 → 报错', B.requiredHeight({ hs: 1, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', targetIL: 40 }).ok === false);
 assert('缺几何参数 → 报错', B.requiredHeight({ targetIL: 10 }).ok === false);
 
+console.log('有限长屏障端部绕射（平面视图程差）');
+var pd1 = B.planDelta({ length: 100, d1: 10, d2: 10 });
+assert('planDelta 计算成功', pd1.ok === true);
+approx('居中 L=100：δ端 = 2√(50²+10²)−20 = 81.980 m', pd1.deltaLeft, 81.98039, 0.001);
+approx('两端对称', pd1.deltaRight, pd1.deltaLeft, 1e-9);
+var pdEdge = B.planDelta({ length: 100, offset: 0, d1: 10, d2: 10 });
+approx('轴线过左端：δ左 = 0（该侧无横向遮挡）', pdEdge.deltaLeft, 0, 1e-9);
+approx('轴线过左端：δ右 = 2√(100²+10²)−20 = 180.998 m', pdEdge.deltaRight, 180.997512, 0.001);
+var pdShort = B.planDelta({ length: 20, d1: 10, d2: 10 });
+approx('短屏障 L=20：δ端 = 2√(10²+10²)−20 = 8.284 m', pdShort.deltaLeft, 8.284271, 0.001);
+assert('L 缺失 → 报错', B.planDelta({ d1: 10, d2: 10 }).ok === false);
+assert('c 超范围 → 报错', B.planDelta({ length: 100, offset: 150, d1: 10, d2: 10 }).ok === false);
+
+console.log('有限长屏障插入损失（顶部 + 两端三路径能量合成）');
+var specInf2 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road' });
+var specL200 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', length: 200 });
+var specL20 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', length: 20 });
+assert('有限长计算成功且标记 finite', specL20.ok === true && specL20.finite === true && specL20.plan != null);
+assert('无限长标记 finite=false', specInf2.finite === false);
+approx('长屏障 L=200 ≈ 无限长（差 < 0.1 dB）', specL200.insertionLoss, specInf2.insertionLoss, 0.1);
+assert('短屏障 L=20 低于无限长（端部分流）', specL20.insertionLoss < specInf2.insertionLoss - 0.2);
+assert('有限长逐带含端部衰减列', specL20.rows[3].ilLeft != null && specL20.rows[3].ilRight != null);
+assert('无限长无端部列', specInf2.rows[3].ilLeft == null);
+assert('L=20 @500Hz 合成 < 顶部单路', specL20.rows[3].deltaL < specL20.rows[3].ilTop);
+
+console.log('地面反射修正（镜像声源法）');
+var imgp = B.imagePath({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20 });
+approx('镜像程差 δ′ = √116+√402.25−√906.25 = 0.7225 m', imgp.delta, 0.722514, 0.001);
+approx('镜像扩展损失 20lg(D′/D) = 0.0288 dB', imgp.spread, 0.028849, 0.001);
+var gNone = B.spectrum({ hs: 0, hb: 3, hr: 0, d1: 10, d2: 20, sourceId: 'road' });
+var gHard0 = B.spectrum({ hs: 0, hb: 3, hr: 0, d1: 10, d2: 20, sourceId: 'road', ground: 'hard' });
+assert('声源贴地（hs=0）时镜像与直达重合，IL 不变', Math.abs(gHard0.insertionLoss - gNone.insertionLoss) < 1e-9);
+var gh1 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', ground: 'hard' });
+var gm1 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', ground: 'mixed' });
+assert('硬地面使无屏障声级升高（≈ +3 dB）', gh1.overallBefore > specInf2.overallBefore + 2.5);
+assert('一般地面增益介于中间', gm1.overallBefore > specInf2.overallBefore + 0.5 && gm1.overallBefore < gh1.overallBefore);
+assert('rho 字段正确', gh1.groundRho === 1 && gm1.groundRho === 0.4 && specInf2.groundRho === 0);
+assert('镜像路径更受遮挡（δ′ > δ）', gh1.image.delta > gh1.geometric.delta);
+var both4 = B.spectrum({ hs: 1, hb: 3, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', length: 60, ground: 'hard' });
+assert('有限长 + 硬地面可叠加', both4.ok === true && both4.finite === true && both4.groundRho === 1);
+var rhF = B.requiredHeight({ hs: 1, hr: 1.5, d1: 10, d2: 20, sourceId: 'road', targetIL: 10, length: 60 });
+assert('有限长反算可用', rhF.ok === true && rhF.height > 1.5 && rhF.height < 3.5);
+
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);

@@ -2949,7 +2949,20 @@
               <label for="barLimit">实用上限 <span class="unit-tag">dB</span></label>
               <input id="barLimit" type="number" step="1" min="5" value="24" />
             </div>
+            <div class="field">
+              <label for="barLen">屏障长度 L <span class="unit-tag">m（留空 = 无限长）</span></label>
+              <input id="barLen" type="number" step="1" min="1" placeholder="留空按无限长" />
+            </div>
+            <div class="field">
+              <label for="barGround">地面反射</label>
+              <select id="barGround">
+                <option value="none">不计（自由场）</option>
+                <option value="mixed">一般地面（ρ ≈ 0.4）</option>
+                <option value="hard">硬地面（ρ ≈ 1）</option>
+              </select>
+            </div>
           </div>
+          <p class="hint">有限长屏障时计入<strong>两端绕射</strong>（竖直端棱，按平面视图程差，三条路径能量合成）；选择地面反射时按<strong>镜像声源法</strong>修正（作用于顶部绕射路径，屏障板面反射与多重反射未计入）。轴线默认过屏障中点。</p>
           <div id="barMsg" class="callout-row"></div>
         </section>
 
