@@ -1,0 +1,75 @@
+/*
+ * cmdk-aliases.js — 命令面板拼音 / 缩写别名索引（在 ui-kit.js 之前加载）
+ *
+ * 动机：命令面板 scoreItem 的匹配域含 keys 字段；中文模块名无法被拼音
+ * 或专业缩写命中（搜「hunjiao」「rt60」「nc」需别名）。本表按路由登记
+ * 「拼音 + 常用缩写 + 英文名」，与 nav.js 的 NAV_SUB 子功能一并并入匹配域。
+ * 新增模块时在此补一行（MODULE-ADMISSION.md 已纳入登记清单）。
+ */
+(function () {
+  'use strict';
+  window.UikAliases = {
+    levels: 'diejia 叠加 sum add spl 合成 背景 background levels',
+    noise: 'zaosheng 噪声 nc nr rc pingjia 评价 background noise criteria',
+    db: 'danwei 单位 huansuan 换算 convert db 声压 声功率 距离衰减 weighting',
+    handbook: 'shouce 手册 gongshi 公式 shuyu 术语 检索 handbook formula',
+    wave: 'bodong 波动 boyin 乐音 bochang 波长 shengsu 声速 duopule 多普勒 wave',
+    perforation: 'chuankong 穿孔 chuankonglv 穿孔率 kongjing 孔径 perforation mpp',
+    absorber: 'xisheng 吸声 zukang 阻抗 nrc delany bazley absorber 材料流阻',
+    absdesign: 'xishej 吸声设计 tmm maa 微穿孔 共振 absdesign 结构',
+    muffler: 'xiaoshengqi 消声器 charu 插入损失 zuxing 阻性 kangxing 抗性 muffler',
+    rt60: 'hunjiao 混响 hunjiaoshi 混响时间 sabine eyring rt60 t60 reverberation',
+    stc: 'gesheng 隔声 rw stc jiquan 计权 质量定律 insulation',
+    leakage: 'kongdong 孔洞 fengxi 缝隙 menchuang 门窗 louxian 漏声 leakage',
+    impact: 'zhuangji 撞击 zhuangjisheng 撞击声 lnw ln 楼板 impact',
+    roomq: 'tingtang 厅堂 kuosheng 扩声 qingxidu 清晰度 c50 c80 d50 roomq',
+    iso3382: 'yinzhi 音质 liangce 量测 iacc itdg lf edt t30 iso3382',
+    smallroom: 'xiaofangjian 小房间 jianzheng 简正 bonello schroeder 临界距离 smallroom',
+    insdesign: 'geshengzhao 隔声罩 fuzhu 浮筑 shuangceng 双层 cexiang 侧向 insdesign',
+    diffuser: 'kuosan 扩散 kuosanti 扩散体 qrd prd mls skyline diffuser',
+    barrier: 'pingzhang 屏障 shengpingzhang 声屏障 chaoru 绕射 fresnel barrier 插入损失',
+    vibration: 'jianzhen 减振 gezhen 隔振 tanhuang 弹簧 xuanxuan 选型 vibration isolator',
+    env: 'huanjing 环境 leq ldn lden 统计声级 huwai 户外 9613 env 评价',
+    exposure: 'baolu 暴露 zhiye 职业 lex twa nrr 剂量 exposure 护听器',
+    vibeval: 'zhendong 振动 2631 vdv aw 计权 vibeval 振级',
+    hvacnoise: 'fengguan 风管 shebei 设备 3744 3746 管道 hvac 声功率测定',
+    noisemap: 'zaoshengditu 噪声地图 dengzhixian 等值线 3096 55016 noisemap',
+    emission: 'paifang 排放 xianzhi 限值 12348 22337 12523 changjie 厂界 emission',
+    traffic: 'jiaotong 交通 hangkong 航空 gonglu 公路 tielu 铁路 ldn nef traffic',
+    psycho: 'xinlixue 心理声学 shengpinzhi 声品质 xiangdu 响度 sone phon psycho 尖锐度 粗糙度',
+    hearing: 'tingjue 听觉 tingyu 听阈 226 7029 who 等响 掩蔽 hearing',
+    pasystem: 'kuosheng 扩声 shengyinqi 扬声器 zengyi 增益 fankui 反馈 stipa pasystem',
+    speakerbox: 'yangshengxiang 扬声器箱体 xiangti 箱体 t/s vas qtc speakerbox 倒相',
+    crossover: 'fenpin 分频 fenpinqi 分频器 lr2 lr4 zobel l-pad crossover',
+    linearray: 'xianzhenlie 线阵列 zhenshi 阵列 jixing 吊挂 梳状 linearray',
+    audiolevel: 'dianping 电平 dbv dbu dbfs dbm zukang 阻抗 audiolevel 灵敏度',
+    spectrum: 'pinpu 频谱 guibing 归并 octave bands 计权 spectrum psil',
+    sim: 'moni 模拟 yinzhi 音质彩图 caitu 三维 3d sim 声场分布',
+    simfx: 'lizi 粒子 donghua 动画 shengxian 声线 simfx gif mp4',
+    aural: 'keting 可听化 shiting 试听 juanji 卷积 hunxiang 混响 aural',
+    'sim-helmholtz': 'gongming 共鸣 gongmingqi 共鸣器 helmholtz qiang 腔 jingjing 颈',
+    'sim-impedance': 'zukang 阻抗 fanshe 反射 toushe 透射 impedance tl 界面',
+    'sim-octave': 'pinpu 频谱 beipinchen 倍频程 jiquan 计权 octave 扫掠',
+    'sim-hvac': 'xiaosheng 消声 chenli 衬里 fengguan 风管 hvac 衰减',
+    'sim-fxlms': 'zhudong 主动 降噪 anc fxlms lms xuexi 学习 收敛',
+    'sim-drone': 'wurenji 无人机 xuanyi 旋翼 bpf yin 音调 drone',
+    'sim-micarray': 'zhenlie 阵列 bojiao 波束 shuju 麦克风 doa micarray',
+    'sim-wedge': 'xie 楔 xiaoshengshi 消声室 jiezhi 截止 wedge 吸声',
+    'sim-tube': 'guan 管 zhukang 阻抗管 zhubo 驻波 tube 两传声器',
+    'sim-echo': 'huisheng 回声 ceju 测距 juli 距离 echo 时延',
+    'sim-interference': 'ganshe 干涉 shuangyuan 双源 xiangan 相干 interference 波程差',
+    'sim-bubble': 'qipao 气泡 shuixia 水下 minnaert bubble 脉动',
+    'sim-refraction': 'zheshe 折射 wendu 温度 tidu 梯度 refraction shengyingqu 声影区',
+    'sim-radiation': 'zhixiang 指向 xiangxing 辐射 单极子 偶极子 radiation di',
+    'sim-sonar': 'shengna 声呐 sonar zuoyong 作用距离 thorp 海水吸收',
+    'sim-sea': 'tongji 统计 能量 fenxi 分析 sea 功率流 耦合',
+    'sim-fourier': 'fuliyve 傅里叶 fourier xiebo 谐波 泄漏 窗函数 gibbs',
+    'sim-ut': 'chaosheng 超声 cehou 测厚 huibo 回波 ut ndt 缺陷',
+    splmeter: 'shengjiji 声级计 shengji 声级 jiaozhun 校准 splmeter leq lmax',
+    rta: 'shishi 实时 pinpu 频谱 fenxi 分析 rta band 倍频带',
+    siggen: 'xinhao 信号 fasheng 发生器 fashengqi 白噪声 粉红 扫频 siggen wav',
+    irt60: 'shice 实测 hunjiao 混响 irt60 farina schroeder t20 t30 edt',
+    stipa: 'yuyan 语言 chuanbo 传输 zhishu 指数 stipa sti mtf snr',
+    all: 'quanbu 全部 gongju 工具 mulu 目录 qingdan 清单 all 目录页'
+  };
+})();

@@ -546,6 +546,10 @@
         }
         var d = $('.mc-desc', card);
         var route = (card.getAttribute('href') || '').replace(/^#\//, '');
+        // 拼音 / 缩写别名（cmdk-aliases.js）与三级子功能（nav.js NAV_SUB）并入匹配域，
+        // 使「hunjiao / rt60 / nc / Bonello」等词都能命中对应模块
+        var alias = (window.UikAliases && window.UikAliases[route]) || '';
+        var navSub = (window.NavSub && window.NavSub[route]) || [];
         items.push({
           id: route,
           kind: 'module',
@@ -553,6 +557,7 @@
           group: gname,
           sub: gname + (d ? ' · ' + d.textContent.replace(/\s+/g, ' ').trim().slice(0, 44) + '…' : ''),
           desc: d ? d.textContent : '',
+          keys: alias + (navSub.length ? ' ' + navSub.join(' ') : ''),
           route: route,
           icon: 'module'
         });
@@ -938,11 +943,19 @@
   /* ==========================================================================
      启动
      ========================================================================== */
+  // 装饰性动效分级：涟漪 / 3D 倾斜默认仅在交互实验室（ui-lab）启用，
+  // 产品页保持安静；任何页面可用 <html data-uik-decor="on"> 显式开启。
+  // Toast / tooltip / 主题揭示 / 命令面板等服务任务的动效不受此开关影响。
+  function decorativeFxEnabled() {
+    var el = document.documentElement;
+    if (el.hasAttribute('data-uik-decor')) return el.getAttribute('data-uik-decor') !== 'off';
+    return !!document.querySelector('.lab-back') || /ui-lab\.html?$/i.test(location.pathname);
+  }
+
   function boot() {
     buildPaletteIndexSoon();
     initTooltips();
-    initRipple();
-    initTilt();
+    if (decorativeFxEnabled()) { initRipple(); initTilt(); }
     initCounters();
     initProgress();
     initReveal();

@@ -230,5 +230,26 @@ assert('卡片描述 clamp 两行（-webkit-line-clamp:2）',
 assert('hero 标题与计数文案同源（61 个）',
   html.indexOf('61 个声学计算器，输入即算') >= 0 && html.indexOf('61 个模块') >= 0);
 
+// ---- 13) P4 打磨：命令面板别名索引 + 动效分级 ----
+console.log('\n[13] P4 命令面板增强');
+var aliasesJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'cmdk-aliases.js'), 'utf8');
+var iAliases = html.indexOf('js/cmdk-aliases.js');
+assert('index.html 加载 cmdk-aliases.js 且先于 ui-kit.js', iAliases > 0 && iAliases < iUiKitJs);
+var labHtml = fs.readFileSync(path.join(__dirname, '..', 'public', 'ui-lab.html'), 'utf8');
+assert('ui-lab.html 同样加载 cmdk-aliases.js',
+  labHtml.indexOf('js/cmdk-aliases.js') >= 0 && labHtml.indexOf('js/cmdk-aliases.js') < labHtml.indexOf('js/ui-kit.js'));
+assert('ui-kit.js 读取 window.UikAliases 并入匹配域', uiKitJs.indexOf('window.UikAliases') >= 0);
+assert('ui-kit.js 读取 window.NavSub 子功能并入匹配域', uiKitJs.indexOf('window.NavSub') >= 0);
+['hunjiao', 'rt60', 'zaosheng', 'gesheng', 'chuankong', 'shengna'].forEach(function (kw) {
+  assert('别名表含「' + kw + '」', aliasesJs.indexOf(kw) >= 0);
+});
+var aliasRoutes = (aliasesJs.match(/^\s+'?([\w-]+)'?:/gm) || []).length;
+assert('别名表覆盖全部路由（含 all ≥ 62 条，实际 ' + aliasRoutes + '）', aliasRoutes >= 62);
+assert('ui-kit.js 含装饰动效分级 decorativeFxEnabled', uiKitJs.indexOf('decorativeFxEnabled') >= 0);
+assert('装饰动效（涟漪/倾斜）改为条件启用',
+  /if \(decorativeFxEnabled\(\)\) \{ initRipple\(\); initTilt\(\); \}/.test(uiKitJs));
+assert('data-uik-decor 显式开关支持', /data-uik-decor/.test(uiKitJs));
+assert('UI-KIT.md 记录动效分级', fs.readFileSync(path.join(__dirname, '..', 'UI-KIT.md'), 'utf8').indexOf('动效分级') >= 0);
+
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
