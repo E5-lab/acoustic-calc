@@ -215,7 +215,7 @@
     <div class="hero-banner" id="heroBanner">
       <div class="hb-track" id="hbTrack">
         <figure class="hb-slide">
-          <img src="img/banner-room.webp" alt="室内音质模拟：声场彩图与混响时间" decoding="async" />
+          <img src="img/banner-room.png" alt="室内音质模拟：声场彩图与混响时间" loading="lazy" />
           <figcaption class="hb-cap">
             <span class="hb-kicker">室内音质模拟</span>
             <span class="hb-title">声场彩图 · 逐倍频带混响时间 · ISO 3382 评价</span>
@@ -223,7 +223,7 @@
           </figcaption>
         </figure>
         <figure class="hb-slide">
-          <img src="img/banner-aural.webp" alt="声学可听化：波形与频谱" decoding="async" />
+          <img src="img/banner-aural.png" alt="声学可听化：波形与频谱" loading="lazy" />
           <figcaption class="hb-cap">
             <span class="hb-kicker">声学可听化</span>
             <span class="hb-title">不同混响 / 隔声前后的声音对比试听</span>
@@ -231,7 +231,7 @@
           </figcaption>
         </figure>
         <figure class="hb-slide">
-          <img src="img/banner-insulation.webp" alt="建筑隔声：墙体阻隔声能" decoding="async" />
+          <img src="img/banner-insulation.png" alt="建筑隔声：墙体阻隔声能" loading="lazy" />
           <figcaption class="hb-cap">
             <span class="hb-kicker">材料与构件</span>
             <span class="hb-title">穿孔率 · 吸声阻抗 · 墙体隔声量 Rw</span>
@@ -239,7 +239,7 @@
           </figcaption>
         </figure>
         <figure class="hb-slide">
-          <img src="img/banner-environment.webp" alt="环境噪声：声屏障降噪" decoding="async" />
+          <img src="img/banner-environment.png" alt="环境噪声：声屏障降噪" loading="lazy" />
           <figcaption class="hb-cap">
             <span class="hb-kicker">环境与振动</span>
             <span class="hb-title">环境噪声评价 · 声屏障 · 弹簧减振 · 消声器</span>
@@ -1788,7 +1788,7 @@
 
     <section class="card">
       <h3>户外声传播（ISO 9613-2，A 计权）</h3>
-      <p class="hint">输入各倍频带声功率级 L_W（dB），计算自由场接收点 A 声级。含几何发散、ISO 9613-1 大气吸收与（简化）地面效应。</p>
+      <p class="hint">输入各倍频带声功率级 L_W（dB），计算接收点 A 声级（ISO 9613-2 基本公式，<strong>顺风参考气象条件</strong>）。含几何发散、ISO 9613-1 大气吸收与（简化）地面效应；长期平均声级需另扣气象修正 C₀（评价时段见下）。</p>
       <div class="field-row">
         <div class="field"><label for="o31">31.5 Hz L_W</label><input id="o31" type="number" step="0.1" /></div>
         <div class="field"><label for="o63">63 Hz L_W</label><input id="o63" type="number" step="0.1" /></div>
@@ -1809,6 +1809,10 @@
         </div>
         <div class="field"><label for="oT">温度 °C</label><input id="oT" type="number" step="0.1" value="20" /></div>
         <div class="field"><label for="oRH">湿度 %</label><input id="oRH" type="number" step="0.1" value="50" /></div>
+        <div class="field"><label for="oMet">评价时段（气象修正）</label>
+          <select id="oMet"><option value="0">顺风参考条件（C₀=0）</option><option value="2">长期平均·保守（C₀=2 dB）</option><option value="3">长期平均·常用（C₀=3 dB）</option></select>
+        </div>
+        <div class="field"><label for="oCmet">自定义 C₀ (dB，可选优先)</label><input id="oCmet" type="number" step="0.5" min="0" placeholder="0~5，如 4" /></div>
       </div>
       <div class="btn-row"><button id="oBtn" class="btn primary" type="button">计算声压级</button></div>
       <div id="oOut" class="result-line" hidden></div>
@@ -1816,6 +1820,7 @@
         <thead><tr><th>倍频带 (Hz)</th><th>L_W</th><th>A_div</th><th>A_atm</th><th>A_gr</th><th>L_p</th><th>L_pA</th></tr></thead>
         <tbody id="oBody"></tbody>
       </table>
+      <p class="hint"><strong>精度与适用条件（ISO 9613-2）</strong>：本面板输出<strong>顺风参考气象条件</strong>（风以 1~5 m/s 由声源吹向接收点，或晴夜中等逆温）下的等效连续 A 声级；年均/月均等<strong>长期平均</strong>声级按 L_AT = L_A − C₀ 扣气象修正（C₀ 经验值 0~5 dB，缺当地风统计时 ISO 9613-2:2024 建议保守取 2 dB、1996 版工程实践常用 3 dB）。地面效应为<strong>简化经验式</strong>（未实现标准 A_gr 的源区/中区/接收区分段模型），且未含屏障衰减 A_bar 与树木、建筑群等附加衰减 A_misc（屏障衰减请用「声屏障」模块单独估算）；标准表 4 预期精度量级约 ±3 dB，简化模型实际偏差可能更大，供工程估算与方案比选参考。</p>
     </section>
 
     <section class="card">
@@ -1837,7 +1842,7 @@
   <section class="view" id="view-psycho" data-view="psycho" hidden>
     <div class="page-head">
       <h2>心理声学 / 声品质</h2>
-      <p class="hint">响度 · 尖锐度 · 粗糙度 / 抖动度 · 感觉噪声级 PNL · 语言传输指数 STIPA</p>
+      <p class="hint">响度 · 尖锐度 · 粗糙度 / 抖动度 · 感觉噪声级 PNL · 语言传输指数 STIPA —— phon↔sone 换算与 STIPA/STI 为标准实现；总响度 / 尖锐度 / 粗糙度 / 抖动度 / PNL 为<strong>简化模型</strong>（非完整 Zwicker / DIN 45692），供工程估算参考</p>
     </div>
 
     <section class="card">
@@ -1854,7 +1859,7 @@
 
     <section class="card">
       <h3>总响度估算 / 尖锐度（倍频带，工程近似）</h3>
-      <p class="hint">输入各倍频带声压级（dB），估算总响度（sones，仅供参考）与尖锐度（acum）。高频占比越高越尖锐。</p>
+      <p class="hint">输入各倍频带声压级（dB），估算总响度（sones）与尖锐度（acum）。高频占比越高越尖锐。<strong>简化模型</strong>：总响度按各带 phon→sone 直接求和，未做临界带掩蔽与响度合成；尖锐度未做临界带归一（完整方法见 Zwicker / DIN 45692），结果仅供工程参考。</p>
       <div class="field-row">
         <div class="field"><label for="lo31">31.5 Hz</label><input id="lo31" type="number" step="0.1" /></div>
         <div class="field"><label for="lo63">63 Hz</label><input id="lo63" type="number" step="0.1" /></div>
@@ -1872,7 +1877,7 @@
 
     <section class="card">
       <h3>粗糙度 / 抖动度（调制感知，经典模型）</h3>
-      <p class="hint">粗糙度峰值在调制频率≈70Hz，抖动度峰值≈4Hz。需给出调制频率、调制深度(0~1)与整体响度 N（sones）。</p>
+      <p class="hint">粗糙度峰值在调制频率≈70Hz，抖动度峰值≈4Hz。需给出调制频率、调制深度(0~1)与整体响度 N（sones）。经验近似式（简化模型），非完整 Zwicker 调制感知理论。</p>
       <div class="field-row">
         <div class="field"><label for="psFmod">调制频率 f_mod (Hz)</label><input id="psFmod" type="number" step="0.1" value="70" /></div>
         <div class="field"><label for="psDepth">调制深度 m (0~1)</label><input id="psDepth" type="number" step="0.05" value="1" /></div>
@@ -1884,7 +1889,7 @@
 
     <section class="card">
       <h3>感觉噪声级 PNL（倍频带，简化）</h3>
-      <p class="hint">基于 1/1 倍频带声压级估算感觉噪声级 PNL（dB）。低/高频比中频更"吵"，低带贡献更大。</p>
+      <p class="hint">基于 1/1 倍频带声压级估算感觉噪声级 PNL（dB）。低/高频比中频更"吵"，低带贡献更大。简化模型：1/1 倍频带近似（完整 PNL 用 1/3 倍频带，纯音修正得 PNLT），供工程参考。</p>
       <div class="field-row">
         <div class="field"><label for="pn31">31.5 Hz</label><input id="pn31" type="number" step="0.1" /></div>
         <div class="field"><label for="pn63">63 Hz</label><input id="pn63" type="number" step="0.1" /></div>

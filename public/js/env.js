@@ -9,7 +9,8 @@
  *  4) 噪声污染级 NPL、交通噪声指数 TNI
  *  5) 噪声评价数 NR 曲线
  *  6) ISO 9613-1 大气吸收系数（精确解析公式）
- *  7) ISO 9613-2 户外 A 计权声传播（发散 + 大气吸收 + 地面效应）
+ *  7) ISO 9613-2 户外 A 计权声传播（发散 + 大气吸收 + 简化地面效应）
+ *     —— 输出为顺风参考条件声级；长期平均声级 L_AT = L_A − C0（气象修正）
  *  8) 公路交通噪声（线声源近似）
  */
 (function (global) {
@@ -161,8 +162,11 @@
   /* ---------------- 7) ISO 9613-2 户外 A 计权声传播 ---------------- */
   // 输入倍频带声功率级谱 spectrum{LW@各倍频带}，计算自由场接收点声压级（A 计权）。
   // 参数：r 距离(m)，hs 源高(m)，hr 接收高(m)，ground 地面类型 'soft'|'hard'|'mixed'，
-  //       Tc, rh, p 大气条件。返回逐带 Lp、A 计权 LpA、各衰减分量。
-  function iso9613(spectrum, r, hs, hr, ground, Tc, rh, p) {
+  //       Tc, rh, p 大气条件，cmet 气象修正 C0（dB，≥0，默认 0）。
+  // 基本公式输出为顺风参考条件声级 L_A；长期平均（年均/月均）声级 L_AT = L_A − C0
+  // （ISO 9613-2：C0 经验值 0~5 dB，缺当地风统计时 2024 版建议保守取 2 dB、
+  //   1996 版工程实践常用 3 dB）。C0 只修正总 A 声级，不改逐带值。
+  function iso9613(spectrum, r, hs, hr, ground, Tc, rh, p, cmet) {
     if (!spectrum) return null;
     var R = num(r); if (R == null || R <= 0) return null;
     var Hr = num(hr); if (Hr == null || Hr < 0) Hr = 1.5;
@@ -189,7 +193,12 @@
       bands.push({ f: f, LW: LW, Adiv: round1(Adiv), Aatm: round1(Aatm), Agr: round1(Agr), Lp: round1(Lp), LpA: round1(La) });
     });
     var LpA = sA > 0 ? fromLin(sA) : null;
-    return { r: R, ground: g, bands: bands, LpA: round1(LpA) };
+    var cM = num(cmet); if (cM == null || cM < 0) cM = 0;
+    return {
+      r: R, ground: g, cmet: cM, bands: bands,
+      LpA: round1(LpA),                              // 顺风参考条件（基本公式）
+      LpA_LT: LpA == null ? null : round1(LpA - cM)  // 长期平均 L_AT = L_A − C0
+    };
   }
 
   /* ---------------- 8) 公路交通噪声（线声源近似） ---------------- */

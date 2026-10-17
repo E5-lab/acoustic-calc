@@ -54,5 +54,15 @@ var good = P.stipa([0.9, 0.9, 0.95, 0.95, 0.95, 0.95, 0.9, 0.9, 0.85, 0.8, 0.7, 
 ok('高 MTF → 优秀', good.grade === '优秀');
 ok('SNR 越好 STI 越高', P.stipaFromSnr([20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]).sti > P.stipaFromSnr([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).sti - 1e-9);
 
+/* 8) 简化模型界面标注守护（明确标注边界：标准实现 vs 简化模型） */
+var fs2 = require('fs'), path2 = require('path');
+var html2 = fs2.readFileSync(path2.join(__dirname, '..', 'public', 'index.html'), 'utf8');
+var idxP = html2.indexOf('id="view-psycho"');
+ok('找到 psycho 视图段落', idxP > 0);
+var segP = html2.slice(idxP, idxP + 16000);
+ok('psycho 页头标注"简化模型"', segP.indexOf('简化模型') >= 0);
+ok('psycho 总响度卡片标注临界带合成缺失', segP.indexOf('未做临界带掩蔽与响度合成') >= 0);
+ok('psycho PNL 卡片标注完整方法为 1/3 倍频带', segP.indexOf('完整 PNL 用 1/3 倍频带') >= 0);
+
 console.log('\n结果: ' + pass + ' 通过, ' + fail + ' 失败');
 process.exit(fail ? 1 : 0);

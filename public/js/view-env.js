@@ -60,10 +60,15 @@
       var spec = {};
       Object.keys(oMap).forEach(function (id) { var v = parseFloat($(id).value); if (!isNaN(v)) spec[oMap[id]] = v; });
       if (!Object.keys(spec).length) { show($('oOut'), '请至少输入一个倍频带 L_W', 'warn'); return; }
+      // 气象修正 C0：自定义输入优先，否则用评价时段下拉（顺风 0 / 长期平均 2~3 dB）
+      var cmet = parseFloat($('oCmet').value);
+      if (isNaN(cmet) || cmet < 0) cmet = parseFloat($('oMet').value) || 0;
       var r = E.iso9613(spec, parseFloat($('oR').value), parseFloat($('oHs').value), parseFloat($('oHr').value),
-        $('oGround').value, parseFloat($('oT').value), parseFloat($('oRH').value));
+        $('oGround').value, parseFloat($('oT').value), parseFloat($('oRH').value), null, cmet);
       if (!r) { show($('oOut'), '请检查距离是否大于 0', 'warn'); return; }
-      show($('oOut'), '接收点 A 声级 L_pA ≈ <b>' + fmt(r.LpA) + ' dB(A)</b>（r = ' + fmt(r.r, 1) + ' m，地面：' + r.ground + '）', 'ok');
+      var html = '接收点 A 声级（顺风参考条件）L_pA ≈ <b>' + fmt(r.LpA) + ' dB(A)</b>（r = ' + fmt(r.r, 1) + ' m，地面：' + r.ground + '）';
+      if (r.cmet > 0) html += '　·　长期平均 L_AT = L_pA − C₀ ≈ <b>' + fmt(r.LpA_LT) + ' dB(A)</b>（气象修正 C₀ = ' + fmt(r.cmet, 1) + ' dB）';
+      show($('oOut'), html, 'ok');
       var rows = '';
       r.bands.forEach(function (b) {
         if (b.Lp == null) return;

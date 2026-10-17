@@ -67,5 +67,26 @@ ok('车流量增大噪声升高', E.roadTraffic(2000, 80, 20, {}).LpA > rt.LpA -
 ok('距离增大噪声降低', E.roadTraffic(1000, 80, 40, {}).LpA < rt.LpA - 1e-9);
 ok('线声源发散≈10log10(2π·20)', Math.abs(rt.Adiv - 10 * Math.log10(2 * Math.PI * 20)) < 0.06);
 
+/* 9) 长期平均气象修正 C0（ISO 9613-2：L_AT = L_A − C0） */
+var out0c = E.iso9613({ 1000: 100 }, 10, 1.5, 1.5, 'mixed', 20, 50, 101.325, 0);
+var out3c = E.iso9613({ 1000: 100 }, 10, 1.5, 1.5, 'mixed', 20, 50, 101.325, 3);
+ok('默认（未传 C0）LpA_LT = LpA', out.LpA_LT === out.LpA);
+ok('C0 不改顺风声级', out3c.LpA === out0c.LpA);
+approx('C0=3 → 长期平均 = 顺风 − 3', out3c.LpA_LT, out3c.LpA - 3, 0.05);
+ok('C0 不改逐带值', out3c.bands[6].Lp === out0c.bands[6].Lp);
+ok('负 C0 视为 0', (function () { var r = E.iso9613({ 1000: 100 }, 10, 1.5, 1.5, 'mixed', 20, 50, 101.325, -5); return r.LpA_LT === r.LpA; })());
+ok('返回 cmet 字段', out3c.cmet === 3);
+
+/* 10) 界面标注守护：顺风参考条件 / 长期平均 / 气象修正 C0 / ±3 dB 精度 */
+var fs = require('fs'), pathMod = require('path');
+var html = fs.readFileSync(pathMod.join(__dirname, '..', 'public', 'index.html'), 'utf8');
+var idxE = html.indexOf('id="view-env"');
+ok('找到 env 视图段落', idxE > 0);
+var segE = html.slice(idxE, html.indexOf('id="view-psycho"'));
+ok('env 户外传播含"顺风参考"标注', segE.indexOf('顺风参考') >= 0);
+ok('env 含长期平均与气象修正说明', segE.indexOf('长期平均') >= 0 && segE.indexOf('气象修正') >= 0);
+ok('env 含 ±3 dB 精度标注', segE.indexOf('±3 dB') >= 0);
+ok('env 含 C0 评价时段选择控件', segE.indexOf('id="oMet"') >= 0 && segE.indexOf('id="oCmet"') >= 0);
+
 console.log('\n结果: ' + pass + ' 通过, ' + fail + ' 失败');
 process.exit(fail ? 1 : 0);
