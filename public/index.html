@@ -8,6 +8,8 @@
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png" />
   <link rel="shortcut icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#2563eb" />
   <meta name="description" content="声学计算工具箱：声压级叠加、背景噪声评价（NC/NR/RC）、穿孔率、吸声阻抗、混响时间、墙体隔声 Rw/STC、声屏障与弹簧减振隔振效率计算，纯静态、零依赖、按标准方法实现。" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -138,6 +140,20 @@
           <a href="#/sim-radiation" data-route="sim-radiation"><span class="nm-t">声源辐射指向性</span><small class="nm-d">单极子/偶极子/四极子 · DI</small></a>
         </div>
       </div>
+
+      <div class="nav-group">
+        <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true">
+          现场实测
+          <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <div class="nav-menu">
+          <a href="#/splmeter" data-route="splmeter"><span class="nm-t">声级计实测</span><small class="nm-d">麦克风实时 Leq / Lmax · 倍频带 · 校准偏移</small></a>
+          <a href="#/rta" data-route="rta"><span class="nm-t">实时频谱分析 RTA</span><small class="nm-d">1/1 与 1/3 倍频带 · A/C 计权 · 最大保持</small></a>
+          <a href="#/siggen" data-route="siggen"><span class="nm-t">测量信号发生器</span><small class="nm-d">白噪/粉噪/正弦/扫频/带限噪 · WAV 下载</small></a>
+          <a href="#/irt60" data-route="irt60"><span class="nm-t">混响时间 RT60 实测</span><small class="nm-d">扫频播放+录音 · Farina 反卷积 · T20/T30/EDT</small></a>
+          <a href="#/stipa" data-route="stipa"><span class="nm-t">语言传输指数 STIPA 实测</span><small class="nm-d">IEC 60268-16 信号 · MTF/SNR · STI 评级</small></a>
+        </div>
+      </div>
     </nav>
     <div class="topbar-actions">
       <div class="ts-wrap" id="tsWrap">
@@ -239,7 +255,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 7 个分组、49 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 8 个分组、54 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -914,12 +930,83 @@
       </div>
     </div>
 
+    <div class="module-group">
+      <div class="group-label">现场实测</div>
+      <div class="module-grid">
+        <a class="module-card" href="#/splmeter">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 30a12 12 0 0124 0" stroke-linecap="round" />
+              <path d="M20 30l8-14" stroke-linecap="round" />
+              <circle cx="20" cy="30" r="2.4" fill="currentColor" stroke="none" />
+              <path d="M8 38h32" stroke-linecap="round" opacity="0.4" />
+              <path d="M14 22a8.5 8.5 0 0112 0" stroke-linecap="round" opacity="0.55" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声级计实测 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">浏览器麦克风实时测量：宽带 LA / LC / LZ、帧最大 Lmax、能量等效 Leq 与时长，F/S 时间计权显示；十个倍频带声级表（Leq 累积 + 当前帧）；最近 60 s 声级—时间滚动曲线；支持校准偏移（配声校准器 94 dB 定标）。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/rta">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 38h36" stroke-linecap="round" opacity="0.4" />
+              <path d="M10 38V26M16 38V18M22 38V22M28 38V12M34 38V24M40 38V30" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">实时频谱分析 RTA <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">实时倍频带频谱：<strong>1/1 与 1/3 倍频带</strong>切换，Z/A/C 计权可选，指数平均（0.5/2 s）与最大值保持；对数频率轴条形图 + 各带数值，宽带 A 声级同屏显示。适合看频谱倾斜、找窄带成分与低频堆积。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/siggen">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 24c4-10 8-10 12 0s8 10 12 0 8-10 12 0" stroke-linecap="round" />
+              <circle cx="12" cy="36" r="2" fill="currentColor" stroke="none" />
+              <circle cx="36" cy="12" r="2" fill="currentColor" stroke="none" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">测量信号发生器 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">五种标准测量信号：<strong>白噪声 / 粉红噪声 / 正弦 / 对数扫频 ESS / 倍频带限噪</strong>，时长与参数可调，浏览器直接播放或下载 16-bit WAV；扫频两端 5 ms 淡入淡出防爆音，带限噪过渡带外硬置零（带外 &lt; −100 dB）。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/irt60">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 34c6 0 6-20 12-20s6 20 12 20 6-14 12-14" stroke-linecap="round" />
+              <path d="M6 40h36" stroke-linecap="round" opacity="0.4" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">混响时间 RT60 实测 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">播放对数扫频 + 麦克风同步录音，<strong>Farina 频域反卷积</strong>恢复脉冲响应，FFT 带限后做 Schroeder 反向积分、Lundeby 噪声补偿，拟合 <strong>T20 / T30 / EDT</strong>；IR 波形与衰减曲线同屏，也可上传 WAV 录音离线分析。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/stipa">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 6v6M24 36v6M6 24h6M36 24h6M12 12l4 4M32 32l4 4M36 12l-4 4M16 32l-4 4" stroke-linecap="round" />
+              <circle cx="24" cy="24" r="7" />
+              <circle cx="24" cy="24" r="12" stroke-dasharray="3 4" opacity="0.6" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">语言传输指数 STIPA 实测 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">按 <strong>IEC 60268-16</strong> 播放 STIPA 合成信号（7 个倍频带载波 × 2 个低频调制）并录音：倍频带带通 → Hilbert 包络 → 调制频率精确投影得 MTF → 视在 SNR → <strong>男声计权 STI 与五级评级</strong>，各带 MTF/SNR 表 + SNR 分布图；支持上传录音分析。</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
     <section class="card notes">
       <h2>使用说明</h2>
       <ul>
-        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器</strong> 七个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性。</li>
-        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
+        <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器 / 现场实测</strong> 八个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
+        <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。现场实测分组内部即可闭环：<code>#/siggen</code> 产生扫频 → <code>#/irt60</code> 播放并录音得 RT60；<code>#/stipa</code> 实测语言传输指数，与 <code>#/pasystem</code> 的预测值互相印证；<code>#/rta</code> 看频谱形态，<code>#/splmeter</code> 读总声级与 Leq。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 40 个文件 / 2526 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
@@ -1253,6 +1340,305 @@
 
   <!-- ====================== 职业噪声暴露量 ====================== -->
   <section class="view" id="view-exposure" data-view="exposure" hidden></section>
+
+  <!-- ========================= 现场实测 · 声级计 ========================= -->
+  <section class="view" id="view-splmeter" data-view="splmeter" hidden>
+    <div class="page-head">
+      <h2>声级计实测</h2>
+      <p class="hint">浏览器麦克风实时测量：宽带 L<sub>A</sub>/L<sub>C</sub>/L<sub>Z</sub> 与 F/S 时间计权、能量等效 Leq、帧最大 Lmax、十个倍频带声级与最近 60 s 声级—时间曲线。样点只在本机处理，不上传。</p>
+    </div>
+
+    <section class="card">
+      <h3>测量设置</h3>
+      <div class="field-row">
+        <div class="field"><label for="smTw">时间计权</label>
+          <select id="smTw">
+            <option value="fast">F 快（τ = 125 ms）</option>
+            <option value="slow" selected>S 慢（τ = 1 s）</option>
+          </select>
+        </div>
+        <div class="field"><label for="smCalib">校准偏移 (dB)</label><input id="smCalib" type="number" step="0.1" value="0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="smBtnStart" class="btn primary" type="button">开始测量</button></div>
+      </div>
+      <div class="btn-row">
+        <button id="smBtnStop" class="btn" type="button">停止</button>
+        <button id="smBtnReset" class="btn ghost" type="button">重置累计</button>
+        <button id="smShare" class="btn ghost" type="button">复制分享链接</button>
+      </div>
+      <p class="hint" id="smStatus">未开始。点击「开始测量」后允许浏览器使用麦克风。</p>
+      <div class="callout-row">
+        <div class="callout info"><span class="dot"></span><span>校准方法：用声校准器（94 dB @ 1 kHz）套住麦克风，把「当前帧读数 − 94」填入校准偏移，重新开始测量。未校准时读数为相对声级，只能用于比较与趋势判断。</span></div>
+        <div class="callout warn"><span class="dot"></span><span>浏览器会强制关闭回声消除 / 噪声抑制 / 自动增益，保证测量的是原始信号；但手机、笔记本内置麦克风的频响与底噪差异很大，低频段（31.5 Hz）读数波动偏大属正常。</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>实时读数</h3>
+      <div class="kv-result">
+        <div class="kv"><div class="k">时间计权 L（F/S）</div><div class="v" id="smLaf">—</div></div>
+        <div class="kv"><div class="k">Leq(A) 累计</div><div class="v" id="smLeq">—</div></div>
+        <div class="kv"><div class="k">Leq(C) 累计</div><div class="v" id="smLceq">—</div></div>
+        <div class="kv"><div class="k">Leq(Z) 累计</div><div class="v" id="smLzeq">—</div></div>
+        <div class="kv"><div class="k">帧最大 Lmax</div><div class="v" id="smLmax">—</div></div>
+        <div class="kv"><div class="k">累计时长</div><div class="v" id="smSec">0.0 s</div></div>
+      </div>
+      <p class="hint">Leq 按能量累积（10·lg 能量平均），与时长无关；Lmax 取各测量窗宽带 RMS 声级的最大值。</p>
+    </section>
+
+    <section class="card">
+      <h3>倍频带声级（当前帧 + Leq 累积）</h3>
+      <div class="table-wrap">
+        <table class="weight-table">
+          <thead><tr><th>中心频率</th><th>当前帧 (dB)</th><th>Leq (dB)</th></tr></thead>
+          <tbody>
+            <tr id="smB0"></tr><tr id="smB1"></tr><tr id="smB2"></tr><tr id="smB3"></tr><tr id="smB4"></tr>
+            <tr id="smB5"></tr><tr id="smB6"></tr><tr id="smB7"></tr><tr id="smB8"></tr><tr id="smB9"></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">每 8192 样点（约 170 ms @ 48 kHz）做一次 FFT 分带；31.5 Hz 倍频带仅覆盖数个 bin，低频读数波动大是栅栏效应的物理下限。</p>
+    </section>
+
+    <section class="card">
+      <h3>声级—时间曲线（最近 60 s）</h3>
+      <div class="canvas-wrap"><canvas id="smChart" height="200" style="display:block;width:100%"></canvas></div>
+      <p class="hint">蓝线为时间计权显示值（F 快 / S 慢），红线为 Leq(A) 累计值；Leq 只升不降，其稳定值即整段时间的能量等效声级。</p>
+    </section>
+  </section>
+
+  <!-- ========================= 现场实测 · 实时频谱分析 ========================= -->
+  <section class="view" id="view-rta" data-view="rta" hidden>
+    <div class="page-head">
+      <h2>实时频谱分析 RTA</h2>
+      <p class="hint">实时倍频带声级：1/1 与 1/3 倍频程、Z/A/C 计权、指数平均与最大值保持，对数频率轴条形图 + 各带数值，宽带计权声级同屏显示。</p>
+    </div>
+
+    <section class="card">
+      <h3>分析设置</h3>
+      <div class="field-row">
+        <div class="field"><label for="rtBw">频带宽度</label>
+          <select id="rtBw">
+            <option value="octave" selected>1/1 倍频程（10 带）</option>
+            <option value="third">1/3 倍频程（29 带）</option>
+          </select>
+        </div>
+        <div class="field"><label for="rtWeight">计权</label>
+          <select id="rtWeight">
+            <option value="Z" selected>Z 不计权（线性）</option>
+            <option value="A">A 计权</option>
+            <option value="C">C 计权</option>
+          </select>
+        </div>
+        <div class="field"><label for="rtAvg">平均时间常数</label>
+          <select id="rtAvg">
+            <option value="fast" selected>快（0.5 s）</option>
+            <option value="slow">慢（2 s）</option>
+          </select>
+        </div>
+        <div class="field"><label for="rtCalib">校准偏移 (dB)</label><input id="rtCalib" type="number" step="0.1" value="0" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="rtBtnStart" class="btn primary" type="button">开始分析</button></div>
+      </div>
+      <div class="btn-row">
+        <button id="rtBtnStop" class="btn" type="button">停止</button>
+        <button id="rtBtnMax" class="btn ghost" type="button">清除最大保持</button>
+        <button id="rtBtnShare" class="btn ghost" type="button">复制分享链接</button>
+      </div>
+      <p class="hint" id="rtStatus">未开始。宽带声级（计权合成）见下方数值。</p>
+    </section>
+
+    <section class="card">
+      <h3>倍频带频谱</h3>
+      <div class="kv-result">
+        <div class="kv"><div class="k">宽带声级（按所选计权合成）</div><div class="v" id="rtOverall">—</div></div>
+      </div>
+      <div class="canvas-wrap" style="margin-top:12px"><canvas id="rtChart" height="240" style="display:block;width:100%"></canvas></div>
+      <div class="chip-row" id="rtTable" style="margin-top:12px"></div>
+      <p class="hint">蓝条为指数平均声级，红帽为最大值保持（峰值捕获）；横轴为对数频率。适合看频谱倾斜、找窄带成分与低频堆积。</p>
+    </section>
+  </section>
+
+  <!-- ========================= 现场实测 · 信号发生器 ========================= -->
+  <section class="view" id="view-siggen" data-view="siggen" hidden>
+    <div class="page-head">
+      <h2>测量信号发生器</h2>
+      <p class="hint">五种标准测量信号：白噪声 / 粉红噪声 / 正弦 / 对数扫频 ESS / 倍频带限噪。浏览器直接播放，或下载 16-bit WAV 用其他设备播放。</p>
+    </div>
+
+    <section class="card">
+      <h3>信号参数</h3>
+      <div class="field-row">
+        <div class="field"><label for="sgType">信号类型</label>
+          <select id="sgType">
+            <option value="white">白噪声（频谱基准）</option>
+            <option value="pink" selected>粉红噪声（−3 dB/oct，房间测量基准）</option>
+            <option value="sine">正弦（任意频率）</option>
+            <option value="sweep">对数扫频 ESS（测 RT60 用）</option>
+            <option value="band">倍频带限噪（单带能量）</option>
+          </select>
+        </div>
+        <div class="field"><label for="sgDur">时长 (s)</label><input id="sgDur" type="number" step="0.5" min="0.1" max="30" value="5" /></div>
+        <div class="field"><label for="sgPeak">归一化峰值（0~1，可空）</label><input id="sgPeak" type="number" step="0.01" min="0" max="1" value="0.89" /></div>
+      </div>
+      <div class="field-row" id="sgRowSine" hidden>
+        <div class="field"><label for="sgF">频率 (Hz)</label><input id="sgF" type="number" step="10" min="1" value="1000" /></div>
+      </div>
+      <div class="field-row" id="sgRowSweep" hidden>
+        <div class="field"><label for="sgF1">起始频率 (Hz)</label><input id="sgF1" type="number" step="1" min="1" value="20" /></div>
+        <div class="field"><label for="sgF2">终止频率 (Hz)</label><input id="sgF2" type="number" step="100" max="22000" value="20000" /></div>
+      </div>
+      <div class="field-row" id="sgRowBand" hidden>
+        <div class="field"><label for="sgFc">中心频率 (Hz)</label><input id="sgFc" type="number" step="10" min="10" value="1000" /></div>
+        <div class="field"><label for="sgEdge">过渡带衰减 (dB)</label><input id="sgEdge" type="number" step="1" value="-24" /></div>
+      </div>
+      <div class="btn-row">
+        <button id="sgBtnGen" class="btn primary" type="button">生成信号</button>
+        <button id="sgBtnPlay" class="btn" type="button">播放</button>
+        <button id="sgBtnStop" class="btn" type="button">停止播放</button>
+        <button id="sgBtnWav" class="btn" type="button">下载 WAV</button>
+        <button id="sgBtnShare" class="btn ghost" type="button">复制分享链接</button>
+      </div>
+      <div class="btn-row">
+        <span class="hint" style="align-self:center">预设：</span>
+        <button id="sgPre1k" class="btn small" type="button">1 kHz 正弦</button>
+        <button id="sgPrePink" class="btn small" type="button">粉红噪声</button>
+        <button id="sgPreSweep" class="btn small" type="button">20 Hz–20 kHz 扫频</button>
+        <button id="sgPreBand" class="btn small" type="button">1 kHz 带限噪</button>
+      </div>
+      <div id="sgInfo" class="result-line" hidden></div>
+      <p class="hint" id="sgStatus">修改参数后自动重新生成。</p>
+    </section>
+
+    <section class="card">
+      <h3>波形预览</h3>
+      <div class="canvas-wrap"><canvas id="sgWave" height="120" style="display:block;width:100%"></canvas></div>
+      <p class="hint">min/max 包络显示（每列取区间最小 / 最大样点）。扫频相位按解析积分生成（起止 5 ms 淡入淡出防爆音）；倍频带限噪过渡带外硬置零，带外能量 &lt; −100 dB。</p>
+    </section>
+
+    <section class="card notes">
+      <h2>用途提示</h2>
+      <ul>
+        <li><strong>粉红噪声</strong>：倍频带等能量，房间混响、隔声与吸声测量的标准激励；用 RTA 看各带声级是否平坦。</li>
+        <li><strong>对数扫频 ESS</strong>：与「混响时间 RT60 实测」模块联动——在此下载或直接播放，反卷积后得房间脉冲响应。</li>
+        <li><strong>正弦 / 带限噪</strong>：设备频响、失真与共振检查；带限噪把能量集中到单个倍频带，信噪比更高。</li>
+        <li><strong>白噪声</strong>：等功率 / Hz，用于检查设备本底与宽带激励场景。</li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ========================= 现场实测 · RT60 ========================= -->
+  <section class="view" id="view-irt60" data-view="irt60" hidden>
+    <div class="page-head">
+      <h2>混响时间 RT60 实测</h2>
+      <p class="hint">播放对数扫频 + 麦克风同步录音，互相关定位后做 Farina 频域反卷积得脉冲响应，FFT 带限 → Schroeder 反向积分 → Lundeby 噪声补偿 → 拟合 T20 / T30 / EDT。</p>
+    </div>
+
+    <section class="card">
+      <h3>测量参数</h3>
+      <div class="field-row">
+        <div class="field"><label for="itF1">扫频起始 (Hz)</label><input id="itF1" type="number" step="1" min="5" value="50" /></div>
+        <div class="field"><label for="itF2">扫频终止 (Hz)</label><input id="itF2" type="number" step="100" value="20000" /></div>
+        <div class="field"><label for="itDur">扫频时长 (s)</label><input id="itDur" type="number" step="0.5" min="1" max="20" value="5" /></div>
+        <div class="field"><label for="itTail">衰减录制尾音 (s)</label><input id="itTail" type="number" step="0.5" min="0.5" max="5" value="1.5" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="itBtnMeasure" class="btn primary" type="button">播放并录音</button></div>
+      </div>
+      <div class="btn-row">
+        <button id="itBtnCancel" class="btn" type="button">取消</button>
+        <button id="itBtnShare" class="btn ghost" type="button">复制分享链接</button>
+        <span class="sample-wrap">
+          <label class="btn ghost" for="itFile">上传 WAV 录音…</label>
+          <input id="itFile" type="file" accept="audio/wav,audio/x-wav,.wav" hidden />
+        </span>
+      </div>
+      <p class="hint" id="itStatus">未开始。测量期间请保持房间安静，喇叭音量适中（以房间内听感不刺耳为准）。</p>
+      <div class="callout-row">
+        <div class="callout info"><span class="dot"></span><span>上传录音须由本页或「测量信号发生器」下载的<strong>同参数</strong>扫频播放录制（样点率一致），反卷积才能对齐。</span></div>
+        <div class="callout warn"><span class="dot"></span><span>喇叭频响与失真直接进入脉冲响应：近场测量、避开扬声器轴向低谷可提高质量。本实现为工程级（ISO 3382 思路），正式验收以专业测量为准。</span></div>
+      </div>
+      <div id="itOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>测量结果</h3>
+      <div class="kv-result">
+        <div class="kv"><div class="k">T30（−5 ~ −35 dB）</div><div class="v" id="itT30">—</div></div>
+        <div class="kv"><div class="k">T20（−5 ~ −25 dB）</div><div class="v" id="itT20">—</div></div>
+        <div class="kv"><div class="k">EDT（0 ~ −10 dB）</div><div class="v" id="itEdt">—</div></div>
+        <div class="kv"><div class="k">噪声底</div><div class="v" id="itNoise">—</div></div>
+        <div class="kv"><div class="k">动态范围</div><div class="v" id="itDyn">—</div></div>
+        <div class="kv"><div class="k">互相关播放延迟</div><div class="v" id="itLag">—</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>脉冲响应（前 1.2 s）</h3>
+      <div class="canvas-wrap"><canvas id="itIrChart" height="160" style="display:block;width:100%"></canvas></div>
+      <p class="hint">红色虚线标记直达声起始位置（互相关 + IR 能量搜索共同确定）。</p>
+    </section>
+
+    <section class="card">
+      <h3>衰减曲线（Schroeder 反向积分，dB）</h3>
+      <div class="canvas-wrap"><canvas id="itDecayChart" height="260" style="display:block;width:100%"></canvas></div>
+      <p class="hint">直线段斜率即混响衰减速率；噪声底以下由 Lundeby 方法补偿，动态范围不足时拟合点减少、T30 可靠性下降。</p>
+    </section>
+  </section>
+
+  <!-- ========================= 现场实测 · STIPA ========================= -->
+  <section class="view" id="view-stipa" data-view="stipa" hidden>
+    <div class="page-head">
+      <h2>语言传输指数 STIPA 实测</h2>
+      <p class="hint">按 IEC 60268-16 播放 STIPA 合成信号（7 个倍频带噪声载波 × 2 个低频调制）并录音：各带带通 → Hilbert 包络 → 调制频率精确投影得 MTF → 视在 SNR → 男声计权 STI 与五级评级。</p>
+    </div>
+
+    <section class="card">
+      <h3>测量参数</h3>
+      <div class="field-row">
+        <div class="field"><label for="spDur">信号时长 (s)</label><input id="spDur" type="number" step="1" min="6" max="15" value="8" /></div>
+        <div class="field"><label for="spVol">播放音量：<span id="spVolVal">0.9</span></label>
+          <input id="spVol" type="range" min="0" max="1" step="0.05" value="0.9" />
+        </div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="spBtnMeasure" class="btn primary" type="button">播放并录音</button></div>
+      </div>
+      <div class="btn-row">
+        <button id="spBtnCancel" class="btn" type="button">取消</button>
+        <button id="spBtnShare" class="btn ghost" type="button">复制分享链接</button>
+        <span class="sample-wrap">
+          <label class="btn ghost" for="spFile">上传 WAV 录音…</label>
+          <input id="spFile" type="file" accept="audio/wav,audio/x-wav,.wav" hidden />
+        </span>
+      </div>
+      <p class="hint" id="spStatus">未开始。测量时请保持房间安静、喇叭音量适中（与正常语言扩声相当）。</p>
+      <div class="callout-row">
+        <div class="callout info"><span class="dot"></span><span>MTF 只依赖收到的信号包络，<strong>上传录音不需要参考信号</strong>：用本页播放的 STIPA 信号（或同参数重放）录制的 WAV 均可直接分析。</span></div>
+        <div class="callout warn"><span class="dot"></span><span>浏览器麦克风 / 喇叭频响有限（尤其 8 kHz 带），结果与经校准的专业 STIPA 仪可能有偏差；正式验收以专业仪器为准。</span></div>
+      </div>
+      <div id="spOut" class="result-line" hidden></div>
+    </section>
+
+    <section class="card">
+      <h3>测量结果</h3>
+      <div class="kv-result">
+        <div class="kv"><div class="k">STI（男声计权）</div><div class="v" id="spSti">—</div></div>
+        <div class="kv"><div class="k">评级</div><div class="v kv-v" id="spRating">—</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>各倍频带 MTF 与视在 SNR</h3>
+      <div class="table-wrap">
+        <table class="weight-table">
+          <thead><tr><th>倍频带</th><th>调制 1 (Hz)</th><th>MTF 1</th><th>调制 2 (Hz)</th><th>MTF 2</th><th>SNR (dB)</th></tr></thead>
+          <tbody id="spTable"></tbody>
+        </table>
+      </div>
+      <p class="hint">MTF 接近 1 表示该带调制传输完好；SNR 已按 ±15 dB 限幅（IEC 60268-16）。</p>
+    </section>
+
+    <section class="card">
+      <h3>各带视在 SNR 分布</h3>
+      <div class="canvas-wrap"><canvas id="spSnrChart" height="240" style="display:block;width:100%"></canvas></div>
+      <p class="hint">绿色区为 SNR &gt; 0 dB。判读参考：会议 / 教学 ≥ 0.60 合格，音乐厅 ≥ 0.75；本结果为男声计权 STI（IEC 60268-16:2011 Table 4）。</p>
+    </section>
+  </section>
 
   <section class="view" id="view-env" data-view="env" hidden>
     <div class="page-head">
@@ -2211,6 +2597,7 @@
           <div class="btn-row toolbar">
             <button id="rtCopy" class="btn">复制摘要</button>
             <button id="rtCsv" class="btn">导出 CSV</button>
+            <button id="rtShare" class="btn ghost">复制分享链接</button>
             <span id="rtCopyMsg" class="aux-msg"></span>
           </div>
         </section>
@@ -4690,6 +5077,11 @@
 <script src="js/sim.js"></script>
 <script src="js/gif.js"></script>
 <script src="js/aural.js"></script>
+<script src="js/measure.js"></script>
+<script src="js/siggen.js"></script>
+<script src="js/audio-io.js"></script>
+<script src="js/irt60.js"></script>
+<script src="js/stipa.js"></script>
 <script src="js/app.js"></script>
 <script src="js/perforation-view.js"></script>
 <script src="js/view-absorber.js"></script>
@@ -4753,6 +5145,11 @@
 <script src="js/view-sim-refraction.js"></script>
 <script src="js/sim-radiation.js"></script>
 <script src="js/view-sim-radiation.js"></script>
+<script src="js/view-splmeter.js"></script>
+<script src="js/view-rta.js"></script>
+<script src="js/view-siggen.js"></script>
+<script src="js/view-irt60.js"></script>
+<script src="js/view-stipa.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
@@ -4763,5 +5160,12 @@
 <script src="js/router.js"></script>
 <script src="js/share.js"></script>
 <script src="js/export.js"></script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* 注册失败不影响使用 */ });
+  });
+}
+</script>
 </body>
 </html>

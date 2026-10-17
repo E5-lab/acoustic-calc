@@ -79,7 +79,12 @@
     'sim-interference': 'view-sim-interference',
     'sim-bubble': 'view-sim-bubble',
     'sim-refraction': 'view-sim-refraction',
-    'sim-radiation': 'view-sim-radiation'
+    'sim-radiation': 'view-sim-radiation',
+    splmeter: 'view-splmeter',
+    rta: 'view-rta',
+    siggen: 'view-siggen',
+    irt60: 'view-irt60',
+    stipa: 'view-stipa'
   };
 
   var TITLES = {
@@ -132,7 +137,12 @@
     'sim-interference': '双源声波干涉模拟器 · 声学计算工具箱',
     'sim-bubble': '水下气泡共鸣模拟器 · 声学计算工具箱',
     'sim-refraction': '温度梯度声折射模拟器 · 声学计算工具箱',
-    'sim-radiation': '声源辐射指向性模拟器 · 声学计算工具箱'
+    'sim-radiation': '声源辐射指向性模拟器 · 声学计算工具箱',
+    splmeter: '声级计实测 · 声学计算工具箱',
+    rta: '实时频谱分析 RTA · 声学计算工具箱',
+    siggen: '测量信号发生器 · 声学计算工具箱',
+    irt60: '混响时间 RT60 实测 · 声学计算工具箱',
+    stipa: '语言传输指数 STIPA 实测 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -185,7 +195,12 @@
     { route: 'sim-interference', get: function () { return window.SimInterferenceView; } },
     { route: 'sim-bubble', get: function () { return window.SimBubbleView; } },
     { route: 'sim-refraction', get: function () { return window.SimRefractionView; } },
-    { route: 'sim-radiation', get: function () { return window.SimRadiationView; } }
+    { route: 'sim-radiation', get: function () { return window.SimRadiationView; } },
+    { route: 'splmeter', get: function () { return window.SplMeterView; } },
+    { route: 'rta', get: function () { return window.RtaView; } },
+    { route: 'siggen', get: function () { return window.SigGenView; } },
+    { route: 'irt60', get: function () { return window.IrT60View; } },
+    { route: 'stipa', get: function () { return window.StipaView; } }
   ];
 
   // 解析当前 hash → { route, mode?, params }

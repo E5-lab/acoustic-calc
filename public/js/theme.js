@@ -34,6 +34,9 @@
   function apply(theme) {
     root.setAttribute('data-theme', theme);
     root.style.colorScheme = theme;
+    /* 同步浏览器地址栏 / PWA 标题栏颜色 */
+    var mt = document.querySelector('meta[name="theme-color"]');
+    if (mt) mt.setAttribute('content', theme === 'dark' ? '#0b1017' : '#2563eb');
     var btn = document.getElementById('themeToggle');
     if (btn) {
       var dark = theme === 'dark';

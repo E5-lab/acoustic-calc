@@ -265,7 +265,7 @@
     setTimeout(function () { el.textContent = ''; }, 2000);
   }
 
-  function init() {
+  function init(_mode, params) {
     if (inited) return;
     inited = true;
 
@@ -289,6 +289,51 @@
     });
     $('rtCopy').addEventListener('click', function () { copyText(summaryText(), 'rtCopyMsg'); });
     $('rtCsv').addEventListener('click', exportCsv);
+
+    /* 深链分享：#/rt60?L=..&W=..&H=..&air=1&filler=..&use=..&rows=<URI编码的JSON>
+       打开链接的人得到完全相同的房间尺寸、吸声材料表与用途设定 */
+    function collect() {
+      return {
+        L: $('rtL').value, W: $('rtW').value, H: $('rtH').value,
+        air: $('rtAir').value, filler: state.filler, use: state.use,
+        rows: JSON.stringify(state.rows)
+      };
+    }
+    function applyRows(rowsJson) {
+      var arr;
+      try { arr = JSON.parse(rowsJson); } catch (e) { return; }
+      if (!arr || !arr.length) return;
+      state.rows = arr.filter(function (r) {
+        return r && typeof r === 'object' && isFinite(parseFloat(r.area));
+      }).map(function (r) {
+        var row = { name: String(r.name || '表面'), area: parseFloat(r.area) || 0, materialId: String(r.materialId || 'glass') };
+        if (r.auto === 'floor' || r.auto === 'ceiling') row.auto = r.auto;
+        return row;
+      });
+      renderRows();
+    }
+    function applyParams(p) {
+      if (!p) return;
+      if (p.L != null && p.L !== '' && isFinite(parseFloat(p.L))) $('rtL').value = p.L;
+      if (p.W != null && p.W !== '' && isFinite(parseFloat(p.W))) $('rtW').value = p.W;
+      if (p.H != null && p.H !== '' && isFinite(parseFloat(p.H))) $('rtH').value = p.H;
+      if (p.air === '1' || p.air === '0') $('rtAir').value = p.air;
+      if (p.filler) { state.filler = p.filler; $('rtFiller').value = p.filler; }
+      if (p.use) { state.use = p.use; $('rtUse').value = p.use; }
+      if (p.rows) applyRows(p.rows);
+      recalc();
+    }
+    var shareBtn = $('rtShare');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function () {
+        if (!(window.AppShare && window.AppRouter)) return;
+        var l = AppRouter.link('rt60', collect());
+        if (l.tooLong) { AppShare.toast('参数过多，链接超长，仍可复制使用', 'warn'); }
+        AppShare.copy(l.url).then(function () { AppShare.toast('已复制分享链接', 'ok'); },
+                                  function () { AppShare.toast('复制失败，请手动复制地址栏', 'warn'); });
+      });
+    }
+    if (params) applyParams(params);
   }
 
   function onShow() { recalc(); }
