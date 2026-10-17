@@ -331,7 +331,10 @@
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { alert('复制失败，请手动选择文本。'); }
+    try { document.execCommand('copy'); done(); } catch (e) {
+      if (window.UIK && UIK.error) UIK.error('浏览器拒绝了剪贴板访问，请手动选择文本复制。', '复制失败');
+      else alert('复制失败，请手动选择文本。');
+    }
     document.body.removeChild(ta);
   }
   function flash(id, msg) {

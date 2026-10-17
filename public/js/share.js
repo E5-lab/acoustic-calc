@@ -61,6 +61,11 @@
   }
 
   function toast(msg, kind) {
+    /* 有 UI Kit 时统一走右下角 Toast 队列；否则回退到旧的居中提示条 */
+    if (window.UIK && typeof UIK.toast === 'function') {
+      UIK.toast({ type: kind === 'warn' ? 'warn' : 'ok', message: msg, duration: 2800 });
+      return;
+    }
     var el = document.getElementById(TOAST_ID);
     if (!el) {
       el = document.createElement('div');

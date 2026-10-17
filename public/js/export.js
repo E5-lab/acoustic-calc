@@ -293,7 +293,7 @@
     var st = document.createElement('style');
     st.id = PRINT_STYLE_ID;
     st.textContent = '@media print {' +
-      'header,nav,footer,.mainnav,.topbar-actions,.hero-banner,.module-group,.friends,.ts-wrap{display:none !important}' +
+      'header,nav,footer,.mainnav,.topbar-actions,.hero-banner,.module-group,.friends{display:none !important}' +
       '.view{display:none !important}' +
       '.view.active{display:block !important}' +
       'body{background:#fff !important}' +

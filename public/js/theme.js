@@ -43,6 +43,53 @@
       btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
       btn.title = dark ? '切换到日间模式' : '切换到夜间模式';
     }
+    /* 通知画布类组件立即按新主题重绘（在 View Transition 快照前同步执行） */
+    try {
+      document.dispatchEvent(new CustomEvent('acousticthemechange', { detail: { theme: theme } }));
+    } catch (e) { /* 老浏览器忽略 */ }
+  }
+
+  function prefersReducedMotion() {
+    try {
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) { return false; }
+  }
+
+  /*
+   * 圆形揭示切换：以点击位置为圆心，用 View Transitions 的 clip-path 动画
+   * 把新主题「扩散」到全屏。浏览器不支持 startViewTransition 时静默降级。
+   */
+  function applyWithReveal(next, evt) {
+    if (!document.startViewTransition || prefersReducedMotion()) {
+      apply(next);
+      return;
+    }
+    var btn = document.getElementById('themeToggle');
+    var rect = (btn || root).getBoundingClientRect();
+    var keyboard = !evt || evt.detail === 0 || evt.clientX == null;
+    var x = keyboard ? rect.left + rect.width / 2 : evt.clientX;
+    var y = keyboard ? rect.top + rect.height / 2 : evt.clientY;
+    var radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    root.style.setProperty('--uik-theme-x', x + 'px');
+    root.style.setProperty('--uik-theme-y', y + 'px');
+    root.style.setProperty('--uik-theme-r', Math.ceil(radius) + 'px');
+
+    var transition;
+    try {
+      transition = document.startViewTransition(function () { apply(next); });
+    } catch (e) {
+      apply(next);
+      return;
+    }
+    transition.finished.finally(function () {
+      root.style.removeProperty('--uik-theme-x');
+      root.style.removeProperty('--uik-theme-y');
+      root.style.removeProperty('--uik-theme-r');
+    });
   }
 
   function init() {
@@ -51,10 +98,10 @@
 
     var btn = document.getElementById('themeToggle');
     if (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
         var next = current() === 'dark' ? 'light' : 'dark';
-        apply(next);
-        try { localStorage.setItem(KEY, next); } catch (e) {}
+        applyWithReveal(next, e);
+        try { localStorage.setItem(KEY, next); } catch (err) {}
       });
     }
 

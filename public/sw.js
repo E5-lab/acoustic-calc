@@ -11,12 +11,14 @@
  */
 'use strict';
 
-var CACHE = 'acoustic-calc-v1.0.1';
+var CACHE = 'acoustic-calc-v1.2.0';
 
 var CORE = [
   './',
   './index.html',
   './css/styles.css',
+  './css/ui-kit.css',
+  './js/ui-kit.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>交互与组件实验室 · 声学计算工具箱</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="description" content="声学计算工具箱的 UI Kit 实验室：命令面板、Toast、分段控件、标签页、手风琴、模态与抽屉、拖拽对比、可拖拽频谱编辑器、可排序表格等复杂组件与交互效果演示。" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/ui-kit.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="lab-topbar">
+  <div class="lab-topbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M4 16h3l3-7 4 14 3-9 2 4h9" />
+        </svg>
+      </span>
+      <span class="brand-name"><span class="bn-l1">Acoustic</span><span class="bn-l2">Toolbox</span></span>
+    </a>
+    <button class="theme-toggle" type="button" data-cmdk-open aria-label="打开命令面板" data-tip="命令面板 · ⌘K / Ctrl+K">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z"/></svg>
+    </button>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换日间/夜间模式" aria-pressed="false" title="切换日间/夜间模式">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>
+    </button>
+    <a class="lab-back" href="index.html">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      返回工具箱
+    </a>
+  </div>
+</header>
+
+<main id="main" class="lab-wrap">
+  <section class="lab-hero">
+    <span class="eyebrow">UI KIT · 交互实验室</span>
+    <h1>把声学数据做得更好用</h1>
+    <p>这里集中演示为工具箱新增的复杂 UI 组件与交互效果：命令面板、Toast 队列、分段控件、标签页、手风琴、模态与抽屉、拖拽对比、可拖拽频谱编辑器、可排序表格，以及 3D 聚光卡片、数字滚动、主题圆形揭示等细节动效。全部零依赖，并与既有设计令牌、明暗主题、无障碍约定保持一致。</p>
+    <div class="lab-hero-meta">
+      <span class="lab-tag">零依赖原生 JS</span>
+      <span class="lab-tag">明暗双主题</span>
+      <span class="lab-tag">键盘可操作</span>
+      <span class="lab-tag">prefers-reduced-motion 降级</span>
+      <span class="lab-tag">移动端适配</span>
+    </div>
+  </section>
+
+  <div class="lab-shell">
+    <nav class="lab-toc" aria-label="组件目录">
+      <span class="lab-toc-title">组件目录</span>
+      <a href="#cmdk" class="active"><i></i>命令面板与 Toast</a>
+      <a href="#segmented"><i></i>分段控件与开关</a>
+      <a href="#slider"><i></i>滑块与环形进度</a>
+      <a href="#tabs"><i></i>标签页与手风琴</a>
+      <a href="#overlay"><i></i>模态框与抽屉</a>
+      <a href="#compare"><i></i>拖拽前后对比</a>
+      <a href="#spectrum"><i></i>频谱曲线编辑器</a>
+      <a href="#table"><i></i>可排序数据表</a>
+      <a href="#motion"><i></i>动效与微交互</a>
+    </nav>
+
+    <div class="lab-main">
+
+      <!-- ============================ 1. 命令面板 ============================ -->
+      <section class="lab-sec" id="cmdk">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">01</span>命令面板与 Toast</h2>
+              <p class="lab-desc">按 <kbd class="lab-kbd">⌘K</kbd> / <kbd class="lab-kbd">Ctrl K</kbd> 唤起命令面板：对 58 个模块做模糊检索，支持 ↑↓ 选择、↵ 打开、最近使用记忆与操作指令。Toast 采用队列式堆叠，悬停暂停倒计时，适合替代零散的 alert。</p>
+            </div>
+            <span class="lab-badge">全局可用</span>
+          </header>
+          <div class="lab-demo">
+            <div class="uik-btn-row">
+              <button class="btn primary" type="button" data-cmdk-open>打开命令面板</button>
+              <button class="btn" type="button" data-toast="ok">成功通知</button>
+              <button class="btn" type="button" data-toast="warn">警告通知</button>
+              <button class="btn" type="button" data-toast="error">错误通知</button>
+              <button class="btn" type="button" data-toast="info">普通提示</button>
+            </div>
+            <p class="lab-note">命令面板索引来自首页模块卡片，新增模块后自动收录；最近使用写入 localStorage，仅保存在本机。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 2. 分段 + 开关 ============================ -->
+      <section class="lab-sec" id="segmented">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">02</span>分段控件与开关</h2>
+              <p class="lab-desc">分段控件的选中态由一块可滑动的高亮滑块承担，切换时带惯性过渡；开关使用 <code>role="switch"</code> 与 <code>aria-checked</code>，支持空格 / 回车操作。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="lab-grid2">
+              <div>
+                <div class="uik-seg" id="labSeg" role="tablist" aria-label="频率分辨率">
+                  <span class="uik-seg-thumb" aria-hidden="true"></span>
+                  <button type="button" role="tab" aria-selected="true" data-val="oct">1/1 倍频程</button>
+                  <button type="button" role="tab" aria-selected="false" data-val="third">1/3 倍频程</button>
+                  <button type="button" role="tab" aria-selected="false" data-val="narrow">窄带</button>
+                </div>
+                <p class="lab-note" id="segOut">当前：1/1 倍频程 · 16 Hz–8 kHz，共 10 个频带</p>
+              </div>
+              <div>
+                <div class="uik-switch-row">
+                  <div>
+                    <div class="uik-switch-label">显示网格</div>
+                    <div class="uik-switch-hint">图表背景绘制对数频率网格</div>
+                  </div>
+                  <button class="uik-switch" type="button" role="switch" aria-checked="true" aria-label="显示网格"></button>
+                </div>
+                <div class="uik-switch-row">
+                  <div>
+                    <div class="uik-switch-label">A 计权</div>
+                    <div class="uik-switch-hint">按 IEC 61672 对频带做计权</div>
+                  </div>
+                  <button class="uik-switch" type="button" role="switch" aria-checked="false" aria-label="A 计权"></button>
+                </div>
+                <div class="uik-switch-row">
+                  <div>
+                    <div class="uik-switch-label">平滑曲线</div>
+                    <div class="uik-switch-hint">仅影响显示，不改变计算结果</div>
+                  </div>
+                  <button class="uik-switch" type="button" role="switch" aria-checked="true" aria-label="平滑曲线"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 3. 滑块 + 环形 ============================ -->
+      <section class="lab-sec" id="slider">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">03</span>滑块与环形进度</h2>
+              <p class="lab-desc">原生 range 的轨道用渐变实时填充，数值气泡跟随滑块位置；环形进度使用 SVG 的 <code>stroke-dashoffset</code> 过渡，二者联动演示「目标值 → 预估达标率」。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="lab-grid2">
+              <div>
+                <label class="uik-switch-label" for="labRange">目标计权隔声量 Rw</label>
+                <div class="uik-range-wrap" id="rangeWrap">
+                  <span class="uik-range-bubble" id="rangeBubble">45 dB</span>
+                  <input class="uik-range" id="labRange" type="range" min="30" max="75" step="1" value="45" aria-describedby="rangeOut" />
+                  <div class="uik-range-ticks"><span>30</span><span>45</span><span>60</span><span>75</span></div>
+                </div>
+                <p class="lab-note" id="rangeOut">目标 45 dB：普通住宅分户墙常用下限，预估达标率 60%。</p>
+              </div>
+              <div style="display:flex;justify-content:center;align-items:center">
+                <div class="uik-ring" id="labRing">
+                  <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
+                    <circle class="ring-track" cx="66" cy="66" r="56"></circle>
+                    <circle class="ring-val" id="ringVal" cx="66" cy="66" r="56" stroke-dasharray="351.858" stroke-dashoffset="351.858"></circle>
+                  </svg>
+                  <div class="uik-ring-val" id="ringText">0<small>预估达标率</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 4. 标签页 + 手风琴 ============================ -->
+      <section class="lab-sec" id="tabs">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">04</span>标签页与手风琴</h2>
+              <p class="lab-desc">标签页的下划线指示器随选中项滑动，支持 ← → 与 Home / End；手风琴用 <code>grid-template-rows: 0fr → 1fr</code> 做高度过渡，不需要测量内容高度。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="uik-tabs" id="labTabs" role="tablist" aria-label="结果视图">
+              <button type="button" role="tab" id="tab-1" aria-controls="tabpanel-1" aria-selected="true">频谱</button>
+              <button type="button" role="tab" id="tab-2" aria-controls="tabpanel-2" aria-selected="false">时间历程</button>
+              <button type="button" role="tab" id="tab-3" aria-controls="tabpanel-3" aria-selected="false">统计</button>
+              <span class="uik-tabs-ink" id="tabsInk" aria-hidden="true"></span>
+            </div>
+            <div class="uik-tabpanel" id="tabpanel-1" role="tabpanel" aria-labelledby="tab-1">
+              <p class="lab-note" style="margin-top:0">逐倍频带声压级：63 Hz 至 8 kHz 共 8 带，低频段以 125–250 Hz 为主，呈现典型的交通噪声频谱特征。</p>
+            </div>
+            <div class="uik-tabpanel" id="tabpanel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+              <p class="lab-note" style="margin-top:0">30 分钟等效声级随时间变化：早晚高峰抬升约 6–8 dB，午间回落，夜间降至 45 dB 以下。</p>
+            </div>
+            <div class="uik-tabpanel" id="tabpanel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+              <p class="lab-note" style="margin-top:0">统计量：Leq 58.4 dB，L10 62.1 dB，L50 56.8 dB，L90 49.3 dB，Lmax 71.6 dB。</p>
+            </div>
+
+            <hr class="sep" />
+
+            <div class="uik-acc" id="labAcc">
+              <div class="uik-acc-item open">
+                <button class="uik-acc-btn" type="button" aria-expanded="true">
+                  现场测量需要注意什么？
+                  <svg class="uik-acc-chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+                </button>
+                <div class="uik-acc-body"><div class="uik-acc-inner"><div>测量前校准声级计，记录温度、湿度与气压；测点距墙面不小于 1 m、距地面 1.2–1.5 m；每个测点至少采集 3 个时段，每段不短于 1 min，并注明主要声源与工况。</div></div></div>
+              </div>
+              <div class="uik-acc-item">
+                <button class="uik-acc-btn" type="button" aria-expanded="false">
+                  为什么低频带总是不达标？
+                  <svg class="uik-acc-chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+                </button>
+                <div class="uik-acc-body"><div class="uik-acc-inner"><div>低频波长长、绕射能力强，普通多孔吸声材料在 125 Hz 以下效率很低；应优先考虑薄板/薄膜共振结构、亥姆霍兹共振器或加厚空腔，并同步检查侧向传声与结构振动。</div></div></div>
+              </div>
+              <div class="uik-acc-item">
+                <button class="uik-acc-btn" type="button" aria-expanded="false">
+                  计算结果可以直接用于验收吗？
+                  <svg class="uik-acc-chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+                </button>
+                <div class="uik-acc-body"><div class="uik-acc-inner"><div>本站结果为工程估算，用于方案比选与趋势判断；正式验收应以现行标准规定的测量方法、实验室报告或现场检测结论为准。</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 5. 模态 + 抽屉 ============================ -->
+      <section class="lab-sec" id="overlay">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">05</span>模态框与抽屉</h2>
+              <p class="lab-desc">两者共用遮罩、滚动锁定与焦点管理：打开时焦点移入浮层，Tab 在内部循环，Esc 或点击遮罩关闭，关闭后焦点回到触发按钮。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="uik-btn-row">
+              <button class="btn primary" type="button" id="openModal">打开模态框</button>
+              <button class="btn" type="button" id="openDrawer">打开侧边抽屉</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 6. 拖拽对比 ============================ -->
+      <section class="lab-sec" id="compare">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">06</span>拖拽前后对比</h2>
+              <p class="lab-desc">用 <code>clip-path</code> 裁切上层画布，实现「处理前 / 处理后」频谱的直接对比。支持指针拖拽与键盘 ← →（Shift 加速），并同步 <code>aria-valuenow</code>。</p>
+            </div>
+            <span class="lab-badge">Pointer Events</span>
+          </header>
+          <div class="lab-demo">
+            <div class="uik-compare" id="compareBox" style="--uik-pos:52%">
+              <canvas id="cmpAfter"></canvas>
+              <canvas id="cmpBefore" class="uik-compare-top"></canvas>
+              <span class="uik-compare-label before">处理前</span>
+              <span class="uik-compare-label after">处理后</span>
+              <div class="uik-compare-handle" id="cmpHandle" role="slider" tabindex="0"
+                   aria-label="对比位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="52" style="left:52%">
+                <span class="uik-compare-knob" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+                </span>
+              </div>
+            </div>
+            <p class="lab-note">示例为同一房间在加装吸声结构前后的 1/1 倍频程频谱：中高频峰值被削平，低频因共振结构略有改善。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 7. 频谱编辑器 ============================ -->
+      <section class="lab-sec" id="spectrum">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">07</span>频谱曲线编辑器</h2>
+              <p class="lab-desc">Canvas 绘制的对数频率轴频谱，节点可直接拖动改变声压级。带悬停命中检测、参考曲线、A 计权总级实时计算，以及完整的键盘操作（← → 切换频带，↑ ↓ 调整，Enter 复位）。</p>
+            </div>
+            <span class="lab-badge">Canvas + 键盘</span>
+          </header>
+          <div class="lab-demo tight">
+            <div class="uik-spec" id="specBox">
+              <canvas id="specCanvas" tabindex="0" role="application"
+                      aria-label="可拖拽频谱曲线编辑器：左右方向键切换频带，上下方向键调整声压级"></canvas>
+              <div class="uik-spec-readout" id="specReadout"></div>
+              <div class="uik-spec-hint">拖动节点调整 · 双击复位该频带 · 聚焦后用 ← → / ↑ ↓ 操作</div>
+            </div>
+          </div>
+          <div class="uik-btn-row" style="margin-top:12px">
+            <button class="btn primary" type="button" id="specRandom">随机频谱</button>
+            <button class="btn" type="button" id="specWeight">载入机房谱</button>
+            <button class="btn ghost" type="button" id="specReset">恢复默认</button>
+            <span class="aux-msg" id="specMsg"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 8. 可排序表格 ============================ -->
+      <section class="lab-sec" id="table">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">08</span>可排序数据表</h2>
+              <p class="lab-desc">点击表头在升序 / 降序间切换，<code>aria-sort</code> 同步更新；搜索框即时过滤，结果计数与空状态一并处理。表头在滚动容器内吸顶。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="uik-table-tools">
+              <label class="uik-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5l-4-4"/></svg>
+                <input id="tableSearch" type="search" placeholder="筛选构件名称 / 材料…" aria-label="筛选构件" />
+              </label>
+              <span class="hint" id="tableCount">10 个构件</span>
+            </div>
+            <div class="uik-table-wrap">
+              <table class="uik-table" id="labTable">
+                <thead>
+                  <tr>
+                    <th aria-sort="none"><button type="button" data-key="name" data-type="text">构件<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                    <th aria-sort="none"><button type="button" data-key="material" data-type="text">构造<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                    <th aria-sort="none"><button type="button" data-key="rw" data-type="num">Rw (dB)<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                    <th aria-sort="none"><button type="button" data-key="stc" data-type="num">STC<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                    <th aria-sort="none"><button type="button" data-key="thk" data-type="num">厚度 (mm)<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                    <th aria-sort="none"><button type="button" data-key="grade" data-type="text">评价<svg class="uik-sort" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v8M3 7l3 3 3-3"/></svg></button></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 9. 动效 ============================ -->
+      <section class="lab-sec" id="motion">
+        <div class="lab-card">
+          <header>
+            <div>
+              <h2><span class="lab-num">09</span>动效与微交互</h2>
+              <p class="lab-desc">模块卡片跟随指针做轻微 3D 倾斜与聚光高光；结果数字变化时从旧值滚动到新值；骨架屏用位移高光提示加载。所有动效在系统开启「减少动态效果」时自动关闭。</p>
+            </div>
+          </header>
+          <div class="lab-demo">
+            <div class="lab-grid2">
+              <div class="lab-tilt-card">
+                <h3>3D 聚光卡片</h3>
+                <p>指针在卡片内移动时，高光与倾斜角度实时跟随，最大倾斜 4–5°，离开后平滑复位。</p>
+              </div>
+              <div class="lab-tilt-card">
+                <h3>数字滚动</h3>
+                <div class="big uik-num" id="numDemo" style="margin:8px 0 10px">58.4 <span class="unit">dB</span></div>
+                <div class="uik-btn-row">
+                  <button class="btn small" type="button" id="numBtn">换一个数值</button>
+                </div>
+              </div>
+            </div>
+            <hr class="sep" />
+            <div class="lab-grid2">
+              <div>
+                <div class="uik-switch-row" style="border:0;padding-top:0">
+                  <div>
+                    <div class="uik-switch-label">骨架屏加载态</div>
+                    <div class="uik-switch-hint">切换查看占位与真实内容</div>
+                  </div>
+                  <button class="uik-switch" type="button" role="switch" aria-checked="true" aria-label="骨架屏加载态" id="skelSwitch"></button>
+                </div>
+                <div id="skelBox" style="margin-top:12px">
+                  <div id="skelSkeleton">
+                    <div class="uik-skel uik-skel-line" style="height:15px;width:54%;margin-bottom:12px"></div>
+                    <div class="uik-skel uik-skel-line"></div>
+                    <div class="uik-skel uik-skel-line"></div>
+                    <div class="uik-skel uik-skel-line"></div>
+                  </div>
+                  <div id="skelContent" hidden>
+                    <div class="rc-title" style="margin-bottom:4px">混响时间 T30</div>
+                    <div class="hero-rate" style="font-size:32px">0.62 <span class="unit">s</span></div>
+                    <p class="lab-note" style="margin-top:6px">500 Hz–2 kHz 平均，符合语言类厅堂 0.6–0.8 s 的推荐区间。</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin:0 0 8px;font-size:14px">按钮涟漪与焦点环</h3>
+                <p class="lab-note" style="margin-top:0">指针按下时从落点扩散涟漪；Tab 聚焦时显示 2 px 主色焦点环，满足键盘可达性。</p>
+                <div class="uik-btn-row" style="margin-top:12px">
+                  <button class="btn primary" type="button">主按钮</button>
+                  <button class="btn" type="button">次按钮</button>
+                  <button class="btn small" type="button">小按钮</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="lab-footer">
+  <span>声学计算工具箱 · UI Kit 实验室</span>
+  <span><a href="index.html">返回工具箱</a> · 按 <kbd class="lab-kbd">⌘K</kbd> 打开命令面板</span>
+</footer>
+
+<!-- 模态框 -->
+<div class="uik-modal" id="labModal" hidden>
+  <div class="uik-modal-backdrop" data-close></div>
+  <div class="uik-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="uik-modal-head">
+      <div>
+        <h3 id="modalTitle">保存为计算书</h3>
+        <p>将当前参数与结果导出为可分享的文档。</p>
+      </div>
+      <button class="uik-icon-close" type="button" data-close aria-label="关闭">&times;</button>
+    </div>
+    <div class="uik-modal-body" id="modalDesc">
+      <p style="margin-top:0">模态框会把焦点限制在浮层内部：Tab / Shift+Tab 在按钮之间循环，Esc 或点击遮罩关闭。关闭后焦点回到「打开模态框」按钮。</p>
+      <div class="field-row compact" style="margin-top:14px">
+        <div class="field">
+          <label for="modalName">项目名称</label>
+          <input id="modalName" type="text" value="某办公楼声学改造" />
+        </div>
+        <div class="field">
+          <label for="modalType">格式</label>
+          <select id="modalType">
+            <option>PDF 计算书</option>
+            <option>CSV 数据表</option>
+            <option>纯文本摘要</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="uik-modal-foot">
+      <button class="btn ghost" type="button" data-close>取消</button>
+      <button class="btn primary" type="button" id="modalOk">确认导出</button>
+    </div>
+  </div>
+</div>
+
+<!-- 侧边抽屉 -->
+<div class="uik-drawer" id="labDrawer" hidden>
+  <div class="uik-modal-backdrop" data-close></div>
+  <aside class="uik-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <div class="uik-drawer-head">
+      <h3 id="drawerTitle">模块快捷入口</h3>
+      <button class="uik-icon-close" type="button" data-close aria-label="关闭">&times;</button>
+    </div>
+    <div class="uik-drawer-body">
+      <p style="margin-top:0">抽屉从右侧滑入，适合承载筛选器、设置项或模块导航。内容区独立滚动，底部操作区固定在视口内。</p>
+      <div class="mat-list" style="margin-top:14px">
+        <a class="btn" href="index.html#/rt60" style="text-align:left">混响时间 RT60</a>
+        <a class="btn" href="index.html#/stc" style="text-align:left">墙体隔声量 Rw / STC</a>
+        <a class="btn" href="index.html#/absorber" style="text-align:left">多孔吸声材料阻抗</a>
+        <a class="btn" href="index.html#/noise" style="text-align:left">背景噪声评价</a>
+        <a class="btn" href="index.html#/sim" style="text-align:left">室内音质模拟彩图</a>
+      </div>
+    </div>
+    <div class="uik-drawer-foot">
+      <button class="btn primary" type="button" data-close style="flex:1">完成</button>
+    </div>
+  </aside>
+</div>
+
+<script src="js/theme.js"></script>
+<script src="js/ui-kit.js"></script>
+<script src="js/ui-lab.js"></script>
+</body>
+</html>

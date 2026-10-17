@@ -12,6 +12,7 @@
   <meta name="theme-color" content="#2563eb" />
   <meta name="description" content="声学计算工具箱：声压级叠加、背景噪声评价（NC/NR/RC）、穿孔率、吸声阻抗、混响时间、墙体隔声 Rw/STC、声屏障与弹簧减振隔振效率计算，纯静态、零依赖、按标准方法实现。" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/ui-kit.css" />
 </head>
 <body>
 <a class="skip-link" href="#main">跳到主要内容</a>
@@ -160,21 +161,19 @@
       </div>
     </nav>
     <div class="topbar-actions">
-      <div class="ts-wrap" id="tsWrap">
-        <button class="ts-trigger" id="tsTrigger" type="button" aria-label="展开检索框" title="检索功能模块（快捷键 /）">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
-        </button>
-        <div class="ts-field" id="tsField">
-          <svg class="ts-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5l-4-4" /></svg>
-          <input id="tsInput" type="search" autocomplete="off" spellcheck="false"
-                 placeholder="检索功能模块" aria-label="检索功能模块" aria-controls="view-home" />
-          <kbd class="ts-kbd">/</kbd>
-          <button id="tsClear" class="ts-clear" type="button" aria-label="清空检索" hidden>&#215;</button>
-          <div class="ts-panel" id="tsPanel" hidden></div>
-        </div>
-      </div>
+      <button id="cmdkBtn" class="theme-toggle" type="button" data-cmdk-open aria-label="打开命令面板" data-tip="命令面板 · ⌘K / Ctrl+K">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z"/></svg>
+      </button>
+      <button id="shareBtn" class="theme-toggle" type="button" aria-label="复制本页分享链接" title="复制本页分享链接（含当前参数）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.5l3-3a5 5 0 0 0-7.1-7.1L11.6 4.8"/><path d="M14 11a5 5 0 0 0-7.1-.5l-3 3a5 5 0 0 0 7.1 7.1l1.4-1.4"/></svg>
+      </button>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换日间/夜间模式" aria-pressed="false" title="切换日间/夜间模式">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>
+      </button>
+      <span class="topbar-sep" aria-hidden="true"></span>
       <div class="nav-group topbar-group">
-        <button class="nav-parent nav-blog" type="button" aria-expanded="false" aria-haspopup="true" title="友链：博客 / 视频 / 音乐 / 导航">
+        <button class="nav-parent nav-blog" type="button" aria-expanded="false" aria-haspopup="true" aria-label="友链" title="友链：博客 / 视频 / 音乐 / 导航">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
           <span>友链</span>
           <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -187,7 +186,7 @@
         </div>
       </div>
       <div class="nav-group topbar-group" id="exportMenu">
-        <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true" title="导出计算书 / 打印为 PDF">
+        <button class="nav-parent" type="button" aria-expanded="false" aria-haspopup="true" aria-label="导出计算书或打印为 PDF" title="导出计算书 / 打印为 PDF">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M5 20h14"/></svg>
           <span>导出</span>
           <svg class="nav-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -200,13 +199,6 @@
           <button type="button" class="ex-item" data-ex="print"><span class="nm-t">打印 / 存为 PDF</span><small>仅打印当前模块，浏览器可另存为 PDF</small></button>
         </div>
       </div>
-      <button id="shareBtn" class="theme-toggle" type="button" aria-label="复制本页分享链接" title="复制本页分享链接（含当前参数）">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.5l3-3a5 5 0 0 0-7.1-7.1L11.6 4.8"/><path d="M14 11a5 5 0 0 0-7.1-.5l-3 3a5 5 0 0 0 7.1 7.1l1.4-1.4"/></svg>
-      </button>
-      <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换日间/夜间模式" aria-pressed="false" title="切换日间/夜间模式">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>
-      </button>
     </div>
   </div>
 </header>
@@ -5106,7 +5098,7 @@
     <span class="fs-since">（2026-07-13 建站）</span>
   </div>
   <p>数据来源：NC / RC — ANSI/ASA S12.2-2019；NR — ISO/R 1996；A 计权 — IEC 61672；穿孔率公式 — 几何推导（参考 E5-lab/AC_Calc）；微穿孔板理论 — Maa 微穿孔板模型；计权隔声量 Rw — GB/T 50121-2005；声压级叠加 — 声能量与相干叠加基本公式；阻性消声器 — GB/T 50087-2013《工业企业噪声控制设计规范》第 6.3 节；隔振计算 — 《噪声与振动控制工程技术导则》第 7.4 节隔振设计。</p>
-  <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。访客统计由 Vercount 提供，仅统计访问次数、不采集个人身份信息。</p>
+  <p class="footer-note">本工具仅供工程估算，正式验收请以标准与仪器为准。访客统计由 Vercount 提供，仅统计访问次数、不采集个人身份信息。 · <a href="ui-lab.html">交互与组件实验室</a> · 按 <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> 打开命令面板。</p>
 </footer>
 
 <script src="js/chart-util.js"></script>
@@ -5227,7 +5219,6 @@
 <script src="js/sim-ut.js"></script>
 <script src="js/view-sim-ut.js"></script>
 <script src="js/banner.js"></script>
-<script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>
 <script src="https://events.vercount.one/js" async></script>
 <script src="js/urlstate.js"></script>
@@ -5236,6 +5227,7 @@
 <script src="js/router.js"></script>
 <script src="js/share.js"></script>
 <script src="js/export.js"></script>
+<script src="js/ui-kit.js"></script>
 <script>
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', function () {

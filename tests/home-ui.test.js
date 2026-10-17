@@ -2,16 +2,17 @@
  * home-ui.test.js — 总览页 UI 结构守护测试 (node tests/home-ui.test.js)
  *
  * 目的：守护首页改版（v2.4.2）的几项结构约定，避免后续改动把它们弄丢：
- *   1) hero 宣传区块已移除（改由 banner + 顶栏检索承担）；
- *   2) 顶栏功能检索结构完整，位于一级菜单右侧，悬浮结果面板就位；
+ *   1) hero 宣传区块已移除（改由 banner + 命令面板承担）；
+ *   2) 顶栏不再保留独立检索栏，全局检索统一由命令面板（⌘K）承担；
  *   3) banner 轮播结构与其 4 张图片引用完好；
- *   4) 检索脚本 / 轮播脚本按顺序在 nav.js 之前加载；
+ *   4) 检索 / 轮播 / 统计脚本按顺序在 nav.js 之前加载；
  *   5) 顶栏「友链」为下拉菜单，含博客 / 视频 / 音乐 / 导航 4 个站点；
  *   6) nav.js 已把顶栏下拉纳入统一管理；
- *   7) 检索关键词在模块文案中有实际命中（保证索引可用）；
+ *   7) 检索关键词在模块文案中有实际命中（保证命令面板索引可用）；
  *   8) 页脚访客统计（Vercount）与建站运营天数就位；
  *   9) 顶栏一级菜单恒定单行（nowrap + 溢出收纳进「更多」），
- *      「友链」不竖排，三级子计算器覆盖全部模块。
+ *      「友链」不竖排，三级子计算器覆盖全部模块；
+ *  10) 顶栏操作区顺序：图标组在左，友链 / 导出贴页面最右侧。
  */
 var fs = require('fs');
 var path = require('path');
@@ -25,7 +26,7 @@ function assert(name, cond) {
 function read() { return fs.readFileSync(path.join(__dirname, '..', 'public', 'index.html'), 'utf8'); }
 var html = read();
 var navJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'nav.js'), 'utf8');
-var searchJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'search.js'), 'utf8');
+var uiKitJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'ui-kit.js'), 'utf8');
 
 var homeStart = html.indexOf('id="view-home"');
 var homeEnd = html.indexOf('<!-- ========================= 背景噪声评价', homeStart);
@@ -40,18 +41,21 @@ assert('无 hero-title', html.indexOf('hero-title') < 0);
 assert('无 hero-actions', html.indexOf('hero-actions') < 0);
 assert('无 badge-row 标准徽标行', html.indexOf('badge-row') < 0);
 
-// ---- 2) 顶栏检索结构 ----
-console.log('\n[2] 顶栏功能检索结构');
-assert('含顶栏检索容器 .ts-wrap', html.indexOf('class="ts-wrap"') >= 0);
+// ---- 2) 顶栏检索已并入命令面板 ----
+console.log('\n[2] 顶栏检索并入命令面板');
+assert('已移除独立检索容器 .ts-wrap', html.indexOf('class="ts-wrap"') < 0);
 ['tsInput', 'tsClear', 'tsPanel', 'tsTrigger'].forEach(function (id) {
-  assert('含 #' + id, html.indexOf('id="' + id + '"') >= 0);
+  assert('已移除 #' + id, html.indexOf('id="' + id + '"') < 0);
 });
-assert('检索框有 aria-label', /id="tsInput"[\s\S]{0,200}aria-label="检索功能模块"/.test(html));
+assert('已移除 js/search.js 引入', html.indexOf('js/search.js') < 0);
+assert('检索脚本文件已删除', !fs.existsSync(path.join(__dirname, '..', 'public', 'js', 'search.js')));
 var iActions = html.indexOf('class="topbar-actions"');
-var iTs = html.indexOf('class="ts-wrap"');
+var iCmdk = html.indexOf('id="cmdkBtn"');
 var iHeaderEnd = html.indexOf('</header>');
-assert('检索栏位于顶栏操作区（一级菜单右侧）', iActions >= 0 && iTs > iActions && iTs < iHeaderEnd);
+assert('命令面板按钮位于顶栏操作区', iActions >= 0 && iCmdk > iActions && iCmdk < iHeaderEnd);
+assert('命令面板按钮带 data-cmdk-open', /id="cmdkBtn"[\s\S]{0,120}data-cmdk-open/.test(html));
 assert('首页不再保留旧检索栏 .home-search', html.indexOf('class="home-search"') < 0);
+assert('样式表已清理 .ts- 规则', fs.readFileSync(path.join(__dirname, '..', 'public', 'css', 'styles.css'), 'utf8').indexOf('.ts-wrap') < 0);
 
 // ---- 3) banner 轮播结构 ----
 console.log('\n[3] banner 轮播结构');
@@ -68,11 +72,13 @@ imgs.forEach(function (s) {
 // ---- 4) 脚本加载顺序 ----
 console.log('\n[4] 脚本加载顺序');
 var iBannerJs = html.indexOf('js/banner.js');
-var iSearchJs = html.indexOf('js/search.js');
 var iNavJs = html.indexOf('js/nav.js');
+var iUiKitJs = html.indexOf('js/ui-kit.js');
+var iExportJs = html.indexOf('js/export.js');
 assert('banner.js 在 nav.js 之前', iBannerJs > 0 && iBannerJs < iNavJs);
-assert('search.js 在 nav.js 之前', iSearchJs > 0 && iSearchJs < iNavJs);
-assert('search.js 在 banner.js 之后', iSearchJs > iBannerJs);
+assert('ui-kit.js（命令面板）在 export.js 之后', iUiKitJs > iExportJs && iExportJs > 0);
+assert('命令面板索引 .module-card', uiKitJs.indexOf(".module-card") >= 0);
+assert('命令面板支持 ⌘K / Ctrl+K', /metaKey/.test(uiKitJs) && /ctrlKey/.test(uiKitJs));
 
 // ---- 5) 顶栏友链下拉 ----
 console.log('\n[5] 顶栏友链下拉');
@@ -109,12 +115,10 @@ assert('总览卡片数 = 58 (实际 ' + cards.length + ')', cards.length === 58
   var hit = cards.filter(function (c) { return c.text.indexOf(kw) >= 0; });
   assert('关键词「' + kw + '」命中 ' + hit.length + ' 个模块', hit.length >= 1);
 });
-assert('search.js 动态索引 .module-card', searchJs.indexOf(".querySelectorAll('.module-card')") >= 0);
-assert('search.js 提供 Esc 清空', /key === 'Escape'/.test(searchJs));
-assert('search.js 提供「/」聚焦', /key !== '\/'/.test(searchJs));
-assert('search.js 渲染悬浮结果面板', searchJs.indexOf('tsPanel') >= 0);
-assert('search.js 路由切换后复位', searchJs.indexOf('hashchange') >= 0);
-assert('search.js 检索时隐藏 banner', searchJs.indexOf('is-searching') >= 0);
+assert('ui-kit.js 动态索引 .module-card', uiKitJs.indexOf("'.module-card'") >= 0);
+assert('命令面板提供 Esc 关闭', /Escape/.test(uiKitJs));
+assert('命令面板记录最近使用', uiKitJs.indexOf('localStorage') >= 0);
+assert('命令面板渲染悬浮面板 .uik-cmdk', uiKitJs.indexOf('uik-cmdk') >= 0);
 
 // ---- 8) 页脚访客统计与建站天数 ----
 console.log('\n[8] 页脚访客统计与建站天数');
@@ -139,7 +143,7 @@ assert('顶栏栅格中间列可压缩 auto minmax(0,1fr) auto',
 assert('友链按钮不被压缩 flex:none', /\.nav-blog\s*\{[\s\S]*?flex:\s*none/.test(css));
 assert('存在分栏 Mega 面板样式 .nav-menu-mega', css.indexOf('.nav-menu-mega') >= 0);
 assert('存在三级子计算器样式 .nav-sub', css.indexOf('.nav-sub') >= 0);
-assert('窄屏检索折叠断点提高到 1400px', /@media \(max-width: 1400px\)/.test(css));
+assert('存在顶栏操作区分隔线 .topbar-sep', css.indexOf('.topbar-sep') >= 0);
 
 assert('nav.js 提供三级菜单数据表 NAV_SUB', /var NAV_SUB = \{/.test(navJs));
 assert('nav.js 动态创建「更多」收纳分组', navJs.indexOf("'nav-group nav-more'") >= 0);
@@ -160,6 +164,22 @@ var noSub = navRoutes.filter(function (r) { return subKeys.indexOf(r) < 0; });
 assert('每个模块都有三级子计算器条目 (缺失: ' + (noSub.join(',') || '无') + ')', noSub.length === 0);
 var extraSub = subKeys.filter(function (k) { return navRoutes.indexOf(k) < 0; });
 assert('三级菜单无孤儿条目 (多余: ' + (extraSub.join(',') || '无') + ')', extraSub.length === 0);
+
+// ---- 10) 顶栏操作区顺序：图标组在左，友链 / 导出贴最右侧 ----
+console.log('\n[10] 顶栏操作区顺序');
+var actionsStart = html.indexOf('<div class="topbar-actions">');
+var actionsHtml = html.slice(actionsStart, html.indexOf('</header>', actionsStart));
+var iCmdkBtn = actionsHtml.indexOf('id="cmdkBtn"');
+var iShareBtn = actionsHtml.indexOf('id="shareBtn"');
+var iThemeBtn = actionsHtml.indexOf('id="themeToggle"');
+var iFriends = actionsHtml.indexOf('nav-menu-friends');
+var iExport = actionsHtml.indexOf('id="exportMenu"');
+assert('图标组顺序 ⌘K → 分享 → 主题',
+  iCmdkBtn > 0 && iCmdkBtn < iShareBtn && iShareBtn < iThemeBtn);
+assert('友链位于图标组之后', iFriends > iThemeBtn);
+assert('导出位于友链之后（页面最右侧）', iExport > iFriends);
+assert('导出之后无其它控件', actionsHtml.slice(iExport).indexOf('class="theme-toggle"') < 0);
+assert('操作区右对齐 justify-self:end', /\.topbar-actions\s*\{[\s\S]*?justify-self:\s*end/.test(css));
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
