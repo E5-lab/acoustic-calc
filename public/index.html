@@ -131,6 +131,10 @@
           <a href="#/sim-wedge" data-route="sim-wedge"><span class="nm-t">消声室吸声楔</span><small class="nm-d">截止频率 · 楔长估算</small></a>
           <a href="#/sim-tube" data-route="sim-tube"><span class="nm-t">声阻抗管</span><small class="nm-d">管内驻波 · 两传声器法</small></a>
           <a href="#/sim-echo" data-route="sim-echo"><span class="nm-t">回声测距</span><small class="nm-d">脉冲往返 · 时延↔距离</small></a>
+          <a href="#/sim-interference" data-route="sim-interference"><span class="nm-t">双源声波干涉</span><small class="nm-d">波程差 · 相长/相消 · 指向图样</small></a>
+          <a href="#/sim-bubble" data-route="sim-bubble"><span class="nm-t">水下气泡共鸣</span><small class="nm-d">Minnaert · 脉动辐射 · 扫频响应</small></a>
+          <a href="#/sim-refraction" data-route="sim-refraction"><span class="nm-t">温度梯度声折射</span><small class="nm-d">声线弯曲 · 折返点 · 声影区</small></a>
+          <a href="#/sim-radiation" data-route="sim-radiation"><span class="nm-t">声源辐射指向性</span><small class="nm-d">单极子/偶极子/四极子 · DI</small></a>
         </div>
       </div>
     </nav>
@@ -217,7 +221,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 7 个分组、44 个模块，与顶栏二级菜单一一对应</p>
+      <p class="hint">共 7 个分组、48 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -822,6 +826,60 @@
             <span class="mc-desc">脉冲发射—界面反射—返回接收的往返动画，时延 ↔ 距离按 d = c·t/2 实时换算，可调声速与界面距离，演示距离分辨率概念。</span>
           </span>
         </a>
+        <a class="module-card" href="#/sim-interference">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="14" cy="30" r="2.5" fill="currentColor" stroke="none" />
+              <circle cx="34" cy="30" r="2.5" fill="currentColor" stroke="none" />
+              <path d="M9 30a5 5 0 0110 0M29 30a5 5 0 0110 0" opacity="0.55" />
+              <path d="M5 38c5-8 9 5 14-3s9 5 14-3 6 2 10-2" stroke-dasharray="3 3" opacity="0.5" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">双源声波干涉 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">两个同频点源的扩散波前实时叠加：波程差为波长整数倍的方向同相增强、半波长相消，极坐标图给出 A(θ) 指向图样与相长/相消角。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-bubble">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="24" cy="26" r="9" />
+              <path d="M24 11a15 15 0 0115 15M24 41a15 15 0 01-15-15" opacity="0.5" stroke-linecap="round" />
+              <path d="M20 22a5 5 0 013 3" opacity="0.6" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">水下气泡共鸣 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">Minnaert 共鸣频率 f₀ = (1/2πr)·√(3γP₀/ρ) 的气泡脉动与辐射动画，f₀ ∝ 1/r 实时重算，附对数扫频响应与半功率带宽。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-refraction">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 40h40" stroke-linecap="round" />
+              <path d="M8 36c6-1 12-8 32-20" stroke-linecap="round" />
+              <path d="M8 36L40 10" stroke-dasharray="2 3" opacity="0.4" />
+              <path d="M38 8v9M34.5 12.5L38 9l3.5 3.5" opacity="0.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">温度梯度声折射 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">声速随高度线性变化时声线束的弯曲动画：逆温层中声线折返、温度递减时地面形成声影区，折返点高度 z_tp = c₀(secθ₀−1)/g。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/sim-radiation">
+          <span class="mc-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 5v38" stroke-dasharray="2 3" opacity="0.4" />
+              <ellipse cx="24" cy="24" rx="8" ry="17" />
+              <circle cx="24" cy="24" r="2" fill="currentColor" stroke="none" />
+            </svg>
+          </span>
+          <span class="mc-body">
+            <span class="mc-title">声源辐射指向性 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">单极子全指向、偶极子 8 字形、四极子四叶草的极坐标指向图与受指向性调制的径向扩散动画，附探测点时域波形与指向性指数 DI。</span>
+          </span>
+        </a>
       </div>
     </div>
 
@@ -829,9 +887,9 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器</strong> 七个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距。</li>
+        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。</li>
-        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 34 个文件 / 2130+ 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
+        <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 40 个文件 / 2526 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
       </ul>
     </section>
@@ -4547,6 +4605,10 @@
   <section class="view" id="view-sim-wedge" data-view="sim-wedge" hidden></section>
   <section class="view" id="view-sim-tube" data-view="sim-tube" hidden></section>
   <section class="view" id="view-sim-echo" data-view="sim-echo" hidden></section>
+  <section class="view" id="view-sim-interference" data-view="sim-interference" hidden></section>
+  <section class="view" id="view-sim-bubble" data-view="sim-bubble" hidden></section>
+  <section class="view" id="view-sim-refraction" data-view="sim-refraction" hidden></section>
+  <section class="view" id="view-sim-radiation" data-view="sim-radiation" hidden></section>
 </main>
 
 <footer class="site-footer">
@@ -4649,6 +4711,14 @@
 <script src="js/view-sim-tube.js"></script>
 <script src="js/sim-echo.js"></script>
 <script src="js/view-sim-echo.js"></script>
+<script src="js/sim-interference.js"></script>
+<script src="js/view-sim-interference.js"></script>
+<script src="js/sim-bubble.js"></script>
+<script src="js/view-sim-bubble.js"></script>
+<script src="js/sim-refraction.js"></script>
+<script src="js/view-sim-refraction.js"></script>
+<script src="js/sim-radiation.js"></script>
+<script src="js/view-sim-radiation.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/search.js"></script>
 <script src="js/site-stats.js"></script>

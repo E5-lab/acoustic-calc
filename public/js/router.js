@@ -69,7 +69,11 @@
     'sim-micarray': 'view-sim-micarray',
     'sim-wedge': 'view-sim-wedge',
     'sim-tube': 'view-sim-tube',
-    'sim-echo': 'view-sim-echo'
+    'sim-echo': 'view-sim-echo',
+    'sim-interference': 'view-sim-interference',
+    'sim-bubble': 'view-sim-bubble',
+    'sim-refraction': 'view-sim-refraction',
+    'sim-radiation': 'view-sim-radiation'
   };
 
   var TITLES = {
@@ -117,7 +121,11 @@
     'sim-micarray': '麦克风阵列波束模拟器 · 声学计算工具箱',
     'sim-wedge': '消声室吸声楔模拟器 · 声学计算工具箱',
     'sim-tube': '声阻抗管模拟器 · 声学计算工具箱',
-    'sim-echo': '回声测距模拟器 · 声学计算工具箱'
+    'sim-echo': '回声测距模拟器 · 声学计算工具箱',
+    'sim-interference': '双源声波干涉模拟器 · 声学计算工具箱',
+    'sim-bubble': '水下气泡共鸣模拟器 · 声学计算工具箱',
+    'sim-refraction': '温度梯度声折射模拟器 · 声学计算工具箱',
+    'sim-radiation': '声源辐射指向性模拟器 · 声学计算工具箱'
   };
 
   // 视图挂载器（首次进入时初始化，之后仅刷新）
@@ -165,7 +173,11 @@
     { route: 'sim-micarray', get: function () { return window.SimMicarrayView; } },
     { route: 'sim-wedge', get: function () { return window.SimWedgeView; } },
     { route: 'sim-tube', get: function () { return window.SimTubeView; } },
-    { route: 'sim-echo', get: function () { return window.SimEchoView; } }
+    { route: 'sim-echo', get: function () { return window.SimEchoView; } },
+    { route: 'sim-interference', get: function () { return window.SimInterferenceView; } },
+    { route: 'sim-bubble', get: function () { return window.SimBubbleView; } },
+    { route: 'sim-refraction', get: function () { return window.SimRefractionView; } },
+    { route: 'sim-radiation', get: function () { return window.SimRadiationView; } }
   ];
 
   function parse() {
