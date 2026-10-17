@@ -71,6 +71,7 @@
           <a href="#/smallroom" data-route="smallroom"><span class="nm-t">小房间与室内声场</span><small class="nm-d">简正频率 · Bonello · 房间常数 · 临界距离</small></a>
           <a href="#/diffuser" data-route="diffuser"><span class="nm-t">扩散体设计</span><small class="nm-d">QRD/PRD/MLS/2D · Skyline/Binary/Wave/Fractal</small></a>
           <a href="#/insdesign" data-route="insdesign"><span class="nm-t">隔声与撞击声进阶</span><small class="nm-d">质量定律+吻合 · 双层共振 · 隔声罩 · 浮筑 · 侧向</small></a>
+          <a href="#/impact" data-route="impact"><span class="nm-t">撞击声隔声评价</span><small class="nm-d">Ln,w 单级评定 · 归一化/标准化 · 楼板构造参考</small></a>
         </div>
       </div>
 
@@ -99,6 +100,8 @@
           <a href="#/vibeval" data-route="vibeval"><span class="nm-t">振动评价</span><small class="nm-d">振动级换算 · ISO 2631 计权/aw · VDV · GB 10070</small></a>
           <a href="#/hvacnoise" data-route="hvacnoise"><span class="nm-t">设备与管道声学</span><small class="nm-d">设备噪声→房间Lp · 风管衰减 · 声功率测定</small></a>
           <a href="#/noisemap" data-route="noisemap"><span class="nm-t">环境噪声进阶</span><small class="nm-d">等值线图 · 交通噪声 · GB 3096/55016 判定</small></a>
+          <a href="#/emission" data-route="emission"><span class="nm-t">噪声排放限值对照</span><small class="nm-d">GB 12348/22337/12523 厂界·施工界噪声</small></a>
+          <a href="#/traffic" data-route="traffic"><span class="nm-t">交通与航空噪声</span><small class="nm-d">公路 · 铁路 · 机场 Ldn/NEF 预测</small></a>
           <a href="#/spectrum" data-route="spectrum"><span class="nm-t">频谱分析与计权</span><small class="nm-d">倍频程归并 · A/C/Z 计权 · NR / NC 评级</small></a>
         </div>
       </div>
@@ -251,7 +254,7 @@
 
     <div class="section-head">
       <h2>功能模块</h2>
-      <p class="hint">共 8 个分组、58 个模块，与顶栏二级菜单一一对应</p>
+<p class="hint">共 8 个分组、61 个模块，与顶栏二级菜单一一对应</p>
     </div>
 
     <div class="module-group">
@@ -457,7 +460,14 @@
             <span class="mc-desc">单层质量定律与吻合频率、双层构造（质量-空气-质量共振）隔声低谷与腔体增益、隔声罩/围护插入损失、浮筑楼板撞击声改进、组合与侧向传声能量叠加。</span>
           </span>
         </a>
-        <a class="module-card" href="#/diffuser">
+
+        <a class="module-card" href="#/impact">
+          <span class="mc-icon" aria-hidden="true"><svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 34h32M8 22h14M8 18h20M8 10h26" /><path d="M32 16l8 8M40 16l-8 8" stroke-width="2.6" /></svg></span>
+          <span class="mc-body">
+            <span class="mc-title">撞击声隔声评价 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">计权撞击声压级 Ln,w（ISO 717-2 / GB/T 50121）单级评定、归一化/标准化换算、楼板构造参考库、GB 50118 / GB 55038 限值判定。</span>
+          </span>
+        </a>        <a class="module-card" href="#/diffuser">
           <span class="mc-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 38h36" stroke-linecap="round" />
@@ -593,7 +603,20 @@
           </span>
         </a>
       </div>
-    </div>
+            <a class="module-card" href="#/emission">
+          <span class="mc-icon" aria-hidden="true"><svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 30h6v6H8zM18 22h6v14h-6zM28 14h6v22h-6zM38 6h4v30h-4z" /></svg></span>
+          <span class="mc-body">
+            <span class="mc-title">噪声排放限值对照 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">GB 12348 厂界 / GB 22337 社会生活 / GB 12523 施工场界 / GB 3096 功能区；限值库内置 + 外部配置。</span>
+          </span>
+        </a>
+        <a class="module-card" href="#/traffic">
+          <span class="mc-icon" aria-hidden="true"><svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 38V22l14-10h8l14 10v16z" /><path d="M20 14v22M28 14v22" stroke-dasharray="3 3" /><path d="M14 30h20M14 34h20" /></svg></span>
+          <span class="mc-body">
+            <span class="mc-title">交通与航空噪声 <span class="mc-tag live">可用</span></span>
+            <span class="mc-desc">公路线声源 / 铁路轮轨简化 / 机场 Ldn · NEF 预测，工程估算模型。</span>
+          </span>
+        </a></div>
 
     <div class="module-group">
       <div class="group-label">电声与听觉</div>
@@ -1058,7 +1081,7 @@
       <h2>使用说明</h2>
       <ul>
         <li>顶栏按 <strong>基础计算 / 材料与构件 / 房间声学 / 环境与振动 / 心理与声品质 / 模拟与可听化 / 声学模拟器 / 现场实测</strong> 八个分组收纳模块：鼠标悬停（触屏点击）分组名即可展开二级菜单，键盘 <kbd>Esc</kbd> 或点击空白处收起。</li>
-        <li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/sim-sonar</code> 声呐方程、<code>#/sim-sea</code> 统计能量分析、<code>#/sim-fourier</code> 傅里叶合成、<code>#/sim-ut</code> 超声测厚、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
+<li>也可用地址栏直接访问：<code>#/levels</code> 声压级叠加、<code>#/noise</code> 噪声评价、<code>#/db</code> 单位换算、<code>#/handbook</code> 公式与术语手册、<code>#/perforation</code> 穿孔率、<code>#/absorber</code> 吸声阻抗、<code>#/absdesign</code> 吸声结构设计、<code>#/muffler</code> 消声器、<code>#/rt60</code> 混响时间、<code>#/stc</code> 墙体隔声、<code>#/leakage</code> 孔洞缝隙与门窗隔声、<code>#/impact</code> 撞击声隔声评价、<code>#/roomq</code> 厅堂扩声、<code>#/smallroom</code> 小房间与室内声场、<code>#/insdesign</code> 隔声与撞击声进阶、<code>#/hvacnoise</code> 设备与管道声学、<code>#/noisemap</code> 环境噪声进阶、<code>#/emission</code> 排放限值对照、<code>#/traffic</code> 交通与航空噪声、<code>#/sim</code> 室内音质模拟彩图、<code>#/simfx</code> 声场粒子动画、<code>#/aural</code> 声学可听化、<code>#/barrier</code> 声屏障、<code>#/vibration</code> 减振计算、<code>#/env</code> 环境噪声、<code>#/exposure</code> 职业噪声暴露、<code>#/vibeval</code> 振动评价、<code>#/psycho</code> 心理声学、<code>#/pasystem</code> 电声与语言清晰度、<code>#/speakerbox</code> 扬声器箱体设计、<code>#/crossover</code> 分频器设计、<code>#/linearray</code> 线阵列覆盖设计、<code>#/wave</code> 波动与乐音计算、<code>#/audiolevel</code> 音频电平与阻抗、<code>#/spectrum</code> 频谱分析与计权、<code>#/diffuser</code> 扩散体设计、<code>#/hearing</code> 听觉与听阈、<code>#/iso3382</code> 厅堂音质参数量测、<code>#/sim-helmholtz</code> 亥姆霍兹共鸣器、<code>#/sim-impedance</code> 声阻抗反射透射、<code>#/sim-octave</code> 倍频程频谱、<code>#/sim-hvac</code> HVAC 消声器、<code>#/sim-fxlms</code> 主动降噪、<code>#/sim-drone</code> 无人机噪声、<code>#/sim-micarray</code> 麦克风阵列、<code>#/sim-wedge</code> 消声室吸声楔、<code>#/sim-tube</code> 声阻抗管、<code>#/sim-echo</code> 回声测距、<code>#/sim-interference</code> 双源干涉、<code>#/sim-bubble</code> 水下气泡共鸣、<code>#/sim-refraction</code> 温度梯度折射、<code>#/sim-radiation</code> 辐射指向性、<code>#/sim-sonar</code> 声呐方程、<code>#/sim-sea</code> 统计能量分析、<code>#/sim-fourier</code> 傅里叶合成、<code>#/sim-ut</code> 超声测厚、<code>#/splmeter</code> 声级计实测、<code>#/rta</code> 实时频谱分析、<code>#/siggen</code> 测量信号发生器、<code>#/irt60</code> 混响时间实测、<code>#/stipa</code> 语言传输指数实测。</li>
         <li>模块之间可配合使用：声压级叠加模块可把多台设备的噪声合成为总声级；吸声阻抗算出的吸声系数可填入混响时间与室内音质模拟模块；噪声评价得到的频谱可用于判断是否需要做隔声或屏障处理；减振计算得到的效率不足时，可先降扰动频率（减振基础与配重）或加大静态压缩量；环境噪声实测序列可先经单位换算统一量纲再做评价；厅堂音质模块可由实测衰减曲线求参数，室内音质模拟则可预测尚未建成房间的声场分布。现场实测分组内部即可闭环：<code>#/siggen</code> 产生扫频 → <code>#/irt60</code> 播放并录音得 RT60；<code>#/stipa</code> 实测语言传输指数，与 <code>#/pasystem</code> 的预测值互相印证；<code>#/rta</code> 看频谱形态，<code>#/splmeter</code> 读总声级与 Leq。</li>
         <li>所有计算在本地浏览器完成，不上传任何数据；各模块内核均有单元测试覆盖（<code>tests/</code>，Node 运行，共 40 个文件 / 2526 条断言全部通过）。声学可听化的音频为浏览器本地合成与播放，上传的音频不会离开本机。</li>
         <li>计算结果供工程估算与方案比选使用，正式验收请以标准方法、计量仪器与合同/规范要求为准。</li>
@@ -4225,6 +4248,40 @@
     </section>
   </section>
 
+  <section class="view" id="view-impact" data-view="impact" hidden>
+    <div class="page-head">
+      <h2>撞击声隔声评价</h2>
+      <p class="hint">计权撞击声压级 Ln,w（ISO 717-2 / GB/T 50121）· 归一化/标准化换算 · 楼板构造参考 · GB 50118 / GB 55038 限值判定</p>
+    </div>
+
+    <section class="card">
+      <h3>评价模式与输入</h3>
+      <div class="btn-row">
+        <button id="imModeCon" class="btn primary" type="button">楼板构造参考</button>
+        <button id="imModeSpec" class="btn" type="button">输入实测频谱</button>
+      </div>
+      <div id="imConPanel" class="field-row">
+        <div class="field field-auto"><label for="imConSel">楼板构造（估算频谱）</label><select id="imConSel"></select></div>
+      </div>
+      <div id="imSpecPanel" class="field-row" hidden></div>
+      <div id="imBands" class="freq-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px 12px;margin-top:10px"></div>
+      <div class="field-row" style="margin-top:10px">
+        <div class="field"><label for="imA">接收室吸声量 A (m²，可空)</label><input id="imA" type="number" value="10" step="1" /></div>
+        <div class="field"><label for="imT">接收室混响 T (s，可空)</label><input id="imT" type="number" value="0.5" step="0.05" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="imBtn" class="btn primary" type="button">评定 Ln,w</button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>评价结果</h3>
+      <div id="imResult" class="result-line"></div>
+    </section>
+
+    <section class="card">
+      <h3>限值对照（GB 50118-2010 / GB 55038-2025）</h3>
+      <div id="imLimits"></div>
+    </section>
+  </section>
   <section class="view" id="view-hvacnoise" data-view="hvacnoise" hidden>
     <div class="page-head">
       <h2>设备与管道声学</h2>
@@ -4929,6 +4986,79 @@
   <section class="view" id="view-hearing" data-view="hearing" hidden></section>
   <section class="view" id="view-iso3382" data-view="iso3382" hidden></section>
 
+  <section class="view" id="view-emission" data-view="emission" hidden>
+    <div class="page-head">
+      <h2>环境噪声排放限值对照</h2>
+      <p class="hint">GB 12348 工业企业厂界 · GB 22337 社会生活噪声 · GB 12523 施工场界 · GB 3096 功能区；限值库内置 + data/limits.json 可外部配置</p>
+    </div>
+
+    <section class="card">
+      <h3>标准与实测输入</h3>
+      <div class="field-row">
+        <div class="field field-auto"><label for="emStd">排放标准</label><select id="emStd"></select></div>
+        <div class="field field-auto" id="emZoneRow"><label for="emZone">声环境功能区类别</label><select id="emZone"></select></div>
+        <div class="field"><label for="emDay">昼间实测 Leq (dB)</label><input id="emDay" type="number" placeholder="如 58" /></div>
+        <div class="field"><label for="emNight">夜间实测 Leq (dB)</label><input id="emNight" type="number" placeholder="如 50" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="emBtn" class="btn primary" type="button">判定</button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>判定结果</h3>
+      <div id="emResult" class="result-line"></div>
+    </section>
+
+    <section class="card">
+      <h3>限值表</h3>
+      <div id="emTable"></div>
+      <p class="hint">限值数据内置在 public/js/limit-data.js；部署后可直接编辑 public/data/limits.json 覆盖（同 key 整体替换，无需改代码）。</p>
+    </section>
+  </section>
+  <section class="view" id="view-traffic" data-view="traffic" hidden>
+    <div class="page-head">
+      <h2>交通与航空噪声预测</h2>
+      <p class="hint">公路线声源简化 · 铁路轮轨简化 · 机场 Ldn/NEF；工程估算模型，正式评价请按 HJ 2.4-2021 等现行导则</p>
+    </div>
+
+    <section class="card">
+      <h3>公路交通噪声（线声源简化）</h3>
+      <p class="hint">L_eq ≈ LwA + 10lg(Q) − 30 − 10lg(v) − 10lg(2πr)，Q 辆/h、v km/h、r m</p>
+      <div class="field-row">
+        <div class="field field-auto"><label for="tfKind">车型</label>
+          <select id="tfKind"><option value="small">小型车</option><option value="medium">中型车</option><option value="heavy">大型车</option></select></div>
+        <div class="field"><label for="tfV">车速 (km/h)</label><input id="tfV" type="number" value="60" /></div>
+        <div class="field"><label for="tfQ">车流量 (辆/h)</label><input id="tfQ" type="number" value="100" /></div>
+        <div class="field"><label for="tfR">预测距离 (m)</label><input id="tfR" type="number" value="10" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="trRoadBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="trRoadOut" class="result-line"></div>
+    </section>
+
+    <section class="card">
+      <h3>铁路噪声（轮轨简化）</h3>
+      <p class="hint">Lp = 65 + 30·lg(v/100) − 10·lg(r/25)（25 m、100 km/h 参考）；L_eq = Lp + 10·lg(N·t/3600)</p>
+      <div class="field-row">
+        <div class="field"><label for="tlV">车速 (km/h)</label><input id="tlV" type="number" value="100" /></div>
+        <div class="field"><label for="tlR">预测距离 (m)</label><input id="tlR" type="number" value="25" /></div>
+        <div class="field"><label for="tlN">列车对数 (列/h)</label><input id="tlN" type="number" value="4" /></div>
+        <div class="field"><label for="tlT">通过等效 (s/列)</label><input id="tlT" type="number" value="15" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="trRailBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="trRailOut" class="result-line"></div>
+    </section>
+
+    <section class="card">
+      <h3>机场噪声（简化）</h3>
+      <p class="hint">Ldn = 10·lg[(Nd + 10·Nn)·10^(SEL/10) / 86400]；NEF ≈ SEL + 10·lg(N) − 88</p>
+      <div class="field-row">
+        <div class="field"><label for="taSEL">单次事件级 SEL (dB)</label><input id="taSEL" type="number" value="90" /></div>
+        <div class="field"><label for="taNd">昼间架次 (次)</label><input id="taNd" type="number" value="100" /></div>
+        <div class="field"><label for="taNn">夜间架次 (次)</label><input id="taNn" type="number" value="10" /></div>
+        <div class="field field-auto"><label>&nbsp;</label><button id="trAirBtn" class="btn primary" type="button">计算</button></div>
+      </div>
+      <div id="trAirOut" class="result-line"></div>
+    </section>
+  </section>
   <section class="view" id="view-spectrum" data-view="spectrum" hidden>
     <div class="page-head">
       <h2>频谱分析与计权</h2>
@@ -5164,10 +5294,17 @@
 <script src="js/view-smallroom.js"></script>
 <script src="js/absdesign.js"></script>
 <script src="js/view-absdesign.js"></script>
+<script src="js/limit-data.js"></script>
+<script src="js/impact.js"></script>
 <script src="js/view-insdesign.js"></script>
+<script src="js/view-impact.js"></script>
 <script src="js/view-hvacnoise.js"></script>
 <script src="js/view-pasystem.js"></script>
 <script src="js/view-noisemap.js"></script>
+<script src="js/emission.js"></script>
+<script src="js/view-emission.js"></script>
+<script src="js/traffic.js"></script>
+<script src="js/view-traffic.js"></script>
 <script src="js/view-speakerbox.js"></script>
 <script src="js/view-crossover.js"></script>
 <script src="js/view-linearray.js"></script>
