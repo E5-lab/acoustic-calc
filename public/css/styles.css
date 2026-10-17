@@ -426,7 +426,23 @@ kbd {
   font-weight: 600;
   letter-spacing: 0.05em;
 }
-.nav-group.nav-more > .nav-menu { left: auto; right: 0; }
+/* 「更多」面板：fixed 视口居中（与 .topbar-inner 内容容器同轴），
+   保证左缘不超过页面内容容器左缘；top 由 nav.js 按按钮底缘精确写入。
+   注意覆写三处状态 transform（基础/open/hover），居中位移不可丢。 */
+.nav-group.nav-more > .nav-menu {
+  position: fixed;
+  top: 66px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) translateY(-6px);
+}
+.nav-group.nav-more.open > .nav-menu,
+.nav-group.nav-more:focus-within > .nav-menu {
+  transform: translateX(-50%);
+}
+@media (hover: hover) {
+  .nav-group.nav-more:hover > .nav-menu { transform: translateX(-50%); }
+}
 
 /* --------------- 模块页面包屑（与二级菜单呼应） --------------- */
 .crumb {

@@ -230,6 +230,14 @@
     }
     if (list.length) buildMoreMenu(list);
     else more.hidden = true;
+
+    /* 「更多」面板为 fixed 视口居中定位（见 styles.css），
+       top 按按钮底缘精确写入（sticky 顶栏 top 恒为 0，视口坐标即面板坐标） */
+    var mBtn = more.querySelector('.nav-parent');
+    var mMenu = more.querySelector('.nav-menu');
+    if (mBtn && mMenu) {
+      mMenu.style.top = Math.round(mBtn.getBoundingClientRect().bottom + 8) + 'px';
+    }
   }
 
   function queueLayout() {
