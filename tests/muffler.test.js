@@ -83,6 +83,54 @@ var rl2 = M.requiredLength({
 });
 ok('A 计权目标反算 ok', rl2.ok && rl2.mode === 'aweighted' && rl2.length > 0 && rl2.length <= 20);
 
+console.log('控制频带动态提示（binding）');
+ok('binding 给出计算所得长度 1.36 m', rl.binding.indexOf('1.36') >= 0);
+ok('binding 指出更严频带 63 Hz（需 7.5 m）', rl.binding.indexOf('63') >= 0 && rl.binding.indexOf('7.5') >= 0);
+ok('binding 不再含写死的 2.2 m', rl.binding.indexOf('2.2') < 0);
+var rl3 = M.requiredLength({
+  form: 'splitter', blades: 3, gap: 0.15, height: 1,
+  alpha: [0.2, 0.45, 0.75, 0.9, 0.95, 0.95, 0.95], formula: 'gb',
+  targetFreq: 63, targetLoss: 20
+});
+ok('控制频带即最严时给出相应说明', rl3.ok && rl3.binding.indexOf('该频带即最严') >= 0);
+
+console.log('φ(α₀) 反演 alphaFromPhi');
+approx('GB 反演：φ=0.70 → α₀=0.50', M.alphaFromPhi(0.70, 'gb'), 0.50, 1e-9);
+approx('GB 反演：φ=1.00 → α₀=0.70', M.alphaFromPhi(1.00, 'gb'), 0.70, 1e-9);
+approx('GB 反演：φ=1.50 → α₀=0.90（平台段，含浮点容差）', M.alphaFromPhi(1.50, 'gb'), 0.90, 1e-9);
+ok('GB 反演：φ=1.55 超表上限返回 null', M.alphaFromPhi(1.55, 'gb') == null);
+ok('GB 反演：φ≤0 返回 null', M.alphaFromPhi(0, 'gb') == null && M.alphaFromPhi(-1, 'gb') == null);
+approx('GB 反演回环：φ(0.85)=1.35 → α₀=0.85', M.alphaFromPhi(M.phiGB(0.85), 'gb'), 0.85, 1e-9);
+approx('别洛夫反演回环：φ(0.5) → α₀=0.5', M.alphaFromPhi(M.phiPerov(0.5), 'perov'), 0.5, 1e-9);
+(function () {
+  var q = 1.5 / 4.34, r = (1 - q) / (1 + q);
+  approx('别洛夫解析反演：α₀ = 1−[(1−φ/4.34)/(1+φ/4.34)]²', M.alphaFromPhi(1.5, 'perov'), 1 - r * r, 1e-12);
+})();
+
+console.log('反算选材 recommendMaterial');
+// 圆管 d=0.3 → P/S = 4/d = 13.333，l=1，目标 500Hz/20dB → φ_req = 20/13.333 = 1.5（恰为 GB 表上限）
+var rm = M.recommendMaterial({ form: 'round', d: 0.3, length: 1, targetFreq: 500, targetLoss: 20 });
+ok('反算选材 ok', rm.ok);
+approx('φ_req = 20/(13.333·1) = 1.5', rm.phiReq, 1.5, 1e-9);
+approx('α₀_req = 0.90（GB 表上限）', rm.alphaReq, 0.9, 1e-9);
+ok('仅 gw32-200（α₀@500=0.90）达标', rm.candidates.length === 1 && rm.candidates[0].id === 'gw32-200');
+approx('候选可达消声量 dL = 1.5·13.333·1 = 20', rm.candidates[0].dL, 20, 1e-9);
+ok('其余 8 种未达标', rm.insufficient.length === 8);
+ok('未达标项按可达消声量降序', rm.insufficient[0].dL >= rm.insufficient[rm.insufficient.length - 1].dL);
+ok('缺目标频带报错', M.recommendMaterial({ form: 'round', d: 0.3, length: 1, targetLoss: 10 }).ok === false);
+ok('目标消声量 ≤ 0 报错', M.recommendMaterial({ form: 'round', d: 0.3, length: 1, targetFreq: 500, targetLoss: 0 }).ok === false);
+ok('目标频带非法报错', M.recommendMaterial({ form: 'round', d: 0.3, length: 1, targetFreq: 300, targetLoss: 10 }).ok === false);
+var rmP = M.recommendMaterial({ form: 'round', d: 0.3, length: 1, targetFreq: 500, targetLoss: 20, formula: 'perov' });
+approx('别洛夫取法 α₀ 需求与解析反演一致', rmP.alphaReq, M.alphaFromPhi(1.5, 'perov'), 1e-9);
+// 高频失效折减：d=0.6 → fc = 1.85·343/0.6 = 1057.6 < 4000 → factor = √(fc/f)
+var rmHi = M.recommendMaterial({ form: 'round', d: 0.6, length: 1, targetFreq: 4000, targetLoss: 15 });
+ok('高频失效折减已触发', rmHi.ok && rmHi.limited === true);
+approx('折减系数 = max(0.3, √(fc/f))', rmHi.factor, Math.sqrt(rmHi.fc / 4000), 1e-9);
+approx('φ_req = 15/(PS·1·factor)', rmHi.phiReq, 15 / ((4 / 0.6) * rmHi.factor), 1e-9);
+ok('φ_req 超 GB 上限 → α₀ 不可得（null）', rmHi.alphaReq == null);
+ok('目标过高时候选为空', rmHi.candidates.length === 0);
+ok('全部材料落入未达标列表', rmHi.insufficient.length === M.MATERIALS.length);
+
 console.log('扩张室');
 // m=4（d1=0.2, d2=0.4），l=0.5，c=343
 var ex = M.expansion({ d1: 0.2, d2: 0.4, l: 0.5 });
@@ -143,6 +191,23 @@ var adv = M.advice({ form: 'round', d: 0.5, length: 1 });
 ok('大当量直径给出片式建议', adv.some(function (a) { return a.level === 'warn' && a.text.indexOf('片式') >= 0; }));
 var adv2 = M.advice({ form: 'round', d: 0.2, length: 1 });
 ok('小当量直径给出直管可行', adv2.some(function (a) { return a.level === 'ok'; }));
+
+console.log('反算选型界面守护');
+(function () {
+  var fs = require('fs');
+  var pathMod = require('path');
+  var html = fs.readFileSync(pathMod.join(__dirname, '..', 'public', 'index.html'), 'utf8');
+  var idxM = html.indexOf('id="view-muffler"');
+  var segM = html.slice(idxM, html.indexOf('id="view-smallroom"'));
+  var vjs = fs.readFileSync(pathMod.join(__dirname, '..', 'public', 'js', 'view-muffler.js'), 'utf8');
+  ok('index.html 含反算选型面板按钮', segM.indexOf('data-mf-panel="solve"') >= 0);
+  ok('index.html 含反算选型面板容器', segM.indexOf('data-panel="solve"') >= 0);
+  ['mfSolveF', 'mfSolveL', 'mfSolveLenBtn', 'mfSolveSrc', 'mfSolveIL', 'mfSolveILBtn', 'mfMatF', 'mfMatL', 'mfMatBtn'].forEach(function (id) {
+    ok('index.html 含 #' + id, segM.indexOf('id="' + id + '"') >= 0);
+  });
+  ok('视图绑定 solve 面板切换与三卡重算', vjs.indexOf('recalcSolve') >= 0 && vjs.indexOf('recalcSolveLen') >= 0 && vjs.indexOf('recalcSolveIL') >= 0 && vjs.indexOf('recalcSolveMat') >= 0);
+  ok('页面提示含反算选型说明', segM.indexOf('反算选型') >= 0);
+})();
 
 console.log('\n结果: ' + passed + ' 通过, ' + failed + ' 失败');
 process.exit(failed === 0 ? 0 : 1);

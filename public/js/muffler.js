@@ -311,10 +311,17 @@
         var li = p > 0 ? tLevel / (p * ch.PS) : null;
         return { f: f, alpha: alpha[i], phi: p, length: li, over: p > 0 && p < phi };
       });
+      var strict = rows.reduce(function (a, b) {
+        if (b.length == null) return a;
+        return (a == null || b.length > a.length) ? b : a;
+      }, null);
       return {
         ok: true, mode: 'band', targetFreq: tBand, targetLoss: tLevel,
         length: l, channel: ch, rows: rows, formula: formula,
-        binding: '控制频带为 ' + tBand + ' Hz（所需长度 2.2 m 以内的频带记为宽松）'
+        binding: strict && strict.f !== tBand
+          ? '控制频带为 ' + tBand + ' Hz，需 ' + round(l, 2) + ' m；若要求各频带同时达到 ' + tLevel +
+            ' dB，则应由最严频带 ' + strict.f + ' Hz 控制（需 ' + round(strict.length, 2) + ' m）'
+          : '控制频带为 ' + tBand + ' Hz，需 ' + round(l, 2) + ' m（各频带等目标下该频带即最严）'
       };
     }
 
@@ -350,6 +357,75 @@
     }
 
     return { ok: false, error: '请填写目标频带与目标消声量，或选择声源谱并填写目标 A 计权消声量' };
+  }
+
+  // φ(α₀) 反演：给定消声系数，反求所需的最小正入射吸声系数 α₀
+  //   GB 表：分段线性反演（α₀ ≥ 0.9 后 φ 恒为 1.5，超出表上限返回 null）
+  //   别洛夫式：解析反演 α₀ = 1 − [(1−φ/4.34)/(1+φ/4.34)]²
+  function alphaFromPhi(phi, formula) {
+    var p = num(phi);
+    if (p == null || p <= 0) return null;
+    if (formula === 'perov') {
+      var q = p / 4.34;
+      if (q >= 1) return 1;
+      var r = (1 - q) / (1 + q);
+      return 1 - r * r;
+    }
+    if (p > 1.5 + 1e-9) return null;         // GB 表 6.3.1 上限（留浮点容差）
+    for (var i = 1; i < GB_PHI.length; i++) {
+      if (p <= GB_PHI[i][1] + 1e-12) {
+        var x0 = GB_PHI[i - 1][0], y0 = GB_PHI[i - 1][1];
+        var x1 = GB_PHI[i][0], y1 = GB_PHI[i][1];
+        if (y1 === y0) return x0;             // 平台段：取平台起点
+        return x0 + (p - y0) / (y1 - y0) * (x1 - x0);
+      }
+    }
+    return 0.9;
+  }
+
+  // 反算选材：给定几何（含长度）与目标频带消声量，反求所需 φ / α₀，
+  // 并从 MATERIALS 中筛出达标候选（按达标余量从小到大排序，最省料者在前）
+  function recommendMaterial(o) {
+    o = o || {};
+    var ch = channel(o);
+    if (!ch.ok) return ch;
+    var tBand = num(o.targetFreq), tLevel = num(o.targetLoss);
+    if (tBand == null) return { ok: false, error: '请选择目标频带' };
+    if (tLevel == null || tLevel <= 0) return { ok: false, error: '请填写目标消声量（> 0 dB）' };
+    var idx = BANDS.indexOf(tBand);
+    if (idx < 0) return { ok: false, error: '目标频带需为 ' + BANDS.join('、') + ' Hz 之一' };
+    var formula = o.formula === 'perov' ? 'perov' : 'gb';
+
+    var factor = 1, limited = false;
+    if (tBand > ch.fc) {
+      factor = Math.max(0.3, Math.sqrt(ch.fc / tBand));
+      limited = true;
+    }
+    var phiReq = tLevel / (ch.PS * ch.length * factor);
+    var alphaReq = alphaFromPhi(phiReq, formula);
+
+    var candidates = [], insufficient = [];
+    MATERIALS.forEach(function (mat) {
+      var a = num(mat.alpha[idx]);
+      if (a == null) return;
+      var phi = formula === 'perov' ? phiPerov(a) : phiGB(a);
+      var dL = phi * ch.PS * ch.length * factor;
+      var rec = { id: mat.id, name: mat.name, alpha: a, phi: phi, dL: dL, pass: dL >= tLevel - 1e-9 };
+      (rec.pass ? candidates : insufficient).push(rec);
+    });
+    candidates.sort(function (x, y) { return x.dL - y.dL; });
+    insufficient.sort(function (x, y) { return y.dL - x.dL; });
+
+    return {
+      ok: true, targetFreq: tBand, targetLoss: tLevel, formula: formula,
+      phiReq: phiReq, alphaReq: alphaReq, factor: factor, limited: limited,
+      fc: ch.fc, channel: ch, candidates: candidates, insufficient: insufficient,
+      note: alphaReq == null
+        ? '所需消声系数 φ = ' + round(phiReq, 2) + ' 超出' + (formula === 'gb' ? 'GB/T 50087 表 6.3.1 上限 1.5' : '别洛夫式可达范围（φ ≤ 4.34）') +
+          '，需加长消声器、增大 P/S（如改片式结构）或改用抗性结构'
+        : '达到 ' + tLevel + ' dB @ ' + tBand + ' Hz 需 φ ≥ ' + round(phiReq, 2) +
+          '（对应 α₀ ≥ ' + round(alphaReq, 2) + '）；下表按达标余量从小到大排序'
+    };
   }
 
   // ------------------------------ 二、抗性：扩张室 ------------------------------
@@ -606,6 +682,7 @@
     aWeight: aWeight, sumDb: sumDb, phiGB: phiGB, phiPerov: phiPerov,
     GB_PHI: GB_PHI,
     channel: channel, resistive: resistive, requiredLength: requiredLength,
+    alphaFromPhi: alphaFromPhi, recommendMaterial: recommendMaterial,
     expansion: expansion, resonator: resonator,
     pressureLoss: pressureLoss, combined: combined, advice: advice,
     sourceById: sourceById, formById: formById

@@ -2,11 +2,13 @@
  * view-muffler.js — 消声器计算视图
  * 依赖：window.Muffler（内核）、window.MiniChart（绘图）
  *
- * 三个面板：
+ * 四个面板：
  *   res    阻性消声器：GB/T 50087-2013 式 6.3.1（φ(α₀)·P·l/S）+ 别洛夫式对照，
  *          含上限截止频率高频失效折减、流速校核、压力损失与选型建议
  *   react  抗性消声器：扩张室（一维平面波解）与共振腔（Helmholtz 旁支式）
  *   combo  组合验算：阻性 + 抗性逐频带相加 → A 计权插入损失（复用前两面板参数）
+ *   solve  反算选型：目标频带消声量 → 所需长度；声源谱+目标 A 计权 IL → 所需长度；
+ *          已知长度 → 所需 φ/α₀ 与内置材料候选（几何/材料/φ 取法复用 res 面板）
  */
 (function () {
   'use strict';
@@ -292,6 +294,121 @@
     });
   }
 
+  // ------------------------------ 面板 4：反算选型 ------------------------------
+  // 几何与材料取自「阻性消声器」面板（P/S、f_c、α₀、φ 取法），
+  // 在 res 面板改完参数切回本面板即自动按新参数重算
+  function solveGeom() {
+    var o = readGeometry();
+    o.alpha = readAlpha();
+    o.formula = $('mfFormula').value;
+    return o;
+  }
+
+  // A：目标频带 + 目标消声量 → 所需有效长度
+  function recalcSolveLen() {
+    var msg = $('mfSolveLenMsg');
+    var o = solveGeom();
+    o.targetFreq = parseFloat($('mfSolveF').value);
+    o.targetLoss = pf('mfSolveL');
+    var r = M.requiredLength(o);
+    if (!r.ok) {
+      msg.innerHTML = callout('error', r.error);
+      $('mfSolveLenStats').innerHTML = '';
+      $('mfSolveLenOut').innerHTML = '';
+      return;
+    }
+    msg.innerHTML = callout('info', r.binding);
+    $('mfSolveLenStats').innerHTML =
+      stat('所需有效长度 l', num(r.length, 2), 'm', 'l = ΔL/(φ(α₀)·P/S)') +
+      stat('饰面周长比 P/S', num(r.channel.PS, 2), 'm⁻¹', '取自阻性面板几何') +
+      stat('上限截止频率 f_c', num(r.channel.fc, 0), 'Hz', 'f_c = 1.85c/D');
+    $('mfSolveLenOut').innerHTML = table(
+      ['倍频带 (Hz)', 'α₀', 'φ(α₀)', '等目标所需长度 l (m)', '备注'],
+      r.rows.map(function (row) {
+        return [
+          cell('<span class="mono">' + row.f + '</span>'),
+          cell('<span class="mono">' + num(row.alpha, 2) + '</span>'),
+          cell('<span class="mono">' + num(row.phi, 2) + '</span>'),
+          row.length == null
+            ? cell('—', 'muted')
+            : cell('<span class="mono">' + (row.f === r.targetFreq ? '<strong>' + num(row.length, 2) + '</strong>' : num(row.length, 2)) + '</span>'),
+          row.f === r.targetFreq
+            ? cell('控制频带', 'ok')
+            : (row.over ? cell('需更长才能等量达标', 'warn') : cell('—', 'muted'))
+        ];
+      }), 'wide');
+  }
+
+  // B：声源谱 + 目标 A 计权插入损失 → 所需有效长度
+  function recalcSolveIL() {
+    var msg = $('mfSolveILMsg');
+    var src = M.sourceById($('mfSolveSrc').value);
+    var o = solveGeom();
+    if (src) o.sourceLevels = src.levels.slice();
+    o.targetIL = pf('mfSolveIL');
+    var r = M.requiredLength(o);
+    if (!r.ok) {
+      msg.innerHTML = callout('error', r.error);
+      $('mfSolveILStats').innerHTML = '';
+      return;
+    }
+    msg.innerHTML = callout('info', r.note + ' 声源谱：' + (src ? src.name : '—') + '。');
+    $('mfSolveILStats').innerHTML =
+      stat('所需有效长度 l', num(r.length, 2), 'm', '二分区间 0.05 ~ 20 m') +
+      stat('可达 A 计权 IL', num(r.achievableIL, 1), 'dB(A)', '目标 ' + num(r.targetIL, 1) + ' dB') +
+      stat('饰面周长比 P/S', num(r.channel.PS, 2), 'm⁻¹', '取自阻性面板几何');
+  }
+
+  // C：已知长度 + 目标频带消声量 → 所需 φ/α₀ 与材料候选
+  function recalcSolveMat() {
+    var msg = $('mfMatMsg');
+    var o = readGeometry();
+    o.formula = $('mfFormula').value;
+    o.targetFreq = parseFloat($('mfMatF').value);
+    o.targetLoss = pf('mfMatL');
+    var r = M.recommendMaterial(o);
+    if (!r.ok) {
+      msg.innerHTML = callout('error', r.error);
+      $('mfMatStats').innerHTML = '';
+      $('mfMatOut').innerHTML = '';
+      return;
+    }
+    msg.innerHTML = callout(r.alphaReq == null ? 'warn' : 'info', r.note);
+    $('mfMatStats').innerHTML =
+      stat('所需消声系数 φ', num(r.phiReq, 2), '', r.alphaReq == null ? '超出可选范围' : '对应 α₀ ≥ ' + num(r.alphaReq, 2)) +
+      stat('合格候选材料', r.candidates.length, '种', r.insufficient.length + ' 种未达标') +
+      stat('上限截止频率 f_c', num(r.fc, 0), 'Hz', r.limited ? '目标频带已按高频失效折减 ×' + num(r.factor, 2) : '未触发高频失效折减');
+
+    var head = ['材料', 'α₀ @' + r.targetFreq + ' Hz', 'φ(α₀)', '可达消声量 ΔL (dB)', '余量 (dB)'];
+    function matRow(c) {
+      return [
+        cell(c.name),
+        cell('<span class="mono">' + num(c.alpha, 2) + '</span>'),
+        cell('<span class="mono">' + num(c.phi, 2) + '</span>'),
+        cell('<span class="mono"><strong>' + num(c.dL, 1) + '</strong></span>'),
+        cell('<span class="mono">' + (c.dL - r.targetLoss >= 0 ? '+' : '') + num(c.dL - r.targetLoss, 1) + '</span>', c.pass ? 'ok' : 'warn')
+      ];
+    }
+    var html = '';
+    if (r.candidates.length) {
+      html += '<h3 class="sub-head">合格候选（按余量从小到大，最省料者在前）</h3>' +
+        table(head, r.candidates.map(matRow), 'wide');
+    } else {
+      html += callout('warn', '当前长度与几何下，内置材料均达不到 ' + r.targetLoss + ' dB @ ' + r.targetFreq + ' Hz；建议加长消声器、增大 P/S（如改片式）或改用抗性结构。');
+    }
+    if (r.insufficient.length) {
+      html += '<h3 class="sub-head">未达标（' + r.insufficient.length + ' 种，可达消声量降序）</h3>' +
+        table(head, r.insufficient.map(matRow), 'wide');
+    }
+    $('mfMatOut').innerHTML = html;
+  }
+
+  function recalcSolve() {
+    recalcSolveLen();
+    recalcSolveIL();
+    recalcSolveMat();
+  }
+
   // ------------------------------ 联动 ------------------------------
   function syncGeomRows() {
     var f = $('mfForm').value;
@@ -320,6 +437,7 @@
     if (name === 'res') recalcRes();
     if (name === 'react') recalcReact();
     if (name === 'combo') recalcCombo();
+    if (name === 'solve') recalcSolve();
   }
 
   function init() {
@@ -357,6 +475,27 @@
     $('mfWeighted').addEventListener('change', recalcCombo);
     $('mfComboRecalc').addEventListener('click', recalcCombo);
 
+    // 面板 4（反算选型）：下拉与目标值即改即算，按钮亦可手动触发
+    var bandOpts = BANDS.map(function (f) {
+      return '<option value="' + f + '">' + f + '</option>';
+    }).join('');
+    $('mfSolveF').innerHTML = bandOpts;
+    $('mfSolveF').value = '500';
+    $('mfMatF').innerHTML = bandOpts;
+    $('mfMatF').value = '500';
+    $('mfSolveSrc').innerHTML = M.SOURCES.map(function (s) {
+      return '<option value="' + s.id + '">' + esc(s.name) + '</option>';
+    }).join('');
+    $('mfSolveF').addEventListener('change', recalcSolveLen);
+    $('mfSolveL').addEventListener('input', recalcSolveLen);
+    $('mfSolveLenBtn').addEventListener('click', recalcSolveLen);
+    $('mfSolveSrc').addEventListener('change', recalcSolveIL);
+    $('mfSolveIL').addEventListener('input', recalcSolveIL);
+    $('mfSolveILBtn').addEventListener('click', recalcSolveIL);
+    $('mfMatF').addEventListener('change', recalcSolveMat);
+    $('mfMatL').addEventListener('input', recalcSolveMat);
+    $('mfMatBtn').addEventListener('click', recalcSolveMat);
+
     var view = $('view-muffler');
     if (view) {
       Array.prototype.forEach.call(view.querySelectorAll('.mode-btn[data-mf-panel]'), function (b) {
@@ -377,6 +516,7 @@
         if (state.panel === 'res') recalcRes();
         if (state.panel === 'react') recalcReact();
         if (state.panel === 'combo') recalcCombo();
+        if (state.panel === 'solve') recalcSolve();
       }, 160);
     });
   }
@@ -384,6 +524,7 @@
   function onShow() {
     if (state.panel === 'react') recalcReact();
     else if (state.panel === 'combo') recalcCombo();
+    else if (state.panel === 'solve') recalcSolve();
     else recalcRes();
   }
 

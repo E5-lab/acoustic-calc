@@ -3782,13 +3782,14 @@
   <section class="view" id="view-muffler" data-view="muffler">
     <div class="page-head">
       <h2>消声器计算</h2>
-      <p class="hint">阻性（GB/T 50087-2013 式 6.3.1，附别洛夫式对照与高频失效折减）、抗性（扩张室一维平面波解、共振腔 Helmholtz）与阻抗复合验算（逐频带相加 → A 计权插入损失），含流速、压力损失与结构选型校核</p>
+      <p class="hint">阻性（GB/T 50087-2013 式 6.3.1，附别洛夫式对照与高频失效折减）、抗性（扩张室一维平面波解、共振腔 Helmholtz）与阻抗复合验算（逐频带相加 → A 计权插入损失），含流速、压力损失与结构选型校核；另提供反算选型（目标消声量 → 所需长度 / 候选材料）</p>
     </div>
 
     <div class="mode-row">
       <button class="mode-btn active" data-mf-panel="res" type="button">阻性消声器</button>
       <button class="mode-btn" data-mf-panel="react" type="button">抗性（扩张室 / 共振腔）</button>
       <button class="mode-btn" data-mf-panel="combo" type="button">组合验算 · A 计权</button>
+      <button class="mode-btn" data-mf-panel="solve" type="button">反算选型</button>
     </div>
 
     <div class="mf-panel" data-panel="res">
@@ -4028,6 +4029,74 @@
         <div id="mfComboStats" class="stat-grid"></div>
         <div id="mfComboTable" class="table-wrap"></div>
         <canvas id="mfComboChart" height="260"></canvas>
+      </section>
+    </div>
+
+    <div class="mf-panel" data-panel="solve" hidden>
+      <div class="page-head">
+        <p class="hint">反算选型复用「阻性消声器」面板已填的结构几何、吸声材料与 φ 取法（P/S、f_c、α₀ 均取自该面板）；在该面板改完参数后切回本面板即自动重算。</p>
+      </div>
+
+      <section class="card">
+        <h3><span class="step">A</span> 目标频带消声量 → 所需有效长度</h3>
+        <p class="hint">反算公式 l = ΔL/(φ(α₀)·P/S)；结果表同时给出各频带等目标所需长度，供选择控制频带时参考。</p>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfSolveF">目标倍频带</label>
+            <select id="mfSolveF"></select>
+          </div>
+          <div class="field">
+            <label for="mfSolveL">目标消声量 ΔL <span class="unit-tag">dB</span></label>
+            <input id="mfSolveL" type="number" step="1" min="1" value="20" />
+          </div>
+          <div class="field">
+            <button id="mfSolveLenBtn" class="btn" type="button">反算所需长度</button>
+          </div>
+        </div>
+        <div id="mfSolveLenMsg" class="callout-row"></div>
+        <div id="mfSolveLenStats" class="stat-grid"></div>
+        <div id="mfSolveLenOut" class="table-wrap"></div>
+      </section>
+
+      <section class="card">
+        <h3><span class="step">B</span> 声源谱 + 目标 A 计权插入损失 → 所需有效长度</h3>
+        <p class="hint">各频带消声量按能量叠加折算为 A 计权插入损失，用二分法（0.05 ~ 20 m）反解有效长度，计入高频失效折减。</p>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfSolveSrc">声源谱预设</label>
+            <select id="mfSolveSrc"></select>
+          </div>
+          <div class="field">
+            <label for="mfSolveIL">目标 A 计权插入损失 IL <span class="unit-tag">dB(A)</span></label>
+            <input id="mfSolveIL" type="number" step="1" min="1" value="15" />
+          </div>
+          <div class="field">
+            <button id="mfSolveILBtn" class="btn" type="button">反算所需长度</button>
+          </div>
+        </div>
+        <div id="mfSolveILMsg" class="callout-row"></div>
+        <div id="mfSolveILStats" class="stat-grid"></div>
+      </section>
+
+      <section class="card">
+        <h3><span class="step">C</span> 已知长度 → 所需 φ / α₀ 与材料候选</h3>
+        <p class="hint">给定阻性面板填写的有效长度与目标频带消声量，反求所需最小消声系数 φ 与正入射吸声系数 α₀，并从内置材料中按达标余量筛出候选（含高频失效折减）。</p>
+        <div class="field-row compact">
+          <div class="field">
+            <label for="mfMatF">目标倍频带</label>
+            <select id="mfMatF"></select>
+          </div>
+          <div class="field">
+            <label for="mfMatL">目标消声量 ΔL <span class="unit-tag">dB</span></label>
+            <input id="mfMatL" type="number" step="1" min="1" value="20" />
+          </div>
+          <div class="field">
+            <button id="mfMatBtn" class="btn" type="button">反算选材</button>
+          </div>
+        </div>
+        <div id="mfMatMsg" class="callout-row"></div>
+        <div id="mfMatStats" class="stat-grid"></div>
+        <div id="mfMatOut" class="table-wrap"></div>
       </section>
     </div>
   </section>
