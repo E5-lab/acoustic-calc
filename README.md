@@ -481,7 +481,7 @@
 - `public/js/audio-io.js` — 浏览器共享音频 I/O（AudioContext 播放 / 麦克风采集 / WAV 解码 16-24-32bit PCM 与 float32）
 - `public/js/banner.js` — 首页 hero 轮播（纯 DOM，无依赖）；顶栏全局检索已并入 `ui-kit.js` 的命令面板（⌘K / Ctrl+K）
 - `tools/make-icons.js` — PWA 图标生成（纯 Node zlib 实现 PNG 编码，重绘 favicon.svg 设计；改品牌后运行 `node tools/make-icons.js` 重新生成）
-- `node tests/*.test.js` 共 **59 个测试文件全部通过**（含计算内核与 UI 结构守护，`tests/structure.test.js` 自动校验计数与结构约定）（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏操作区顺序 / 命令面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/ui-kit.test.js` 守护 UI 组件层（命令面板 / Toast / 实验室组件 / 主题揭示 / PWA 缓存）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
+- `node tests/*.test.js` 共 **61 个测试文件全部通过**（含计算内核与 UI 结构守护，`tests/structure.test.js` 自动校验计数与结构约定）（覆盖各模块计算内核与厂家计算书复核逻辑；其中 `tests/overview.test.js` 守护「路由 ↔ 顶栏导航 ↔ 首页总览 ↔ 使用说明地址清单」四处登记一致，防止新增模块后首页漏更新；`tests/home-ui.test.js` 守护总览页结构（顶栏操作区顺序 / 命令面板 / 轮播 / 友链下拉 / 页脚统计 / 一级菜单单行与三级菜单）；`tests/ui-kit.test.js` 守护 UI 组件层（命令面板 / Toast / 实验室组件 / 主题揭示 / PWA 缓存）；`tests/measure/siggen/irt60/stipa/audio-io` 覆盖现场实测内核，容差均基于实测数值设定）。
 
 新增或修改模块前请先过 [MODULE-ADMISSION.md](MODULE-ADMISSION.md)（模块准入清单：分组归属 / 重叠检查 / 命名合规 / 四处登记 / 计数同步 / 权威入口对照表）。
 
@@ -554,7 +554,7 @@ npx serve public
 运行全部内核单元测试（需 Node ≥ 18，零依赖，无需安装）：
 
 ```bash
-npm test                 # 一键运行 tests/ 下全部 59 个测试文件
+npm test                 # 一键运行 tests/ 下全部 61 个测试文件
 node tests/run-all.js --only overview   # 只跑文件名含 overview 的测试
 ```
 

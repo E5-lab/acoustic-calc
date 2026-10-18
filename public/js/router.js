@@ -111,6 +111,20 @@
     }
   });
 
+  // —— 合并声明式计算器路由（calc-core.js / calc-bN.js 在 router 之前已 register）——
+  (function mergeCalcRoutes() {
+    var reg = (typeof window !== 'undefined' && window.CalcRegistry) ? window.CalcRegistry : null;
+    if (!reg) return;
+    reg.pending().forEach(function (p) {
+      if (VIEWS[p.route]) return;           // 静态路由优先，避免覆盖
+      VIEWS[p.route] = p.view;
+      TITLES[p.route] = p.title;
+      if (p.mount) {
+        MOUNTS.push({ route: p.route, get: (function (name) { return function () { return window[name]; }; })(p.mount) });
+      }
+    });
+  })();
+
   // 解析当前 hash → { route, mode?, params }
   // 深链形如 #/leakage?wall=3&hole=1，参数解析委托给 UrlState（未加载时降级为忽略参数）
   function parse() {
