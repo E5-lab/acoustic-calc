@@ -141,8 +141,8 @@ console.log('\n[7] 界面接线守护');
     html.indexOf('js/material-store.js') >= 0 && html.indexOf('material-store.js') < html.indexOf('js/view-rt60.js'));
   ok('index.html 含 rtMatStore / mfMatStore 容器',
     html.indexOf('id="rtMatStore"') >= 0 && html.indexOf('id="mfMatStore"') >= 0);
-  ok('使用说明测试计数同步为 58（治理守护）',
-    /共 58 个测试文件全部通过/.test(html));
+  ok('使用说明测试计数同步为 59（治理守护）',
+    /共 59 个测试文件全部通过/.test(html));
   ok('rt60 视图：下拉并入自定义材料且以 alpha 参与计算',
     vRt.indexOf("MS.list('rt60')") >= 0 && vRt.indexOf("MS.get('rt60', r.materialId)") >= 0 &&
     vRt.indexOf('alpha: c.alpha.slice()') >= 0);

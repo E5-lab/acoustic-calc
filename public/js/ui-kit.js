@@ -879,6 +879,7 @@
     renderPalette();
     loadRemoteIndex();
     document.body.classList.add('uik-lock');
+    if (palette.fab) palette.fab.hidden = true;
     setTimeout(function () { palette.input.focus(); }, 20);
   }
 
@@ -887,6 +888,7 @@
     palette.open = false;
     palette.el.hidden = true;
     document.body.classList.remove('uik-lock');
+    if (palette.fab) palette.fab.hidden = false;
     if (palette.lastFocus && palette.lastFocus.focus) {
       try { palette.lastFocus.focus(); } catch (e) { /* 忽略 */ }
     }
@@ -952,6 +954,30 @@
     return !!document.querySelector('.lab-back') || /ui-lab\.html?$/i.test(location.pathname);
   }
 
+  /* 移动端悬浮入口：手机上顶栏会随页面滚走、也没有 ⌘K 键盘，
+     用一颗常驻的圆形按钮把命令面板「随时调用」出来。 */
+  function initFab() {
+    if (document.querySelector('.uik-fab')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'uik-fab';
+    btn.setAttribute('data-cmdk-open', '');
+    btn.setAttribute('aria-label', '搜索模块与操作（命令面板）');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5l-4-4"/></svg>';
+    document.body.appendChild(btn);
+    palette.fab = btn;
+
+    // 聚焦输入框时淡出，避免悬浮按钮压住表单
+    var dim = function (on) { document.body.classList.toggle('uik-fab-dim', on); };
+    document.addEventListener('focusin', function (e) {
+      var t = e.target;
+      if (t && /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) dim(true);
+    });
+    document.addEventListener('focusout', function () { dim(false); });
+  }
+
   function boot() {
     buildPaletteIndexSoon();
     initTooltips();
@@ -960,6 +986,7 @@
     initProgress();
     initReveal();
     initPalette();
+    initFab();
     bridge();
   }
 

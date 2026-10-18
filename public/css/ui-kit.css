@@ -1391,16 +1391,16 @@ body.uik-lock { overflow: hidden; }
 @media (max-width: 640px) {
   /* 窄屏轮播箭头移到右上角，避免压住底部说明文字 */
   .hero-banner .hb-arrow {
-    top: 10px;
+    top: 8px;
     transform: none;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
     background: rgba(10, 18, 34, 0.45);
   }
   .hero-banner .hb-arrow:hover { transform: scale(1.06); }
-  .hero-banner .hb-arrow.prev { left: auto; right: 48px; }
-  .hero-banner .hb-arrow.next { right: 10px; }
+  .hero-banner .hb-arrow.prev { left: auto; right: 58px; }
+  .hero-banner .hb-arrow.next { right: 8px; }
   .uik-toasts { right: 12px; left: 12px; bottom: 12px; width: auto; }
   .uik-cmdk { padding: 8vh 10px 16px; }
   .uik-cmdk-panel { border-radius: 14px; }
@@ -1444,4 +1444,41 @@ body.uik-lock { overflow: hidden; }
   .uik-cmdk,
   .uik-tip,
   .lab-toc { display: none !important; }
+}
+
+/* ==========================================================================
+   15. 移动端悬浮入口（随时调用命令面板）
+   ========================================================================== */
+.uik-fab {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 320;
+  display: none;              /* 仅在窄屏出现，桌面有顶栏 ⌘K 按钮 */
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--primary) 70%, #fff);
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 26px -8px rgba(37, 99, 235, 0.6), 0 2px 6px rgba(15, 30, 70, 0.18);
+  transition: transform 0.16s, box-shadow 0.16s, opacity 0.16s;
+  -webkit-tap-highlight-color: transparent;
+}
+.uik-fab[hidden] { display: none !important; }
+/* 正在填表时淡出，避免遮住输入框 */
+body.uik-fab-dim .uik-fab { opacity: 0; transform: translateY(10px) scale(0.9); pointer-events: none; }
+.uik-fab svg { width: 22px; height: 22px; }
+.uik-fab:hover { box-shadow: 0 14px 32px -8px rgba(37, 99, 235, 0.7); }
+.uik-fab:active { transform: scale(0.94); }
+.uik-fab:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent); outline-offset: 3px; }
+
+@media (max-width: 640px) {
+  .uik-fab { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .uik-fab { transition: none; }
 }

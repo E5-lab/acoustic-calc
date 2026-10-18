@@ -1852,3 +1852,105 @@ select.btn:focus,
 @media (max-width: 640px) {
   .at-list { grid-template-columns: 1fr; }
 }
+
+/* ==========================================================================
+   移动端适配（v2.12）
+   目标：手机上不再需要来回缩放 —— ①表单 16px 关掉 iOS 自动放大；
+   ②表格自己横向滚动、不撑破页面；③触控目标 ≥ 44px；④正文与说明字号上调。
+   ========================================================================== */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+@media (max-width: 768px) {
+  /* ① 输入控件一律 16px：iOS Safari 对 font-size < 16px 的控件会在聚焦时
+     强制放大整个页面，这正是「用一会儿就要缩小一次」的根因。 */
+  input, select, textarea,
+  .field input, .field select,
+  .card textarea, .band-cell input,
+  .mat-row input, .mat-row select,
+  select.btn, #roomSelect, .search-input,
+  .text-input, .seg-in, .src-name, .src-level, .src-count {
+    font-size: 16px !important;
+  }
+  /* 输入框加高，手指点得准 */
+  .field input, .field select, select.btn, .card textarea {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+  .field label { font-size: 13px; }
+  .field .unit-tag { font-size: 12px; }
+
+  /* ② 表格：自身横向滚动，不再把整页撑宽 */
+  .detail-table,
+  .detail-table.wide,
+  .data-table,
+  .weight-table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 12.5px;
+  }
+  .detail-table th, .detail-table td,
+  .data-table th, .data-table td { white-space: nowrap; }
+
+  /* ③ 下拉框按最宽选项撑开的问题：限制在容器内 */
+  select, select.btn, .sample-wrap { max-width: 100%; }
+  .sample-wrap { min-width: 0; }
+  .btn-row { flex-wrap: wrap; }
+  .btn-row > * { max-width: 100%; }
+
+  /* ④ 触控目标：按钮 / 分段控件 / 图标按钮不低于 44px */
+  .btn, button.btn, .mode-btn, .seg-btn, .tab-btn, .chip {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-toggle, .icon-btn { min-width: 44px; min-height: 44px; }
+  .kv .v { font-size: 14px; }
+
+  /* 裸 select / input 也要够高（如 rt60 的用途下拉、手册筛选标签） */
+  select,
+  input:not([type="checkbox"]):not([type="radio"]),
+  .hb-chip {
+    min-height: 44px;
+  }
+  .hb-chip { padding: 8px 14px; font-size: 13.5px; }
+
+  /* 页脚底部留出悬浮按钮的位置，避免遮住最后一行内容 */
+  .site-footer { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+
+  /* 轮播圆点视觉不变，命中区扩到 30px 以上，手指点得中 */
+  .hero-banner .hb-dot { position: relative; }
+  .hero-banner .hb-dot::after {
+    content: '';
+    position: absolute;
+    inset: -12px -8px;
+  }
+  .hero-banner .hb-dots { gap: 10px; }
+
+  /* ⑤ 正文可读性：11.5–12.5px 的小字在手机上偏小，统一上调一档 */
+  .hint, .mc-desc, .nm-d, .at-desc { font-size: 13px; }
+  .kv .k, .field .unit-tag, .mc-tag { font-size: 12px; }
+  .group-label { font-size: 13px; }
+  .card h3 { font-size: 15.5px; }
+  .card { padding: 14px; }
+
+  /* ⑥ 长英文/数字串不要顶破卡片 */
+  .hint, .mc-desc, .kv .v, .at-desc, .result-line { overflow-wrap: anywhere; }
+
+  /* ⑦ 双栏与多列布局在窄屏统一落成单列 */
+  .split, .split-2, .two-col, .grid-2 { grid-template-columns: 1fr !important; }
+  .field-row { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); }
+}
+
+@media (max-width: 420px) {
+  /* 超窄屏（iPhone SE / 小屏安卓）：数字输入两列会挤，改单列 */
+  .field-row, .field-row.compact { grid-template-columns: 1fr; }
+  .container { padding: 14px 12px 8px; }
+  .card { padding: 12px; }
+  .btn { padding: 10px 14px; }
+}

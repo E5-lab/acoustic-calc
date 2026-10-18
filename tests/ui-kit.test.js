@@ -149,7 +149,8 @@ assert('浮层锁定页面滚动', css.indexOf('body.uik-lock') >= 0);
 assert('窄屏一级菜单撑满整行', /@media \(max-width: 900px\)[\s\S]{0,220}\.mainnav \{ width: 100%/.test(css));
 assert('窄屏收起态下拉不参与布局', css.indexOf('.mainnav .nav-menu { display: none; }') >= 0);
 assert('窄屏友链/导出收成图标按钮', css.indexOf('#exportMenu > .nav-parent > span') >= 0);
-assert('窄屏轮播箭头移至右上角', /max-width: 640px[\s\S]{0,400}\.hero-banner \.hb-arrow[\s\S]{0,200}top: 10px/.test(css));
+assert('窄屏轮播箭头移至右上角且放大到 40px 触控目标',
+  /max-width: 640px[\s\S]{0,400}\.hero-banner \.hb-arrow[\s\S]{0,200}top: 8px[\s\S]{0,200}width: 40px/.test(css));
 assert('app.js 复制失败改用 UIK 提示', app.indexOf('UIK.error') >= 0);
 
 // ---- 7) PWA 缓存 ----
