@@ -217,8 +217,8 @@ assert('测试计数文案与 tests/ 实际文件数一致（' + testFileCount +
 // ---- 12) P2 结构改造：#/all 目录页 / 交叉链接 / 描述 clamp ----
 console.log('\n[12] P2 结构改造');
 var routerJs = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'router.js'), 'utf8');
-assert('router 注册 all → view-all', /all:\s*'view-all'/.test(routerJs));
-assert('router TITLES 含「全部工具」', /all:\s*'全部工具/.test(routerJs));
+assert('router 注册 all → view-all', /all:\s*\{\s*view:\s*'view-all'/.test(routerJs));
+assert('router ROUTES 含「全部工具」', /all:\s*\{[^}]*title:\s*'全部工具/.test(routerJs));
 assert('index.html 含 #view-all 视图', html.indexOf('id="view-all"') >= 0);
 assert('all-tools.js 文件存在', fs.existsSync(path.join(__dirname, '..', 'public', 'js', 'all-tools.js')));
 assert('nav.js 暴露 window.NavSub', navJs.indexOf('window.NavSub') >= 0);

@@ -106,6 +106,64 @@ assert('全站无零信息量「可用」徽标', html.indexOf('>可用</span>')
 assert('准入清单文档存在', fs.existsSync(path.join(__dirname, '..', 'MODULE-ADMISSION.md')));
 assert('README 链接准入清单', readme.indexOf('MODULE-ADMISSION.md') >= 0);
 
+// ---- 4b) esc 转义统一（防三字符版 XSS 隐患回归） ----
+// 所有视图/工具文件不得再自建仅转义 &<> 的残缺 esc；应委托 window.Util.esc 或使用完整五字符版。
+console.log('\n[4b] esc 转义统一');
+var jsDir = path.join(__dirname, '..', 'public', 'js');
+var jsFiles = fs.readdirSync(jsDir).filter(function (f) { return /\.js$/.test(f) && f !== 'util.js'; });
+var badEsc = [];
+jsFiles.forEach(function (f) {
+  var src = fs.readFileSync(path.join(jsDir, f), 'utf8');
+  // 残缺 esc：仅转义 &<>（缺 " 与 '），且未委托 Util
+  if (/function\s+esc\s*\(\s*s\s*\)\s*\{\s*return\s+String\([^)]*\)\.replace\(\/&\/g,\s*'&amp;'\)\.replace\(\/<\//.test(src)) {
+    badEsc.push(f);
+  }
+});
+assert('无残缺 esc 定义（发现 ' + badEsc.length + ' 个：' + badEsc.join(',') + '）', badEsc.length === 0);
+assert('共享 util.js 存在且导出完整 esc', fs.existsSync(path.join(jsDir, 'util.js')) &&
+  /function\s+esc\s*\(s\)/.test(fs.readFileSync(path.join(jsDir, 'util.js'), 'utf8')) &&
+  /'&quot;'/.test(fs.readFileSync(path.join(jsDir, 'util.js'), 'utf8')));
+
+// ---- 4c) $ 选择器统一（防 getElementById 版重复定义回归） ----
+// 除 util.js（唯一规范实现）外，任何文件不得再自建 `function $(id){return document.getElementById(id)}`；
+// 视图应使用委托 `function $(id){return window.Util.$(id)}`。ui-kit/ui-lab 的 querySelector 版不在此限。
+console.log('\n[4c] $ 选择器统一');
+var badDollar = [];
+jsFiles.forEach(function (f) {
+  var src = fs.readFileSync(path.join(jsDir, f), 'utf8');
+  if (/function\s+\$\s*\(\s*id\s*\)\s*\{\s*return\s+document\.getElementById\s*\(\s*id\s*\)\s*;\s*\}/.test(src)) {
+    badDollar.push(f);
+  }
+});
+assert('无重复的 getElementById 版 $ 定义（发现 ' + badDollar.length + ' 个：' + badDollar.join(',') + '）', badDollar.length === 0);
+
+// ---- 4d) cssVar 主题色板工具统一（防重复实现回归） ----
+// 除 util.js（唯一规范实现）外，任何文件不得再自建 cssVar；应委托 window.Util.cssVar。
+console.log('\n[4d] cssVar 主题色板工具统一');
+var badCssVar = [];
+jsFiles.forEach(function (f) {
+  var src = fs.readFileSync(path.join(jsDir, f), 'utf8');
+  if (/function\s+cssVar\s*\(/.test(src) && src.indexOf('return window.Util.cssVar') < 0) {
+    badCssVar.push(f);
+  }
+});
+assert('无重复的 cssVar 实现（发现 ' + badCssVar.length + ' 个：' + badCssVar.join(',') + '）', badCssVar.length === 0);
+
+// ---- 4e) 计算内核保持零依赖（UMD 独立可测，频带常量已在 acoustics.js 集中）----
+// 内核模块不得 require 本地其它模块，保持其「纯函数、无依赖」的可移植契约。
+console.log('\n[4e] 计算内核零依赖契约');
+var coreFiles = fs.readdirSync(jsDir).filter(function (f) {
+  return /^(acoustics|absorber|barrier|aural|audiolevel|insulation|room|perforation|rt60|stc|levels|dbcalc|env|leakage|hvacnoise|impact|speakerbox|muffler|iso3382|crossover|psycho|hearing|wave|smallroom|spectrum|vibeval)\.js$/.test(f);
+});
+var badReq = [];
+coreFiles.forEach(function (f) {
+  var src = fs.readFileSync(path.join(jsDir, f), 'utf8');
+  // 去除块注释与行注释，避免匹配到文档字符串中的 require 字样
+  var code = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  if (/require\s*\(\s*['"]\.\//.test(code)) badReq.push(f);
+});
+assert('计算内核不 require 本地模块（发现 ' + badReq.length + ' 个：' + badReq.join(',') + '）', badReq.length === 0);
+
 // ---- 5) #/all 目录页不嵌套在其他视图内 ----
 console.log('\n[5] 目录页结构');
 // view-all 开始标签之前 <section 与 </section> 必须平衡（否则被包进 view-home 等父视图，

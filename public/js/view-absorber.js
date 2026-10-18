@@ -10,8 +10,8 @@
   var last = null;
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function grouped(n, d) { return Number(n).toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
@@ -188,21 +188,12 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  function copyText(txt, msgId) {
-    if (!txt) { flash(msgId, '暂无可复制结果'); return; }
-    var done = function () { flash(msgId, '已复制'); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(done, function () { fallback(txt, done); });
-    } else fallback(txt, done);
+  function copyText(txt, id) {
+    if (!txt) { flash(id, '暂无可复制结果'); return; }
+    window.Util.copyText(txt, function () { flash(id, '已复制'); }, function () { alert('复制失败，请手动选择文本。'); });
   }
 
-  function fallback(txt, done) {
-    var ta = document.createElement('textarea');
-    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { alert('复制失败，请手动选择文本。'); }
-    document.body.removeChild(ta);
-  }
+  
 
   function flash(id, msg) {
     var el = $(id);

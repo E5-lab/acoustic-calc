@@ -20,8 +20,8 @@
   var sweepDir = 1;       // 自动扫描方向
   var canvas, ctx, W = 360, H = 360;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
 
   /* ------------------------------ 骨架 DOM ------------------------------ */

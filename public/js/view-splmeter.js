@@ -13,7 +13,7 @@
   'use strict';
   var M = window.Measure, AU = window.Aural, IO = window.AudioIO;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 1 : d); }
   function setStatus(t) { var e = $('smStatus'); if (e) e.textContent = t; }

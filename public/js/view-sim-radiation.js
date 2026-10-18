@@ -27,8 +27,8 @@
   var t0 = 0;            // 动画累计时间（秒，仅播放时增长）
   var DPR = 1;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
 
   // 带符号方向因子（画波形相位用：偶极子 θp>90°、四极子越过零点后反相）

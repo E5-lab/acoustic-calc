@@ -88,7 +88,7 @@ ok('无命中时 suggest 为空', H.suggest('zzzzz').length === 0);
 // [7] 相关模块路由与 router.js 一致
 console.log('\n[7] r 字段与 router 路由表一致');
 const routerSrc = fs.readFileSync(path.join(__dirname, '..', 'public', 'js', 'router.js'), 'utf8');
-const routeRe = /'?([\w-]+)'?\s*:\s*'view-[\w-]+'/g;
+const routeRe = /^\s*'?([\w-]+)'?\s*:\s*\{\s*view:\s*'view-[\w-]+'/gm;
 const routes = new Set();
 let m;
 while ((m = routeRe.exec(routerSrc)) !== null) { routes.add(m[1]); }

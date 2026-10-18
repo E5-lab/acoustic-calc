@@ -1,5 +1,5 @@
 /*
- * perforation-view.js — 穿孔率计算视图（交互 + 阵列示意图）
+ * view-perforation.js — 穿孔率计算视图（交互 + 阵列示意图）
  * 依赖：window.Perforation（计算内核）
  */
 (function () {
@@ -46,8 +46,8 @@
   var mpp = null;         // 最近一次共振估算
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function group(n, digits) { return Number(n).toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
@@ -239,10 +239,7 @@
   function fmt(x) { return Number(x).toFixed(2).replace(/\.?0+$/, '') || '0'; }
 
   // ------------------------------ 画布绘制 ------------------------------
-  function cssVar(name, fallback) {
-    var v = getComputedStyle(document.documentElement).getPropertyValue(name);
-    return (v && v.trim()) || fallback;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
 
   function drawDiagram() {
     var canvas = $('perfCanvas');

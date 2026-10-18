@@ -30,8 +30,8 @@
   var prog = 0;          // 播放进度 0..1（驱动收敛曲线与波形窗口）
   var maxAbsD = 1;       // 初级波形最大幅值（波形归一化基准）
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || !isFinite(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
 
   function tones() {

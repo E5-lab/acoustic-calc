@@ -222,8 +222,10 @@
 
   // ------------------------------ 共用管理界面 ------------------------------
   function esc(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    if (typeof window !== 'undefined' && window.Util && window.Util.esc) return window.Util.esc(s);
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   function renderManager(el, opts) {

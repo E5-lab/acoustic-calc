@@ -26,8 +26,8 @@
   var dispLevels = DEFAULTS.slice(); // 各柱当前显示高度（平滑过渡）
   var dispWeights = DEFAULTS.slice();
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || !isFinite(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
 
   /* ------------------------------ 初始化骨架 ------------------------------ */

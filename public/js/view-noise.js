@@ -1,5 +1,5 @@
 /*
- * app.js — 声学计算器前端交互
+ * view-noise.js — 声学计算器前端交互（噪声评价视图 #/noise）
  * 支持 1/1 倍频程（16–8000 Hz）与 1/3 倍频程（16–10000 Hz）两种输入模式。
  */
 (function () {
@@ -20,7 +20,7 @@
 
   var mode = 'octave'; // 'octave' | 'third'，由路由或页面模式按钮切换
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function fmt(n, d) {
     if (n == null || isNaN(n)) return '—';
     return Number(n).toFixed(d == null ? 1 : d);

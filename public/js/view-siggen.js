@@ -14,7 +14,7 @@
   'use strict';
   var SG = window.SigGen, AU = window.Aural, IO = window.AudioIO;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function setStatus(t) { var e = $('sgStatus'); if (e) e.textContent = t; }

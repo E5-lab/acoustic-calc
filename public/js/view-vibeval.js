@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var V = window.VibEval;
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function fmt(n, d) { if (n == null || isNaN(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function fmtSci(n) { if (n == null || isNaN(n)) return '—'; if (Math.abs(n) >= 1e-3 && Math.abs(n) < 1e4) return n.toFixed(4); return n.toExponential(3); }
   function show(el, html, cls) { if (!el) return; el.hidden = false; if (html != null) el.innerHTML = html; if (cls) el.className = 'result-line ' + cls; }

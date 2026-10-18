@@ -16,7 +16,7 @@
   var S = window.Spectrum;
   var Chart = window.MiniChart;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function show(el, html, cls) {
@@ -25,10 +25,7 @@
     if (html != null) el.innerHTML = html;
     el.className = 'result-line' + (cls ? ' ' + cls : '');
   }
-  function cssVar(n, f) {
-    var v = window.getComputedStyle ? getComputedStyle(document.documentElement).getPropertyValue(n) : '';
-    return (v || '').trim() || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
 
   /** 解析「频率 声压级」文本：支持空格 / 逗号 / 制表符 / 分号分隔，忽略空行与 # 注释 */
   function parsePairs(text) {

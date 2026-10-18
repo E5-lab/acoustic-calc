@@ -1,0 +1,17 @@
+{
+  "name": "acoustic-calc",
+  "version": "2.13.0",
+  "description": "声学计算工具箱 · Acoustic Toolbox（纯静态、零依赖，Cloudflare Workers 部署）",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "test:one": "node tests/run-all.js --only",
+    "serve": "npx serve public",
+    "verify:icons": "node tools/make-icons.js"
+  },
+  "license": "UNLICENSED"
+}

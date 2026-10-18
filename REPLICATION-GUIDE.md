@@ -50,7 +50,7 @@ acoustic-calc/
 │       ├── vibration.js     # 内核：弹簧减振（静变形法/频率比法/反算/厂家复核/环新复核）
 │       ├── muffler.js       # 内核：消声器（阻性/抗性/组合）
 │       ├── perforation.js / absorber.js / room.js / insulation.js / barrier.js / levels.js
-│       ├── app.js           # 视图：背景噪声评价（#/noise，最完整的参考范例）
+│       ├── view-noise.js    # 视图：背景噪声评价（#/noise，最完整的参考范例）
 │       ├── view-*.js        # 视图：perforation / absorber / rt60 / stc / barrier / levels / vibration / muffler
 │       ├── nav.js           # 顶栏二级菜单交互 + 面包屑
 │       ├── theme.js         # 日/夜切换（localStorage 持久化 + 跟随系统）
@@ -352,7 +352,7 @@ chart-util → acoustics → perforation → absorber → room → insulation
 
 - [ ] `public/index.html`（含顶栏 + 一个 `<section id="view-home">` + `<section id="view-noise" hidden>`）
 - [ ] `public/css/styles.css`（§3 的明暗令牌 + 基础组件）
-- [ ] `public/js/acoustics.js`（内核）、`app.js`（NoiseView 范例）
+- [ ] `public/js/acoustics.js`（内核）、`view-noise.js`（NoiseView 范例）
 - [ ] `public/js/router.js`、`nav.js`、`theme.js`
 - [ ] 本地起静态服务（`python -m http.server`）打开，确认路由切换、主题切换、图表绘制正常
 

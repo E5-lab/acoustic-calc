@@ -5,11 +5,7 @@
 (function (global) {
   'use strict';
 
-  function cssVar(name, fallback) {
-    if (typeof getComputedStyle !== 'function') return fallback;
-    var v = getComputedStyle(document.documentElement).getPropertyValue(name);
-    return (v && v.trim()) || fallback;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
 
   function roundRect(ctx, x, y, w, h, r) {
     r = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);

@@ -30,8 +30,8 @@
   var t = 0;               // 动画相位时间
   var PX_PER_M = 70;       // 几何像素比例（用于画楔与波长）
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function group(n) { return Number(n).toLocaleString('en-US'); }
 

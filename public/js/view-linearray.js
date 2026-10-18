@@ -14,7 +14,7 @@
   var A = window.LineArray;
   var Chart = window.MiniChart;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
   function show(el, html, cls) {
@@ -23,11 +23,7 @@
     if (html != null) el.innerHTML = html;
     el.className = 'result-line' + (cls ? ' ' + cls : '');
   }
-  function cssVar(n, f) {
-    var v = window.getComputedStyle ? getComputedStyle(document.documentElement).getPropertyValue(n) : '';
-    v = (v || '').trim();
-    return v || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
   function hz(v) {
     if (v == null || !isFinite(v)) return '—';
     return v >= 10000 ? (v / 1000).toFixed(1) + ' kHz' : (v >= 1000 ? (v / 1000).toFixed(2) + ' kHz' : Math.round(v) + ' Hz');

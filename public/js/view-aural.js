@@ -9,7 +9,7 @@
 (function () {
   'use strict';
   var A = window.Aural, S = window.RoomSim, MC = window.MiniChart;
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function css(n, fb) { return (MC && MC.cssVar) ? MC.cssVar(n, fb) : fb; }
   function clamp(v, a, b) { v = Number(v); return isNaN(v) ? a : (v < a ? a : (v > b ? b : v)); }
   function fmt(n, d) { if (n == null || isNaN(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }

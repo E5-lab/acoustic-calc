@@ -30,8 +30,8 @@
   var droneX = 80, cy = 180, obsX = 300, scale = 5, maxRpx = 400;
   var RMAX_M = 50;        // 动画中 r 的可视化上限（米）
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
 

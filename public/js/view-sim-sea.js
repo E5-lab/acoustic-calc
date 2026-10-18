@@ -40,8 +40,8 @@
   var anim = { flow: 0, dir: 1, t1: 1, t2: 0 }; // 流动强度/方向、两室能级归一化
   var partsA = [], partsB = [];
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
 

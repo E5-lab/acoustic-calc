@@ -27,13 +27,13 @@ var routerPath = path.join(__dirname, '..', 'public', 'js', 'router.js');
 var html = fs.readFileSync(htmlPath, 'utf8');
 var router = fs.readFileSync(routerPath, 'utf8');
 
-// ---- 从 router.js 提取路由清单（VIEWS 的键），排除 home ----
-var viewsBlock = router.match(/var VIEWS\s*=\s*\{([\s\S]*?)\};/);
-assert('router.js 中可解析出 VIEWS', !!viewsBlock);
+// ---- 从 router.js 提取路由清单（单一数据源 ROUTES 的键），排除 home ----
+var viewsBlock = router.match(/var ROUTES\s*=\s*\{([\s\S]*?)\n  \};/);
+assert('router.js 中可解析出 ROUTES', !!viewsBlock);
 var routes = [];
 if (viewsBlock) {
   var body = viewsBlock[1];
-  var re = /'?([\w-]+)'?\s*:\s*'view-[\w-]+'/g, m;
+  var re = /^\s*'?([\w-]+)'?\s*:\s*\{\s*view:\s*'view-[\w-]+'/gm, m;
   while ((m = re.exec(body)) !== null) routes.push(m[1]);
 }
 assert('VIEWS 路由数量 >= 10', routes.length >= 10);

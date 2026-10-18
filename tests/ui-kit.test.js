@@ -40,7 +40,7 @@ var labHtml = read('public/ui-lab.html');
 var labJs = read('public/js/ui-lab.js');
 var theme = read('public/js/theme.js');
 var sw = read('public/sw.js');
-var app = read('public/js/app.js');
+var app = read('public/js/view-noise.js');
 
 // ---- 1) 资源与接入 ----
 console.log('\n[1] 资源与接入');
@@ -151,7 +151,7 @@ assert('窄屏收起态下拉不参与布局', css.indexOf('.mainnav .nav-menu {
 assert('窄屏友链/导出收成图标按钮', css.indexOf('#exportMenu > .nav-parent > span') >= 0);
 assert('窄屏轮播箭头移至右上角且放大到 40px 触控目标',
   /max-width: 640px[\s\S]{0,400}\.hero-banner \.hb-arrow[\s\S]{0,200}top: 8px[\s\S]{0,200}width: 40px/.test(css));
-assert('app.js 复制失败改用 UIK 提示', app.indexOf('UIK.error') >= 0);
+assert('view-noise.js 复制失败改用 UIK 提示', app.indexOf('UIK.error') >= 0);
 
 // ---- 7) PWA 缓存 ----
 console.log('\n[7] PWA 缓存');

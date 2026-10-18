@@ -7,7 +7,7 @@
   var D = window.DbCalc;
   var RHO_C = 400; // 空气特性阻抗近似 Pa·s/m（20°C, 1atm 约 413，取 400 计算平面波声强）
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function fmt(n, d) { if (n == null || isNaN(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function setText(el, html) { if (el) el.innerHTML = html; }
 

@@ -14,7 +14,7 @@
   var C = window.Crossover;
   var Chart = window.MiniChart;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function show(el, html, cls) {
     if (!el) return;
@@ -23,11 +23,7 @@
     el.className = 'result-line' + (cls ? ' ' + cls : '');
   }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
-  function cssVar(n, f) {
-    var v = window.getComputedStyle ? getComputedStyle(document.documentElement).getPropertyValue(n) : '';
-    v = (v || '').trim();
-    return v || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
 
   var lastDesign = null;
 

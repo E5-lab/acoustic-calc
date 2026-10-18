@@ -20,10 +20,8 @@
   var state = { panel: 'res' };
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) {
     if (v == null || isNaN(v) || !isFinite(v)) return '—';
     return Number(v).toFixed(d == null ? 2 : d);
@@ -34,10 +32,7 @@
     var v = parseFloat(el.value);
     return isFinite(v) ? v : null;
   }
-  function cssVar(n, f) {
-    var v = getComputedStyle(document.documentElement).getPropertyValue(n);
-    return (v && v.trim()) || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
   function stat(label, value, unit, sub) {
     return '<div class="stat"><div class="s-label">' + label + '</div>' +
       '<div class="s-value">' + value + (unit ? '<small>' + unit + '</small>' : '') + '</div>' +

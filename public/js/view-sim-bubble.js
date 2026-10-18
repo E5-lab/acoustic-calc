@@ -31,8 +31,8 @@
   var DPR = 1;
   var anim = { fVis: 1.2 }; // 视觉脉动频率 Hz（由真实 f₀ 对数映射，真实值无法直接观察）
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
 
   /* ------------------------------ 字段 ------------------------------ */

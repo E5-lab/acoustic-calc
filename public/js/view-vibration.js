@@ -45,10 +45,8 @@
   var lastV = null;     // 面板 2 结果
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) {
     if (v == null || isNaN(v) || !isFinite(v)) return '—';
     return Number(v).toFixed(d == null ? 2 : d);
@@ -59,10 +57,7 @@
     var v = parseFloat(el.value);
     return isFinite(v) ? v : null;
   }
-  function cssVar(n, f) {
-    var v = getComputedStyle(document.documentElement).getPropertyValue(n);
-    return (v && v.trim()) || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
   function stat(label, value, unit, sub) {
     return '<div class="stat"><div class="s-label">' + label + '</div>' +
       '<div class="s-value">' + value + (unit ? '<small>' + unit + '</small>' : '') + '</div>' +
@@ -582,18 +577,9 @@
 
   function copyText(txt, id) {
     if (!txt) { flash(id, '暂无可复制结果'); return; }
-    var done = function () { flash(id, '已复制'); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(done, function () { fallback(txt, done); });
-    } else fallback(txt, done);
+    window.Util.copyText(txt, function () { flash(id, '已复制'); }, function () { alert('复制失败，请手动选择文本。'); });
   }
-  function fallback(txt, done) {
-    var ta = document.createElement('textarea');
-    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { alert('复制失败，请手动选择文本。'); }
-    document.body.removeChild(ta);
-  }
+  
   function flash(id, msg) {
     var el = $(id);
     if (!el) return;

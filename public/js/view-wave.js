@@ -17,7 +17,7 @@
   var W = window.Wave;
   var Chart = window.MiniChart;
 
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
   function fmt(n, d) { if (n == null || !isFinite(n)) return '—'; return Number(n).toFixed(d == null ? 2 : d); }
   function show(el, html, cls) {
@@ -26,10 +26,7 @@
     if (html != null) el.innerHTML = html;
     el.className = 'result-line' + (cls ? ' ' + cls : '');
   }
-  function cssVar(n, f) {
-    var v = window.getComputedStyle ? getComputedStyle(document.documentElement).getPropertyValue(n) : '';
-    return (v || '').trim() || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
   function sci(n, d) {
     if (n == null || !isFinite(n)) return '—';
     var e = Math.floor(Math.log10(Math.abs(n)));

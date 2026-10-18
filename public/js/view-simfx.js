@@ -8,7 +8,7 @@
 (function () {
   'use strict';
   var S = window.RoomSim, MC = window.MiniChart;
-  function $(id) { return document.getElementById(id); }
+  function $(id) { return window.Util.$(id); }
   function css(name, fb) { return (MC && MC.cssVar) ? MC.cssVar(name, fb) : fb; }
   function clamp(v, a, b) { v = Number(v); return isNaN(v) ? a : (v < a ? a : (v > b ? b : v)); }
 

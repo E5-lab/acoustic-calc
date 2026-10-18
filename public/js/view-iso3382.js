@@ -18,14 +18,11 @@
 
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function pf(v) { var n = parseFloat(v); return isNaN(n) ? null : n; }
-  function cssVar(n, f) {
-    var v = window.getComputedStyle ? getComputedStyle(document.documentElement).getPropertyValue(n) : '';
-    return (v || '').trim() || f;
-  }
+  function cssVar(n, f) { return window.Util.cssVar(n, f); }
 
   function show(id, html, cls) {
     var el = $(id);

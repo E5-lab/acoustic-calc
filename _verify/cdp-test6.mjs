@@ -8,9 +8,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const EDGE = process.env.VB_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const PORT = Number(process.env.VB_PORT || 9336);
 const BASE = process.env.VB_BASE || 'http://127.0.0.1:8765';
+// 可覆盖环境变量：VB_EDGE=浏览器可执行文件路径  VB_PORT=CDP 调试端口  VB_BASE=被测站点地址
 
 let passed = 0, failed = 0;
 const fails = [];

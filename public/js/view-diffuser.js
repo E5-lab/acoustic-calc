@@ -39,8 +39,8 @@
   var last = null;
   var inited = false;
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(id) { return window.Util.$(id); }
+  function esc(s) { return window.Util.esc(s); }
   function num(v, d) { return v == null || isNaN(v) ? '—' : Number(v).toFixed(d == null ? 2 : d); }
   function group(n, digits) { return Number(n).toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
