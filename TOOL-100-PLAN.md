@@ -179,5 +179,16 @@ mach / standing-open-closed / p-u-intensity / decibel-conv（见文件与 `tests
 - ✅ 地基：calc-core.js / calc-view.js / router 合并 / index.html 脚本接入
 - ✅ 示范块 B7（4 个工具 + 测试）
 - ✅ 契约门禁 calc-registry.test.js
-- ⬜ B1 / B2 / B3 / B4 / B5 / B6 / B8（空壳待协作 AI 填充）
-- ✅ 全量测试现状：61 文件 / 4179 断言 / 0 失败（新增地基后）
+- ✅ **第1组（主 AI 已完成）**：B1 材料与建筑声学（6）+ B2 电声与系统（6）= 12 工具 + 测试
+- ✅ **第2组（协作 AI-A 已交付）**：B3 心理与音乐声学（5）+ B4 噪声与法规（6）= 11 工具 + 测试（`calc-b3.js` / `calc-b4.js` + `tests/calc-b3.test.js` / `tests/calc-b4.test.js`）
+- ✅ **第3组（协作 AI-B 已交付）**：B5 测量与校准（5）+ B6 超声·结构·声速（5）= 10 工具 + 测试（`calc-b5.js` / `calc-b6.js` + `tests/calc-b5.test.js` / `tests/calc-b6.test.js`，56+52 项断言）
+- ✅ **第4组（协作 AI-C 已交付）**：B7 已完成 + B8 振动与结构（4）= 4 工具 + 测试（`calc-b8.js` + `tests/calc-b8.test.js`）
+- ✅ 全量测试现状：68 文件 / 4967 断言 / 0 失败（全部 8 块完成，新增声学计算器 41 个，工具总数 102）
+
+### 8. 分组与提示（8 块 → 4 组并行）
+| 组 | 块 | 工具数 | 负责人 | 提示文件 |
+|----|----|--------|--------|----------|
+| 第1组 | B1+B2 | 12 | 主 AI（已完成） | — |
+| 第2组 | B3+B4 | 11 | 协作 AI-A（已交付） | 见 TOOL-100-PROMPTS.md · 提示A |
+| 第3组 | B5+B6 | 10 | 协作 AI-B（已交付） | 见 TOOL-100-PROMPTS.md · 提示B |
+| 第4组 | B7+B8 | 4 | 协作 AI-C（已交付） | 见 TOOL-100-PROMPTS.md · 提示C |

@@ -28,8 +28,8 @@ var R = CalcRegistry;
 var all = R.all();
 var keys = Object.keys(all);
 
-console.log('\n[registry] 已登记工具数 = ' + keys.length + '（B7=4 + B1=6 + B2=6，其余块待协作 AI 填充）');
-assert('至少已登记示范块 4 个工具', keys.length >= 4, keys.length);
+console.log('\n[registry] 已登记工具数 = ' + keys.length + '（B7=4 + B1=6 + B2=6 + B3=5 + B4=6 + B5=5 + B6=5 + B8=4，全部完成）');
+assert('已登记全部 41 个声明式计算器', keys.length === 41, keys.length);
 
 console.log('\n[registry] 契约字段校验');
 var seen = {};

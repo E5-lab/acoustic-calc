@@ -368,13 +368,16 @@
 
   function updateModuleCount() {
     // 结构测试会从 index.html 静态卡片 + calc-bN.js 注册数推导；此处仅更新首页展示文本。
-    var total = 0;
+    // 分组数动态统计（含声明式计算器注入的「速算计算器」组），模块数动态统计实际卡片。
+    var total = 0, groups = 8;
     try {
       total = document.querySelectorAll('#view-home .module-card').length;
-    } catch (e) { total = 0; }
+      var g = document.querySelectorAll('.mainnav .nav-group:not(.topbar-group)');
+      if (g && g.length) groups = g.length;
+    } catch (e) {}
     var hint = document.querySelector('.section-head .hint');
     if (hint && total) {
-      hint.textContent = '共 8 个分组、' + total + ' 个模块，与顶栏二级菜单一一对应';
+      hint.textContent = '共 ' + groups + ' 个分组、' + total + ' 个模块，与顶栏二级菜单一一对应';
     }
   }
 
