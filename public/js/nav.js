@@ -213,11 +213,24 @@
     if (btn) btn.classList.toggle('active', anyActive);
   }
 
+  // 手机端导航改为抽屉：宽度由抽屉决定，不再做「更多」收纳
+  function isDrawer() {
+    return !!(window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
+  }
+
   // 先全部展开，再从后往前把装不下的分组收进「更多」
   function relayout() {
     if (!nav) return;
     var real = realGroups();
     if (!real.length) return;
+
+    if (isDrawer()) {
+      real.forEach(function (g) { g.hidden = false; });
+      if (more) { setOpen(more, false); more.hidden = true; }
+      hiddenGroups = [];
+      highlightMore();
+      return;
+    }
 
     real.forEach(function (g) { g.hidden = false; });
     if (more) more.hidden = true;
@@ -351,10 +364,128 @@
     });
   }
 
+  // ------------------------------ 手机端导航抽屉 ------------------------------
+  // 仅在 ≤768px 生效：顶栏导航行收起为一颗「☰」，点开是左侧抽屉。
+  // 桌面端完全不受影响（按钮 display:none，抽屉样式全在媒体查询里）。
+  function initDrawer() {
+    var navEl = document.querySelector('.mainnav');
+    var inner = document.querySelector('.topbar-inner');
+    var actions = document.querySelector('.topbar-actions');
+    if (!navEl || !inner || !actions) return;
+    if (!navEl.id) navEl.id = 'mainnav';
+
+    // ☰ 按钮（放在品牌左侧）
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'nav-toggle';
+    toggle.setAttribute('aria-label', '打开导航菜单');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'mainnav');
+    toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+    inner.insertBefore(toggle, inner.firstChild);
+
+    // 抽屉标题栏
+    var head = document.createElement('div');
+    head.className = 'nav-drawer-head';
+    head.innerHTML = '<span class="nav-drawer-t">导航</span>' +
+      '<button type="button" class="nav-drawer-close" aria-label="关闭导航菜单">&#215;</button>';
+    navEl.insertBefore(head, navEl.firstChild);
+
+    // 「更多」区：把顶栏的友链 / 导出搬进来（保持单一数据源，事件仍生效）
+    var extra = document.createElement('div');
+    extra.className = 'nav-drawer-extra';
+    extra.innerHTML = '<div class="nav-drawer-extra-t">更多</div>';
+    navEl.appendChild(extra);
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'nav-backdrop';
+    backdrop.hidden = true;
+    document.body.appendChild(backdrop);
+
+    // 抽屉是 position:fixed，但 .topbar 上有 backdrop-filter —— 它会成为 fixed 的
+    // 包含块，导致抽屉只能拿到顶栏高度。因此抽屉模式下把 .mainnav 挪到 body，
+    // 离开抽屉模式再放回顶栏（位置：品牌之后、操作区之前）。
+    function parkNav(on) {
+      if (on) {
+        if (navEl.parentNode !== document.body) document.body.appendChild(navEl);
+      } else if (navEl.parentNode === document.body) {
+        inner.insertBefore(navEl, actions);
+      }
+    }
+
+    var parked = [];
+    function park(on) {
+      var friends = actions.querySelector('.nav-blog');
+      var friendsGroup = friends ? friends.closest('.nav-group') : null;
+      var exportGroup = document.getElementById('exportMenu');
+      if (on) {
+        if (parked.length) return;
+        [friendsGroup, exportGroup].forEach(function (el) {
+          if (!el || !el.parentNode) return;
+          parked.push({ el: el, parent: el.parentNode });
+          extra.appendChild(el);
+          el.classList.add('in-drawer');
+        });
+      } else {
+        if (!parked.length) return;
+        parked.forEach(function (p) {
+          p.parent.appendChild(p.el);
+          p.el.classList.remove('in-drawer');
+        });
+        parked = [];
+      }
+    }
+
+    function open() {
+      if (!isDrawer()) return;
+      closeAll();
+      park(true);
+      document.body.classList.add('nav-open');
+      backdrop.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      navEl.scrollTop = 0;
+    }
+    function close() {
+      if (!document.body.classList.contains('nav-open')) return;
+      document.body.classList.remove('nav-open');
+      backdrop.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (document.body.classList.contains('nav-open')) close(); else open();
+    });
+    backdrop.addEventListener('click', close);
+    head.querySelector('.nav-drawer-close').addEventListener('click', close);
+    navEl.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('.nav-menu a')) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) close();
+    });
+    window.addEventListener('hashchange', close);
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(max-width: 768px)');
+      var onChange = function () {
+        if (mq.matches) { parkNav(true); park(true); }
+        else { close(); parkNav(false); park(false); }
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+      if (mq.matches) { parkNav(true); park(true); }
+    }
+
+    window.AppNav.drawer = { open: open, close: close, isDrawer: isDrawer };
+  }
+
   function boot() {
     bind();
     injectSub();
     crumbs();
+    initDrawer();
     syncActive(window.AppRouter ? window.AppRouter.parse().route : 'home');
     watchWidth();
   }

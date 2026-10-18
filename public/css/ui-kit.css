@@ -1482,3 +1482,206 @@ body.uik-fab-dim .uik-fab { opacity: 0; transform: translateY(10px) scale(0.9); 
 @media (prefers-reduced-motion: reduce) {
   .uik-fab { transition: none; }
 }
+
+/* ==========================================================================
+   16. 手机端导航抽屉（≤768px）：顶栏导航行收成一颗「☰」
+   桌面端完全不受影响 —— 按钮默认隐藏，抽屉样式全部锁在媒体查询内。
+   ========================================================================== */
+.nav-toggle,
+.nav-drawer-head,
+.nav-drawer-extra,
+.nav-backdrop { display: none; }
+
+@media (max-width: 768px) {
+  /* 顶栏收成一行：☰ / 品牌 / 图标组（导航行让位，省下约 50px 高度） */
+  .topbar-inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .nav-toggle { grid-column: 1; grid-row: 1; }
+  .brand { grid-column: 2; grid-row: 1; }
+  .topbar-actions { grid-column: 3; grid-row: 1; }
+  /* 友链 / 导出已进抽屉，顶栏分隔线不再需要 */
+  .topbar-actions .topbar-sep { display: none; }
+
+  .nav-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    flex: none;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-soft);
+    color: var(--text-soft);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, color 0.15s, transform 0.12s;
+  }
+  .nav-toggle:hover { background: var(--primary-soft); color: var(--primary-d); }
+  .nav-toggle:active { transform: scale(0.94); }
+  .nav-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .nav-toggle svg { width: 20px; height: 20px; }
+
+  /* 导航本体 → 左侧抽屉 */
+  .mainnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 460;
+    width: min(84vw, 330px);
+    height: auto;
+    margin: 0;
+    padding: 10px 10px calc(24px + env(safe-area-inset-bottom));
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    box-shadow: 0 24px 70px -24px rgba(15, 30, 70, 0.55);
+    transform: translateX(-104%);
+    visibility: hidden;
+    transition: transform 0.26s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0.26s;
+  }
+  body.nav-open .mainnav { transform: none; visibility: visible; }
+  body.nav-open { overflow: hidden; }
+
+  .nav-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 6px 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .nav-drawer-t { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+  .nav-drawer-close {
+    width: 40px; height: 40px;
+    display: grid; place-items: center;
+    border: 0; border-radius: 10px;
+    background: var(--card-soft);
+    color: var(--muted);
+    font-size: 20px; line-height: 1;
+    cursor: pointer;
+  }
+  .nav-drawer-close:hover { background: var(--primary-soft); color: var(--primary-d); }
+
+  /* 一级项与分组标题：整行可点，48px 高 */
+  .mainnav > a,
+  .mainnav .nav-parent {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    justify-content: space-between;
+    font-size: 14.5px;
+    border-radius: 10px;
+  }
+  .mainnav > a { display: flex; align-items: center; }
+  .mainnav .nav-group { display: block; }
+  .mainnav .nav-parent .nav-caret { margin-left: auto; }
+
+  /* 二级菜单在抽屉里就地展开（手风琴），不再是浮层 */
+  .mainnav .nav-menu {
+    position: static;
+    display: none;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0 0 8px;
+    padding: 4px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--card-soft);
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+  .mainnav .nav-group.open > .nav-menu { display: grid; }
+  .mainnav .nav-menu a {
+    min-height: 44px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  .mainnav .nav-menu .nm-t { font-size: 13.5px; }
+  .mainnav .nav-menu .nm-d { font-size: 12px; line-height: 1.45; }
+  .mainnav .nav-sub { display: none; }   /* 三级子菜单在抽屉里层级过深，从模块页进入 */
+
+  /* 抽屉底部的「更多」：友链 / 导出（从顶栏搬进来） */
+  .nav-drawer-extra {
+    display: block;
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-drawer-extra-t {
+    padding: 6px 12px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--faint);
+    letter-spacing: 0.04em;
+  }
+  .nav-drawer-extra .nav-group { display: block; }
+  /* 友链 / 导出在抽屉里恢复成「图标 + 文字 + 箭头」的整行按钮
+     （顶栏的 ≤640px 图标化规则会隐藏文字，这里按抽屉场景覆盖回来） */
+  .nav-drawer-extra .nav-group > .nav-parent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: auto;
+    min-height: 48px;
+    padding: 10px 12px;
+    justify-content: flex-start;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+  }
+  .nav-drawer-extra .nav-group > .nav-parent > span { display: inline; font-size: 14.5px; }
+  .nav-drawer-extra .nav-group > .nav-parent > .nav-caret { display: block; margin-left: auto; }
+  .nav-drawer-extra .nav-group > .nav-parent svg { width: 17px; height: 17px; flex: none; }
+  /* #exportMenu 的图标化规则带 ID，特异性更高，需按 ID 覆盖回来 */
+  .nav-drawer-extra #exportMenu > .nav-parent {
+    width: 100%;
+    height: auto;
+    min-height: 48px;
+    padding: 10px 12px;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+  }
+  .nav-drawer-extra #exportMenu > .nav-parent > span { display: inline; }
+  .nav-drawer-extra #exportMenu > .nav-parent > .nav-caret { display: block; margin-left: auto; }
+  .nav-drawer-extra .nav-menu { min-width: 0; }
+  .nav-drawer-extra .ex-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+  .nav-drawer-extra .ex-item .nm-t { display: block; font-size: 13.5px; font-weight: 500; }
+  .nav-drawer-extra .ex-item small { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* 遮罩 */
+  .nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 450;
+    background: rgba(10, 18, 34, 0.46);
+    backdrop-filter: blur(2px);
+    animation: uik-fade-in 0.2s ease both;
+  }
+  .nav-backdrop[hidden] { display: none; }
+}

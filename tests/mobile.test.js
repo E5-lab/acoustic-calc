@@ -25,6 +25,7 @@ var html = read('public/index.html');
 var css = read('public/css/styles.css');
 var uikCss = read('public/css/ui-kit.css');
 var uikJs = read('public/js/ui-kit.js');
+var navJs = read('public/js/nav.js');
 
 // 取出移动端适配区块，后续断言只在这段里找，避免误命中桌面规则
 var mStart = css.indexOf('移动端适配（v2.12）');
@@ -64,6 +65,23 @@ assert('无障碍标签', uikJs.indexOf("btn.setAttribute('aria-label'") >= 0);
 
 console.log('\n[6] 轮播箭头触控目标');
 assert('窄屏箭头放大到 40px', /\.hero-banner \.hb-arrow \{[\s\S]{0,120}width: 40px/.test(uikCss));
+
+console.log('\n[7] 手机端导航抽屉（仅 ≤768px）');
+assert('nav.js 提供抽屉初始化', navJs.indexOf('function initDrawer()') >= 0);
+assert('nav.js 有抽屉断点判断 isDrawer', navJs.indexOf('function isDrawer()') >= 0);
+assert('抽屉模式下跳过「更多」收纳', /if \(isDrawer\(\)\) \{[\s\S]{0,200}more.hidden = true/.test(navJs));
+assert('抽屉模式把 .mainnav 移到 body（规避 backdrop-filter 包含块）', navJs.indexOf('function parkNav(') >= 0 && navJs.indexOf('document.body.appendChild(navEl)') >= 0);
+assert('离开抽屉模式归还到 .topbar-inner', navJs.indexOf('inner.insertBefore(navEl, actions)') >= 0);
+assert('友链 / 导出搬进抽屉', navJs.indexOf("querySelector('.nav-blog')") >= 0 && navJs.indexOf('nav-drawer-extra') >= 0);
+assert('点二级链接后关闭抽屉', navJs.indexOf("closest('.nav-menu a')) close()") >= 0);
+
+assert('桌面默认隐藏 ☰ 与抽屉结构', /\.nav-toggle,\s*\n\.nav-drawer-head,\s*\n\.nav-drawer-extra,\s*\n\.nav-backdrop \{ display: none; \}/.test(uikCss));
+assert('≤768 顶栏三列（☰ / 品牌 / 图标）', /\.topbar-inner \{\s*grid-template-columns: auto minmax\(0, 1fr\) auto/.test(uikCss));
+assert('抽屉为 fixed 且默认移出屏幕', /\.mainnav \{[\s\S]{0,400}position: fixed;/.test(uikCss) && uikCss.indexOf('transform: translateX(-104%)') >= 0);
+assert('body.nav-open 才滑入', uikCss.indexOf('body.nav-open .mainnav { transform: none; visibility: visible; }') >= 0);
+assert('抽屉内二级菜单就地展开（static）', /\.mainnav \.nav-menu \{[\s\S]{0,200}position: static;/.test(uikCss));
+assert('抽屉内三级子菜单隐藏', /\.mainnav \.nav-sub \{ display: none; \}/.test(uikCss));
+assert('抽屉内 #exportMenu 按 ID 覆盖图标化规则', uikCss.indexOf('.nav-drawer-extra #exportMenu > .nav-parent > span') >= 0);
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);
