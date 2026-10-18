@@ -28,7 +28,7 @@ var R = CalcRegistry;
 var all = R.all();
 var keys = Object.keys(all);
 
-console.log('\n[registry] 已登记工具数 = ' + keys.length + '（当前仅示范块 B7=4，其余块待协作 AI 填充）');
+console.log('\n[registry] 已登记工具数 = ' + keys.length + '（B7=4 + B1=6 + B2=6，其余块待协作 AI 填充）');
 assert('至少已登记示范块 4 个工具', keys.length >= 4, keys.length);
 
 console.log('\n[registry] 契约字段校验');
